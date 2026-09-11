@@ -1,9 +1,17 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
-from .database import connect, init_schema, record_feedback
+from .database import (
+    connect,
+    daily_delivery_exists,
+    init_schema,
+    record_daily_delivery,
+    record_feedback,
+)
 from .mailer import send_digest
 from .service import build_digest, load_json, mark_notified, poll_all
 
@@ -23,6 +31,8 @@ def main() -> None:
     parser.add_argument("--db", type=Path, default=DEFAULT_DB)
     parser.add_argument("--output", type=Path)
     parser.add_argument("--mark-sent", action="store_true")
+    parser.add_argument("--daily", action="store_true")
+    parser.add_argument("--force", action="store_true")
     parser.add_argument("--job-id", type=int)
     parser.add_argument(
         "--decision",
@@ -51,9 +61,21 @@ def main() -> None:
 
     digest, job_ids = build_digest(connection)
     if args.command == "email":
+        local_now = datetime.now(ZoneInfo("America/New_York"))
+        delivery_date = local_now.date().isoformat()
+        if args.daily and not args.force and local_now.hour < 7:
+            print(f"Daily email not due yet: {local_now:%H:%M}")
+            return
+        if args.daily and not args.force and daily_delivery_exists(
+            connection, delivery_date
+        ):
+            print(f"Daily email already sent for {delivery_date}")
+            return
         delivery = load_json(DELIVERY)
         send_digest(delivery["subject"], digest, delivery["recipient"])
         mark_notified(connection, job_ids)
+        if args.daily:
+            record_daily_delivery(connection, delivery_date, len(job_ids))
         print(f"Sent digest with {len(job_ids)} jobs to {delivery['recipient']}")
         return
 

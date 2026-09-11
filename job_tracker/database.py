@@ -97,6 +97,12 @@ def init_schema(connection: sqlite3.Connection) -> None:
             reason TEXT,
             created_at TEXT NOT NULL
         );
+
+        CREATE TABLE IF NOT EXISTS daily_deliveries (
+            delivery_date TEXT PRIMARY KEY,
+            sent_at TEXT NOT NULL,
+            job_count INTEGER NOT NULL
+        );
         """
     )
     columns = {
@@ -261,5 +267,22 @@ def record_feedback(
     connection.execute(
         "INSERT INTO feedback(job_id, decision, reason, created_at) VALUES (?, ?, ?, ?)",
         (job_id, decision, reason, utc_now()),
+    )
+    connection.commit()
+
+
+def daily_delivery_exists(connection: sqlite3.Connection, delivery_date: str) -> bool:
+    return connection.execute(
+        "SELECT 1 FROM daily_deliveries WHERE delivery_date=?", (delivery_date,)
+    ).fetchone() is not None
+
+
+def record_daily_delivery(
+    connection: sqlite3.Connection, delivery_date: str, job_count: int
+) -> None:
+    connection.execute(
+        "INSERT OR REPLACE INTO daily_deliveries(delivery_date, sent_at, job_count) "
+        "VALUES (?, ?, ?)",
+        (delivery_date, utc_now(), job_count),
     )
     connection.commit()
