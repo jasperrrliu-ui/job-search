@@ -1,9 +1,26 @@
 {
-  "version": "2026-09-10-v2",
+  "version": "2026-09-11-v3",
   "knowledge_status": "candidate-profile-v0.1",
   "search_scope": {
     "country": "US",
     "employment_type": "FULL_TIME",
+    "require_explicit_us_location": true,
+    "us_location_markers": [
+      "united states",
+      "usa",
+      "u.s.",
+      "remote - us",
+      "remote, us",
+      "new york",
+      "california",
+      "massachusetts",
+      "virginia",
+      "texas",
+      "illinois",
+      "north carolina",
+      "washington, dc",
+      "district of columbia"
+    ],
     "outside_us_markers": [
       "canada",
       "united kingdom",
@@ -36,6 +53,13 @@
     "relevant_years_max": 2,
     "experience_includes_internships": true,
     "needs_visa_sponsorship": true
+  },
+  "seniority": {
+    "strong_negative_title_terms": [
+      "lead",
+      "staff",
+      "principal"
+    ]
   },
   "hard_fail_signals": {
     "work_authorization": [

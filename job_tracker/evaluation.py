@@ -8,6 +8,13 @@ from .llm import evaluate_with_openai
 
 FIT_VALUES = {"HIGH", "MEDIUM", "LOW", "UNKNOWN"}
 DEGREE_RANK = {"BS": 1, "MS": 2, "PHD": 3}
+US_STATE_CODES = {
+    "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI",
+    "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI",
+    "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC",
+    "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT",
+    "VT", "VA", "WA", "WV", "WI", "WY", "DC",
+}
 
 
 def _sentences(text: str) -> list[str]:
@@ -44,9 +51,23 @@ def _required_evidence(text: str, subject_pattern: str) -> list[dict]:
     return found
 
 
+def _location_status(location: str, domain: dict) -> str:
+    lowered = location.lower()
+    markers = domain["search_scope"]["us_location_markers"]
+    state_codes = set(re.findall(r"\b[A-Z]{2}\b", location))
+    if any(marker in lowered for marker in markers) or state_codes & US_STATE_CODES:
+        return "PASS"
+    if any(
+        marker in lowered
+        for marker in domain["search_scope"]["outside_us_markers"]
+    ):
+        return "FAIL"
+    return "UNKNOWN"
+
+
 def _hard_eligibility(
     job: dict, domain: dict, qualification_paths: list[dict]
-) -> tuple[str, list[dict]]:
+) -> tuple[str, list[dict], str]:
     description = job.get("description", "")
     text = f"{job.get('location', '')}\n{description}".lower()
     failures = []
@@ -78,16 +99,8 @@ def _hard_eligibility(
             }
         )
 
-    outside_us = domain["search_scope"]["outside_us_markers"]
-    location = job.get("location", "").lower()
-    us_marker = re.search(
-        r"\b(united states|usa|us|u\.s\.|remote[, -]+us|"
-        r"AL|AK|AZ|AR|CA|CO|CT|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|"
-        r"MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|"
-        r"RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY|DC)\b",
-        job.get("location", ""),
-    )
-    if any(marker in location for marker in outside_us) and not us_marker:
+    location_status = _location_status(job.get("location", ""), domain)
+    if location_status == "FAIL":
         failures.append(
             {
                 "field": "location",
@@ -95,10 +108,19 @@ def _hard_eligibility(
                 "certainty": "EXPLICIT",
             }
         )
+    elif location_status == "UNKNOWN":
+        failures.append(
+            {
+                "field": "location",
+                "text": job.get("location", "Not listed") or "Not listed",
+                "certainty": "UNKNOWN",
+            }
+        )
 
-    if failures:
-        return "FAIL", failures
-    return "UNKNOWN", []
+    explicit_failures = [item for item in failures if item["certainty"] == "EXPLICIT"]
+    if explicit_failures:
+        return "FAIL", failures, location_status
+    return "UNKNOWN", failures, location_status
 
 
 def _qualification_paths(description: str) -> list[dict]:
@@ -188,9 +210,10 @@ def _semantic_rules(job: dict, domain: dict) -> tuple[bool, dict]:
     title_plausible = any(
         term in title for term in domain["title_plausibility_signals"]
     )
+    seniority_terms = domain["seniority"]["strong_negative_title_terms"]
     seniority_signal = (
         "STRONG_NEGATIVE"
-        if re.search(r"\b(staff|principal)\b", title)
+        if any(re.search(rf"\b{re.escape(term)}\b", title) for term in seniority_terms)
         else "NEUTRAL"
     )
 
@@ -291,11 +314,17 @@ def _semantic_rules(job: dict, domain: dict) -> tuple[bool, dict]:
     return plausible, result
 
 
-def _decision(eligibility: str, plausible: bool, result: dict) -> tuple[str, str]:
+def _decision(
+    eligibility: str, location_status: str, plausible: bool, result: dict
+) -> tuple[str, str]:
     if eligibility == "FAIL":
         return "SKIP", "LOW"
+    if location_status != "PASS":
+        return "HOLD", "LOW"
     if not plausible:
         return "HOLD", "LOW"
+    if result["role_interpretation"].get("seniority_signal") == "STRONG_NEGATIVE":
+        return "SAVE", "LOW"
     career = result["career_direction_fit"]
     capability = result["capability_fit"]
     resume = result["resume_signal_fit"]
@@ -316,12 +345,15 @@ def _decision(eligibility: str, plausible: bool, result: dict) -> tuple[str, str
 
 def evaluate(job: dict, domain: dict) -> dict:
     paths = _qualification_paths(job.get("description", ""))
-    eligibility, hard_evidence = _hard_eligibility(job, domain, paths)
+    eligibility, hard_evidence, location_status = _hard_eligibility(
+        job, domain, paths
+    )
     path_eligibility, path_reason = _evaluate_paths(paths, domain["candidate"])
     if eligibility != "FAIL":
         eligibility = path_eligibility
 
     plausible, semantic = _semantic_rules(job, domain)
+    deterministic_seniority = semantic["role_interpretation"]["seniority_signal"]
     if (
         eligibility != "FAIL"
         and plausible
@@ -329,6 +361,7 @@ def evaluate(job: dict, domain: dict) -> dict:
         and os.environ.get("OPENAI_API_KEY")
     ):
         semantic = evaluate_with_openai(job, domain)
+        semantic["role_interpretation"]["seniority_signal"] = deterministic_seniority
 
     for key in (
         "career_direction_fit",
@@ -339,10 +372,13 @@ def evaluate(job: dict, domain: dict) -> dict:
         if semantic.get(key) not in FIT_VALUES:
             semantic[key] = "UNKNOWN"
 
-    decision, priority = _decision(eligibility, plausible, semantic)
+    decision, priority = _decision(eligibility, location_status, plausible, semantic)
     evidence = {"hard_eligibility": hard_evidence, **semantic.get("evidence", {})}
     role = semantic["role_interpretation"]
-    reasons = [f"Eligibility {eligibility}: {path_reason}"]
+    reasons = [
+        f"Location {location_status}: {job.get('location', '') or 'Not listed'}.",
+        f"Eligibility {eligibility}: {path_reason}",
+    ]
     if role["role_archetype"] != "UNKNOWN":
         reasons.append(f"Role archetype: {role['role_archetype']}")
     if not plausible:

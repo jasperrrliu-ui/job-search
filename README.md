@@ -84,10 +84,11 @@ values live in configuration and may be changed without editing the tracker.
 
 ## Optional LLM evaluation
 
-The default evaluator is free and deterministic. It never rejects `Senior`,
-`Sr.`, `II`, or `III` from title alone; it stores explicit degree/YOE pathways
-separately and treats missing candidate facts as `UNKNOWN`. Staff and Principal
-are negative review signals, not automatic eligibility failures.
+The default evaluator is free and deterministic. Only explicitly US-located jobs
+enter the email; ambiguous `Remote` locations stay `UNKNOWN`/`HOLD`. It never
+rejects `Senior`, `Sr.`, `II`, or `III` from title alone and stores explicit
+degree/YOE pathways separately. Lead, Staff, and Principal are saved as strong
+negative review signals rather than eligibility failures.
 
 For plausible or ambiguous jobs, an optional OpenAI Responses API interpreter
 can classify responsibilities and role identity with quoted JD evidence. It
