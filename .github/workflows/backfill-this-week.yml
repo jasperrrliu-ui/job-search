@@ -1,0 +1,107 @@
+name: Backfill Sep 7-10
+
+on:
+  workflow_dispatch:
+
+jobs:
+  send-backfill:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/cache/restore@v4
+        with:
+          path: data/jobs.db
+          key: backfill-db-${{ github.run_id }}
+          restore-keys: |
+            job-db-
+
+      - name: Refresh current postings
+        run: python -m job_tracker poll
+
+      - name: Send four dated emails
+        env:
+          SMTP_HOST: smtp.gmail.com
+          SMTP_PORT: "587"
+          SMTP_USER: jasperrrliu@gmail.com
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          MAIL_FROM: jasperrrliu@gmail.com
+        run: |
+          python - <<'PY'
+          import json
+          import sqlite3
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+
+          from job_tracker.mailer import send_digest
+
+
+          days = ["2026-09-07", "2026-09-08", "2026-09-09", "2026-09-10"]
+          eastern = ZoneInfo("America/New_York")
+          connection = sqlite3.connect("data/jobs.db")
+          connection.row_factory = sqlite3.Row
+          delivery = json.load(open("config/delivery.json", encoding="utf-8"))
+          rows = connection.execute(
+              """
+              SELECT jobs.title, jobs.location, jobs.official_url,
+                     jobs.official_created_at, companies.name AS company,
+                     evaluations.decision, evaluations.score
+              FROM jobs
+              JOIN companies ON companies.id = jobs.company_id
+              JOIN evaluations ON evaluations.id = (
+                  SELECT id FROM evaluations e
+                  WHERE e.job_id = jobs.id ORDER BY id DESC LIMIT 1
+              )
+              WHERE jobs.status='OPEN' AND jobs.official_created_at IS NOT NULL
+              """
+          ).fetchall()
+
+          grouped = {day: [] for day in days}
+          for row in rows:
+              timestamp = datetime.fromisoformat(
+                  row["official_created_at"].replace("Z", "+00:00")
+              )
+              day = timestamp.astimezone(eastern).date().isoformat()
+              if day in grouped:
+                  grouped[day].append(row)
+
+          for day in days:
+              jobs = sorted(
+                  grouped[day],
+                  key=lambda row: (
+                      row["decision"] == "HOLD",
+                      -row["score"],
+                      row["company"].lower(),
+                      row["title"].lower(),
+                  ),
+              )
+              matches = sum(row["decision"] != "HOLD" for row in jobs)
+              lines = [
+                  f"{day}: {len(jobs)} postings",
+                  f"Current AI/ML title matches: {matches}",
+                  "",
+                  "Greenhouse dates may represent a posting update rather than its original publication.",
+                  "Jobs matching the current rules are listed first.",
+                  "",
+              ]
+              for index, row in enumerate(jobs, start=1):
+                  marker = "MATCH" if row["decision"] != "HOLD" else "OTHER"
+                  lines.extend(
+                      [
+                          f"{index}. [{marker}] {row['title']} — {row['company']}",
+                          f"Location: {row['location'] or 'Not listed'}",
+                          f"URL: {row['official_url']}",
+                          "",
+                      ]
+                  )
+              subject = f"{day} jobs — {len(jobs)} postings, {matches} matches"
+              send_digest(subject, "\n".join(lines), delivery["recipient"])
+              print(f"Sent {day}: {len(jobs)} postings, {matches} matches")
+          PY
