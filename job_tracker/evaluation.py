@@ -44,7 +44,9 @@ def _required_evidence(text: str, subject_pattern: str) -> list[dict]:
     return found
 
 
-def _hard_eligibility(job: dict, domain: dict) -> tuple[str, list[dict]]:
+def _hard_eligibility(
+    job: dict, domain: dict, qualification_paths: list[dict]
+) -> tuple[str, list[dict]]:
     description = job.get("description", "")
     text = f"{job.get('location', '')}\n{description}".lower()
     failures = []
@@ -53,8 +55,13 @@ def _hard_eligibility(job: dict, domain: dict) -> tuple[str, list[dict]]:
         for item in _evidence(description, terms, limit=2):
             failures.append({"field": category, **item})
 
-    for item in _required_evidence(description, r"\b(ph\.?d\.?|doctorate)\b"):
-        failures.append({"field": "phd_required", **item})
+    phd_evidence = _required_evidence(description, r"\b(ph\.?d\.?|doctorate)\b")
+    if phd_evidence and (
+        not qualification_paths
+        or all(path["degree"] == "PHD" for path in qualification_paths)
+    ):
+        for item in phd_evidence:
+            failures.append({"field": "phd_required", **item})
     for item in _required_evidence(
         description, r"\b(publication|publications|published)\b"
     ):
@@ -128,16 +135,50 @@ def _qualification_paths(description: str) -> list[dict]:
 def _evaluate_paths(paths: list[dict], candidate: dict) -> tuple[str, str]:
     if not paths:
         return "UNKNOWN", "No explicit degree/experience pathway was parsed."
-    degree = candidate.get("degree")
-    years = candidate.get("relevant_years")
-    if degree not in DEGREE_RANK or years is None:
+    completed_degree = candidate.get("completed_degree")
+    current_degree = candidate.get("current_degree")
+    years_min = candidate.get("relevant_years_min")
+    years_max = candidate.get("relevant_years_max")
+    if completed_degree not in DEGREE_RANK or years_min is None or years_max is None:
         return "UNKNOWN", "Qualification pathways found; candidate degree/YOE is incomplete."
-    if any(
-        DEGREE_RANK[degree] >= DEGREE_RANK[path["degree"]]
-        and years >= path["years"]
-        for path in paths
-    ):
-        return "PASS", "Candidate satisfies at least one explicit qualification pathway."
+
+    possible = False
+    for path in paths:
+        required_rank = DEGREE_RANK[path["degree"]]
+        if DEGREE_RANK[completed_degree] >= required_rank:
+            degree_state = "MEETS"
+        elif (
+            candidate.get("degree_status") == "IN_PROGRESS"
+            and current_degree in DEGREE_RANK
+            and DEGREE_RANK[current_degree] >= required_rank
+        ):
+            degree_state = "POSSIBLE"
+        else:
+            degree_state = "NO"
+
+        if years_min >= path["years"]:
+            years_state = "MEETS"
+        elif years_max >= path["years"]:
+            years_state = "POSSIBLE"
+        else:
+            years_state = "NO"
+
+        if degree_state == "MEETS" and years_state == "MEETS":
+            return "PASS", "Candidate satisfies at least one explicit qualification pathway."
+        if degree_state != "NO" and years_state != "NO":
+            possible = True
+
+    if possible:
+        return (
+            "UNKNOWN",
+            "A pathway may be satisfied depending on graduation timing or whether experience is counted at the upper end of the 1-2 year range.",
+        )
+    if any(path["degree"] == "PHD" for path in paths):
+        return "FAIL", "No parsed qualification pathway matches the candidate's degree and YOE range."
+    if years_max < min(path["years"] for path in paths):
+        return "FAIL", "All parsed pathways require more than 2 years of relevant experience."
+    if all(DEGREE_RANK[path["degree"]] > DEGREE_RANK.get(current_degree, 0) for path in paths):
+        return "FAIL", "All parsed pathways require a higher degree than the current MS program."
     return "FAIL", "Candidate does not satisfy any parsed qualification pathway."
 
 
@@ -274,8 +315,8 @@ def _decision(eligibility: str, plausible: bool, result: dict) -> tuple[str, str
 
 
 def evaluate(job: dict, domain: dict) -> dict:
-    eligibility, hard_evidence = _hard_eligibility(job, domain)
     paths = _qualification_paths(job.get("description", ""))
+    eligibility, hard_evidence = _hard_eligibility(job, domain, paths)
     path_eligibility, path_reason = _evaluate_paths(paths, domain["candidate"])
     if eligibility != "FAIL":
         eligibility = path_eligibility
@@ -308,10 +349,12 @@ def evaluate(job: dict, domain: dict) -> dict:
         reasons.append("No plausible target-role evidence.")
 
     uncertainties = list(semantic.get("uncertainties", []))
-    if domain["candidate"].get("degree") is None:
-        uncertainties.append("Candidate degree is not configured.")
-    if domain["candidate"].get("relevant_years") is None:
-        uncertainties.append("Candidate relevant YOE is not configured.")
+    if domain["candidate"].get("degree_status") == "IN_PROGRESS":
+        uncertainties.append(
+            f"MS is in progress; expected graduation {domain['candidate']['expected_graduation']}."
+        )
+    if domain["candidate"].get("experience_includes_internships"):
+        uncertainties.append("The 1-2 year experience range includes internships.")
 
     return {
         "eligibility": eligibility,

@@ -27,8 +27,14 @@
     ]
   },
   "candidate": {
-    "degree": null,
-    "relevant_years": null,
+    "completed_degree": "BS",
+    "current_degree": "MS",
+    "current_program": "Health Data Science, Harvard University",
+    "degree_status": "IN_PROGRESS",
+    "expected_graduation": "2026-12",
+    "relevant_years_min": 1,
+    "relevant_years_max": 2,
+    "experience_includes_internships": true,
     "needs_visa_sponsorship": true
   },
   "hard_fail_signals": {
