@@ -1,0 +1,66 @@
+name: Job search
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0,2,4,6,8,10,11,12,14,16,18,20,22 * * *"
+
+concurrency:
+  group: job-search
+  cancel-in-progress: false
+
+jobs:
+  poll-and-email:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/cache/restore@v4
+        with:
+          path: data/jobs.db
+          key: job-db-${{ github.run_id }}
+          restore-keys: |
+            job-db-
+
+      - name: Decide whether this is the daily email run
+        id: timing
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "send_email=true" >> "$GITHUB_OUTPUT"
+          else
+            python -c 'import os; from datetime import datetime; from zoneinfo import ZoneInfo; value = str(datetime.now(ZoneInfo("America/New_York")).hour == 7).lower(); open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8").write(f"send_email={value}\n")'
+          fi
+
+      - name: Poll jobs or create the first baseline
+        shell: bash
+        run: |
+          if [ -f data/jobs.db ]; then
+            python -m job_tracker poll
+          else
+            python -m job_tracker bootstrap
+          fi
+
+      - name: Send daily digest
+        if: steps.timing.outputs.send_email == 'true'
+        env:
+          SMTP_HOST: smtp.gmail.com
+          SMTP_PORT: "587"
+          SMTP_USER: jasperrrliu@gmail.com
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          MAIL_FROM: jasperrrliu@gmail.com
+        run: python -m job_tracker email
+
+      - name: Save job database
+        if: success()
+        uses: actions/cache/save@v4
+        with:
+          path: data/jobs.db
+          key: job-db-${{ github.run_id }}
