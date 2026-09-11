@@ -1,31 +1,168 @@
 {
-  "version": "2026-09-10-v1",
-  "knowledge_status": "incomplete",
-  "target_titles": [
+  "version": "2026-09-10-v2",
+  "knowledge_status": "candidate-profile-v0.1",
+  "search_scope": {
+    "country": "US",
+    "employment_type": "FULL_TIME",
+    "outside_us_markers": [
+      "canada",
+      "united kingdom",
+      "london",
+      "ireland",
+      "germany",
+      "france",
+      "india",
+      "singapore",
+      "australia",
+      "netherlands",
+      "spain",
+      "sweden"
+    ],
+    "non_full_time_signals": [
+      "part-time",
+      "part time",
+      "internship",
+      "temporary",
+      "contract role"
+    ]
+  },
+  "candidate": {
+    "degree": null,
+    "relevant_years": null,
+    "needs_visa_sponsorship": true
+  },
+  "hard_fail_signals": {
+    "work_authorization": [
+      "without sponsorship",
+      "without visa sponsorship",
+      "no visa sponsorship",
+      "without the need for sponsorship",
+      "will not sponsor",
+      "sponsorship is not available",
+      "no sponsorship available",
+      "unrestricted work authorization",
+      "permanent work authorization"
+    ],
+    "citizenship": [
+      "us citizenship required",
+      "u.s. citizenship required",
+      "must be a us citizen",
+      "must be a u.s. citizen"
+    ],
+    "clearance": [
+      "security clearance required",
+      "active security clearance",
+      "must obtain a security clearance"
+    ]
+  },
+  "role_signals": {
+    "primary": {
+      "APPLIED_DATA_SCIENCE": [
+        "predictive model",
+        "machine learning model",
+        "model evaluation",
+        "calibration",
+        "monitoring",
+        "anomaly detection",
+        "decision system"
+      ],
+      "APPLIED_AI_GENAI": [
+        "large language model",
+        "llm",
+        "generative ai",
+        "rag",
+        "retrieval augmented",
+        "agent workflow",
+        "ai agent",
+        "prompt evaluation"
+      ],
+      "AI_MODEL_EVALUATION": [
+        "model behavior",
+        "failure analysis",
+        "model monitoring",
+        "ai evaluation",
+        "model governance",
+        "evaluation system"
+      ]
+    },
+    "secondary": {
+      "DECISION_SCIENCE": [
+        "decision scientist",
+        "causal inference",
+        "optimization",
+        "decision modeling"
+      ],
+      "APPLIED_AI_ENGINEERING": [
+        "ai engineer",
+        "machine learning engineer",
+        "production machine learning",
+        "ml application"
+      ]
+    },
+    "low_priority": {
+      "PRODUCT_ANALYTICS": [
+        "product analytics",
+        "dashboard",
+        "a/b testing",
+        "business intelligence",
+        "reporting"
+      ],
+      "ML_INFRASTRUCTURE": [
+        "distributed training",
+        "ml infrastructure",
+        "model serving infrastructure",
+        "backend infrastructure"
+      ],
+      "RESEARCH_HEAVY": [
+        "foundation model research",
+        "novel algorithms",
+        "publication record",
+        "top-tier conference"
+      ]
+    }
+  },
+  "title_plausibility_signals": [
     "data scientist",
     "applied scientist",
     "research scientist",
     "decision scientist",
     "machine learning",
+    "ml engineer",
     "ai engineer",
-    "artificial intelligence"
+    "artificial intelligence",
+    "model evaluation",
+    "model governance"
   ],
-  "positive_signals": [
-    "large language model",
-    "llm",
-    "generative ai",
-    "agent",
-    "evaluation",
-    "experimentation",
-    "causal inference"
-  ],
-  "action_thresholds": {
-    "apply_today": 80
+  "resume_evidence": {
+    "proven": [
+      "machine learning",
+      "supervised learning",
+      "anomaly detection",
+      "data pipeline",
+      "calibration",
+      "threshold selection",
+      "model evaluation",
+      "monitoring",
+      "failure analysis",
+      "large language model",
+      "llm",
+      "rag",
+      "prompt evaluation",
+      "cross-functional"
+    ],
+    "developing": [
+      "ci/cd",
+      "mlops",
+      "distributed systems",
+      "backend ownership",
+      "service architecture",
+      "ml infrastructure"
+    ]
   },
   "llm": {
     "enabled": false,
     "model": "gpt-5.6-luna",
     "max_description_chars": 12000,
-    "instructions": "Evaluate the job only from the supplied job and mutable domain configuration. Do not invent preferences. Missing knowledge must produce UNCERTAIN, UNKNOWN, or REVIEW rather than rejection. Keep reasoning concise."
+    "instructions": "Interpret plausible or ambiguous jobs from the supplied JD only. Do not perform hard eligibility filtering and do not choose the final action. Title is weak evidence. Classify the role from responsibilities, domain, model ownership, decision target, and technical focus. Every non-UNKNOWN semantic field must cite concise JD evidence. Mark evidence as EXPLICIT or INFERRED; missing information is UNKNOWN. Return only the requested structured output."
   }
 }

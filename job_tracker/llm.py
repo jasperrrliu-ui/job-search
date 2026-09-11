@@ -5,23 +5,72 @@ import os
 import urllib.request
 
 
+FIT = {"type": "string", "enum": ["HIGH", "MEDIUM", "LOW", "UNKNOWN"]}
+CERTAINTY = {"type": "string", "enum": ["EXPLICIT", "INFERRED", "UNKNOWN"]}
+EVIDENCE = {
+    "type": "object",
+    "properties": {
+        "field": {"type": "string"},
+        "text": {"type": "string"},
+        "certainty": CERTAINTY,
+    },
+    "required": ["field", "text", "certainty"],
+    "additionalProperties": False,
+}
+ROLE = {
+    "type": "object",
+    "properties": {
+        "role_archetype": {"type": "string"},
+        "seniority_signal": {
+            "type": "string",
+            "enum": ["STRONG_NEGATIVE", "NEUTRAL", "UNKNOWN"],
+        },
+        "business_domain": {"type": "string"},
+        "primary_responsibilities": {"type": "array", "items": {"type": "string"}},
+        "model_ownership": {"type": "string"},
+        "decision_target": {"type": "string"},
+        "ai_ml_centrality": FIT,
+        "analytics_intensity": FIT,
+        "engineering_intensity": FIT,
+        "research_intensity": FIT,
+        "product_business_orientation": FIT,
+    },
+    "required": [
+        "role_archetype",
+        "seniority_signal",
+        "business_domain",
+        "primary_responsibilities",
+        "model_ownership",
+        "decision_target",
+        "ai_ml_centrality",
+        "analytics_intensity",
+        "engineering_intensity",
+        "research_intensity",
+        "product_business_orientation",
+    ],
+    "additionalProperties": False,
+}
 SCHEMA = {
     "type": "object",
     "properties": {
-        "eligibility": {"type": "string", "enum": ["PASS", "FAIL", "UNCERTAIN"]},
-        "role_archetype": {"type": "string"},
-        "fit": {"type": "string", "enum": ["STRONG", "POSSIBLE", "WEAK", "UNKNOWN"]},
-        "priority": {"type": "string", "enum": ["HIGH", "MEDIUM", "LOW", "UNKNOWN"]},
-        "decision": {"type": "string", "enum": ["APPLY_NOW", "APPLY_TODAY", "REVIEW", "SAVE", "SKIP"]},
-        "score": {"type": "integer", "minimum": 0, "maximum": 100},
-        "reasoning": {"type": "string"},
-        "uncertainty": {"type": "string"}
+        "role_interpretation": ROLE,
+        "career_direction_fit": FIT,
+        "capability_fit": FIT,
+        "resume_signal_fit": FIT,
+        "trajectory_fit": FIT,
+        "evidence": {"type": "array", "items": EVIDENCE},
+        "uncertainties": {"type": "array", "items": {"type": "string"}},
     },
     "required": [
-        "eligibility", "role_archetype", "fit", "priority", "decision",
-        "score", "reasoning", "uncertainty"
+        "role_interpretation",
+        "career_direction_fit",
+        "capability_fit",
+        "resume_signal_fit",
+        "trajectory_fit",
+        "evidence",
+        "uncertainties",
     ],
-    "additionalProperties": False
+    "additionalProperties": False,
 }
 
 
@@ -32,11 +81,10 @@ def evaluate_with_openai(job: dict, domain: dict) -> dict:
         "title": job["title"],
         "location": job.get("location"),
         "description": job.get("description", "")[: settings["max_description_chars"]],
-        "domain_config": {
-            "target_titles": domain["target_titles"],
-            "positive_signals": domain["positive_signals"],
-            "knowledge_status": domain["knowledge_status"]
-        }
+        "candidate_domain": {
+            "career_direction": domain["role_signals"],
+            "resume_evidence": domain["resume_evidence"],
+        },
     }
     body = {
         "model": os.environ.get("OPENAI_MODEL", settings["model"]),
@@ -46,20 +94,20 @@ def evaluate_with_openai(job: dict, domain: dict) -> dict:
         "text": {
             "format": {
                 "type": "json_schema",
-                "name": "job_evaluation",
+                "name": "job_semantic_interpretation",
                 "strict": True,
-                "schema": SCHEMA
+                "schema": SCHEMA,
             }
-        }
+        },
     }
     request = urllib.request.Request(
         "https://api.openai.com/v1/responses",
         data=json.dumps(body).encode(),
         headers={
             "Authorization": f"Bearer {os.environ['OPENAI_API_KEY']}",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         },
-        method="POST"
+        method="POST",
     )
     with urllib.request.urlopen(request, timeout=60) as response:
         payload = json.load(response)
@@ -67,6 +115,7 @@ def evaluate_with_openai(job: dict, domain: dict) -> dict:
         if item.get("type") == "message":
             for content in item.get("content", []):
                 if content.get("type") == "output_text":
-                    return json.loads(content["text"])
+                    result = json.loads(content["text"])
+                    result["evidence"] = {"semantic": result["evidence"]}
+                    return result
     raise ValueError("OpenAI response did not contain structured output")
-

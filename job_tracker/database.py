@@ -70,7 +70,14 @@ def init_schema(connection: sqlite3.Connection) -> None:
             score INTEGER NOT NULL,
             decision TEXT NOT NULL,
             reasoning TEXT NOT NULL,
-            uncertainty TEXT NOT NULL
+            uncertainty TEXT NOT NULL,
+            career_direction_fit TEXT NOT NULL DEFAULT 'UNKNOWN',
+            capability_fit TEXT NOT NULL DEFAULT 'UNKNOWN',
+            resume_signal_fit TEXT NOT NULL DEFAULT 'UNKNOWN',
+            trajectory_fit TEXT NOT NULL DEFAULT 'UNKNOWN',
+            evidence_json TEXT NOT NULL DEFAULT '{}',
+            qualification_paths_json TEXT NOT NULL DEFAULT '[]',
+            role_interpretation_json TEXT NOT NULL DEFAULT '{}'
         );
 
         CREATE TABLE IF NOT EXISTS poll_runs (
@@ -92,6 +99,21 @@ def init_schema(connection: sqlite3.Connection) -> None:
         );
         """
     )
+    columns = {
+        row[1] for row in connection.execute("PRAGMA table_info(evaluations)").fetchall()
+    }
+    additions = {
+        "career_direction_fit": "TEXT NOT NULL DEFAULT 'UNKNOWN'",
+        "capability_fit": "TEXT NOT NULL DEFAULT 'UNKNOWN'",
+        "resume_signal_fit": "TEXT NOT NULL DEFAULT 'UNKNOWN'",
+        "trajectory_fit": "TEXT NOT NULL DEFAULT 'UNKNOWN'",
+        "evidence_json": "TEXT NOT NULL DEFAULT '{}'",
+        "qualification_paths_json": "TEXT NOT NULL DEFAULT '[]'",
+        "role_interpretation_json": "TEXT NOT NULL DEFAULT '{}'",
+    }
+    for name, definition in additions.items():
+        if name not in columns:
+            connection.execute(f"ALTER TABLE evaluations ADD COLUMN {name} {definition}")
     connection.commit()
 
 

@@ -7,8 +7,8 @@ history in SQLite, applies editable domain rules, and renders a daily digest.
 
 - Providers: Greenhouse API, Greenhouse board HTML, Ashby, Lever
 - Storage: local SQLite (`data/jobs.db`)
-- Evaluation: editable rules in `config/domain.json`; incomplete knowledge returns
-  `UNKNOWN`/`REVIEW`, never an automatic rejection
+- Evaluation: deterministic hard eligibility, parsed degree/YOE pathways, and
+  separate direction/capability/resume/trajectory fit dimensions
 - Delivery: text digest preview; real email and cloud scheduling come after the
   local flow is validated
 
@@ -64,11 +64,19 @@ python -m job_tracker email
 The recipient and subject live in `config/delivery.json`. Do not commit passwords
 or API keys to Git.
 
+## GitHub Actions
+
+`.github/workflows/job-search.yml` polls every two hours and sends the digest at
+07:00 America/New_York. Add the Gmail app password as a repository Actions secret
+named `SMTP_PASSWORD`, then manually run the workflow once to create the baseline
+and verify delivery. The SQLite database is persisted in the Actions cache.
+
 ## Configuration
 
 - `config/companies.json`: mutable company registry and ATS source settings
 - `config/source_backlog.json`: classified companies that still need an adapter
-- `config/domain.json`: mutable target titles, fit signals, and action thresholds
+- `config/domain.json`: candidate facts, hard-fail rules, target role clusters,
+  resume evidence, and optional semantic-interpreter settings
 - `config/schedule.json`: mutable polling and digest schedule
 
 The program contains no Jasper-specific companies, titles, or thresholds. Those
@@ -76,7 +84,13 @@ values live in configuration and may be changed without editing the tracker.
 
 ## Optional LLM evaluation
 
-The default evaluator is free and deterministic. To evaluate title-matched jobs
-with the OpenAI Responses API, set `llm.enabled` to `true` in
-`config/domain.json` and provide `OPENAI_API_KEY`. The model can be changed with
-`OPENAI_MODEL`. Never commit an API key.
+The default evaluator is free and deterministic. It never rejects `Senior`,
+`Sr.`, `II`, or `III` from title alone; it stores explicit degree/YOE pathways
+separately and treats missing candidate facts as `UNKNOWN`. Staff and Principal
+are negative review signals, not automatic eligibility failures.
+
+For plausible or ambiguous jobs, an optional OpenAI Responses API interpreter
+can classify responsibilities and role identity with quoted JD evidence. It
+cannot run hard filters or choose the final action. Enable it with
+`llm.enabled=true` and `OPENAI_API_KEY`; change the model with `OPENAI_MODEL`.
+Purchased Codex credits are not API credits. Never commit an API key.

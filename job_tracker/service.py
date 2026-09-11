@@ -80,8 +80,11 @@ def evaluate_company_jobs(
             INSERT INTO evaluations(
                 job_id, config_version, job_content_hash, evaluated_at,
                 eligibility, role_archetype, fit, freshness, priority,
-                score, decision, reasoning, uncertainty
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                score, decision, reasoning, uncertainty,
+                career_direction_fit, capability_fit, resume_signal_fit,
+                trajectory_fit, evidence_json, qualification_paths_json,
+                role_interpretation_json
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 row["id"],
@@ -97,6 +100,13 @@ def evaluate_company_jobs(
                 result["decision"],
                 result["reasoning"],
                 result["uncertainty"],
+                result["career_direction_fit"],
+                result["capability_fit"],
+                result["resume_signal_fit"],
+                result["trajectory_fit"],
+                json.dumps(result["evidence"], ensure_ascii=False),
+                json.dumps(result["qualification_paths"], ensure_ascii=False),
+                json.dumps(result["role_interpretation"], ensure_ascii=False),
             ),
         )
     connection.commit()
@@ -107,7 +117,11 @@ def build_digest(connection: sqlite3.Connection) -> tuple[str, list[int]]:
         """
         SELECT jobs.id, jobs.title, jobs.location, jobs.official_url,
                jobs.first_seen_at, companies.name AS company,
-               evaluations.decision, evaluations.score, evaluations.reasoning
+               evaluations.decision, evaluations.eligibility,
+               evaluations.role_archetype, evaluations.career_direction_fit,
+               evaluations.capability_fit, evaluations.resume_signal_fit,
+               evaluations.trajectory_fit, evaluations.reasoning,
+               evaluations.uncertainty
         FROM jobs
         JOIN companies ON companies.id = jobs.company_id
         JOIN evaluations ON evaluations.id = (
@@ -115,8 +129,9 @@ def build_digest(connection: sqlite3.Connection) -> tuple[str, list[int]]:
             WHERE e.job_id = jobs.id ORDER BY id DESC LIMIT 1
         )
         WHERE jobs.status='OPEN' AND jobs.notified_at IS NULL
-          AND evaluations.decision != 'HOLD'
-        ORDER BY evaluations.score DESC, jobs.first_seen_at DESC
+          AND evaluations.decision IN ('APPLY_TODAY', 'REVIEW')
+        ORDER BY CASE evaluations.decision WHEN 'APPLY_TODAY' THEN 0 ELSE 1 END,
+                 jobs.first_seen_at DESC
         """
     ).fetchall()
 
@@ -131,8 +146,14 @@ def build_digest(connection: sqlite3.Connection) -> tuple[str, list[int]]:
             [
                 f"{index}. {row['title']} — {row['company']}",
                 f"Location: {row['location'] or 'Not listed'}",
-                f"Recommendation: {row['decision']} (score {row['score']})",
+                f"Recommendation: {row['decision']}",
+                f"Eligibility: {row['eligibility']}",
+                f"Role: {row['role_archetype']}",
+                f"Direction / Capability / Resume / Trajectory: "
+                f"{row['career_direction_fit']} / {row['capability_fit']} / "
+                f"{row['resume_signal_fit']} / {row['trajectory_fit']}",
                 f"Reason: {row['reasoning']}",
+                f"Uncertainty: {row['uncertainty'] or 'None recorded'}",
                 f"First seen: {row['first_seen_at']}",
                 f"URL: {row['official_url']}",
                 "",
