@@ -1,0 +1,72 @@
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
+
+from .database import connect, init_schema, record_feedback
+from .mailer import send_digest
+from .service import build_digest, load_json, mark_notified, poll_all
+
+
+ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_DB = ROOT / "data" / "jobs.db"
+COMPANIES = ROOT / "config" / "companies.json"
+DOMAIN = ROOT / "config" / "domain.json"
+DELIVERY = ROOT / "config" / "delivery.json"
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Target-company job tracker")
+    parser.add_argument(
+        "command", choices=["bootstrap", "poll", "digest", "email", "feedback"]
+    )
+    parser.add_argument("--db", type=Path, default=DEFAULT_DB)
+    parser.add_argument("--output", type=Path)
+    parser.add_argument("--mark-sent", action="store_true")
+    parser.add_argument("--job-id", type=int)
+    parser.add_argument(
+        "--decision",
+        choices=["APPLY", "MAYBE", "SKIP", "SAVE", "CONTACT", "INTERVIEW", "REJECTED"],
+    )
+    parser.add_argument("--reason")
+    args = parser.parse_args()
+
+    connection = connect(args.db)
+    init_schema(connection)
+
+    if args.command == "feedback":
+        record_feedback(connection, args.job_id, args.decision, args.reason)
+        print(f"Saved {args.decision} feedback for job {args.job_id}")
+        return
+
+    if args.command in {"bootstrap", "poll"}:
+        new, changed, failures = poll_all(
+            connection,
+            COMPANIES,
+            DOMAIN,
+            baseline=args.command == "bootstrap",
+        )
+        print(f"Done: {new} new, {changed} changed, {failures} failures")
+        return
+
+    digest, job_ids = build_digest(connection)
+    if args.command == "email":
+        delivery = load_json(DELIVERY)
+        send_digest(delivery["subject"], digest, delivery["recipient"])
+        mark_notified(connection, job_ids)
+        print(f"Sent digest with {len(job_ids)} jobs to {delivery['recipient']}")
+        return
+
+    if args.output:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(digest, encoding="utf-8")
+        print(f"Wrote {args.output}")
+    else:
+        print(digest)
+    if args.mark_sent:
+        mark_notified(connection, job_ids)
+        print(f"Marked {len(job_ids)} jobs as sent")
+
+
+if __name__ == "__main__":
+    main()

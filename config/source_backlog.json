@@ -1,0 +1,21 @@
+[
+  {"name": "Airbnb", "classification": "custom_dynamic", "official_url": "https://careers.airbnb.com/positions/", "next_step": "custom_adapter"},
+  {"name": "Airwallex", "classification": "custom_dynamic", "official_url": "https://careers.airwallex.com/jobs/", "next_step": "custom_adapter"},
+  {"name": "Applied Intuition", "classification": "custom_dynamic", "official_url": "https://www.appliedintuition.com/careers", "next_step": "custom_adapter"},
+  {"name": "Black Forest Labs", "classification": "custom_dynamic", "official_url": "https://bfl.ai/careers", "next_step": "custom_adapter"},
+  {"name": "Cyera", "classification": "custom_dynamic", "official_url": "https://www.cyera.com/careers", "next_step": "custom_adapter"},
+  {"name": "Databricks", "classification": "custom_dynamic", "official_url": "https://www.databricks.com/company/careers/open-positions", "next_step": "custom_adapter"},
+  {"name": "Google", "classification": "custom_dynamic", "official_url": "https://www.google.com/about/careers/applications/jobs/results/", "next_step": "custom_adapter"},
+  {"name": "Helsing", "classification": "custom_dynamic", "official_url": "https://helsing.ai/jobs", "next_step": "custom_adapter"},
+  {"name": "NVIDIA", "classification": "workday", "official_url": "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite", "next_step": "workday_adapter"},
+  {"name": "Pierre Computer", "classification": "custom_static", "official_url": "https://pierre.computer/", "next_step": "html_adapter"},
+  {"name": "Revolut", "classification": "custom_dynamic", "official_url": "https://www.revolut.com/careers/", "next_step": "custom_adapter"},
+  {"name": "Ricursive", "classification": "custom_static", "official_url": "https://www.ricursive.com/careers", "next_step": "html_adapter"},
+  {"name": "Rippling", "classification": "custom_dynamic", "official_url": "https://www.rippling.com/careers/open-roles", "next_step": "custom_adapter"},
+  {"name": "Shopify", "classification": "custom_dynamic", "official_url": "https://www.shopify.com/careers", "next_step": "custom_adapter"},
+  {"name": "Stripe", "classification": "custom_dynamic", "official_url": "https://stripe.com/jobs/search", "next_step": "custom_adapter"},
+  {"name": "Sunday Robotics", "classification": "custom_dynamic", "official_url": "https://www.sunday.ai/careers", "next_step": "custom_adapter"},
+  {"name": "Surge AI", "classification": "custom_dynamic", "official_url": "https://careers.surgehq.ai/", "next_step": "custom_adapter"},
+  {"name": "Tesla", "classification": "custom_dynamic", "official_url": "https://www.tesla.com/careers/search/", "next_step": "custom_adapter"},
+  {"name": "Whatnot", "classification": "custom_dynamic", "official_url": "https://careers.whatnot.com/", "next_step": "custom_adapter"}
+]

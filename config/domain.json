@@ -1,0 +1,31 @@
+{
+  "version": "2026-09-10-v1",
+  "knowledge_status": "incomplete",
+  "target_titles": [
+    "data scientist",
+    "applied scientist",
+    "research scientist",
+    "decision scientist",
+    "machine learning",
+    "ai engineer",
+    "artificial intelligence"
+  ],
+  "positive_signals": [
+    "large language model",
+    "llm",
+    "generative ai",
+    "agent",
+    "evaluation",
+    "experimentation",
+    "causal inference"
+  ],
+  "action_thresholds": {
+    "apply_today": 80
+  },
+  "llm": {
+    "enabled": false,
+    "model": "gpt-5.6-luna",
+    "max_description_chars": 12000,
+    "instructions": "Evaluate the job only from the supplied job and mutable domain configuration. Do not invent preferences. Missing knowledge must produce UNCERTAIN, UNKNOWN, or REVIEW rather than rejection. Keep reasoning concise."
+  }
+}

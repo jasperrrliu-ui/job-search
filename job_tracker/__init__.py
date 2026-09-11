@@ -1,0 +1,2 @@
+"""Target-company job tracker."""
+
