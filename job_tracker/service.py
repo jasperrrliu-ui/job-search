@@ -112,9 +112,19 @@ def evaluate_company_jobs(
     connection.commit()
 
 
-def build_digest(connection: sqlite3.Connection) -> tuple[str, list[int]]:
+def build_digest(
+    connection: sqlite3.Connection,
+    first_seen_since: str | None = None,
+    include_notified: bool = False,
+) -> tuple[str, list[int]]:
+    notification_filter = (
+        "AND jobs.first_seen_at >= ?"
+        if include_notified
+        else "AND jobs.notified_at IS NULL"
+    )
+    parameters = (first_seen_since,) if include_notified else ()
     rows = connection.execute(
-        """
+        f"""
         SELECT jobs.id, jobs.title, jobs.location, jobs.official_url,
                jobs.first_seen_at, companies.name AS company,
                evaluations.decision, evaluations.eligibility,
@@ -128,11 +138,12 @@ def build_digest(connection: sqlite3.Connection) -> tuple[str, list[int]]:
             SELECT id FROM evaluations e
             WHERE e.job_id = jobs.id ORDER BY id DESC LIMIT 1
         )
-        WHERE jobs.status='OPEN' AND jobs.notified_at IS NULL
+        WHERE jobs.status='OPEN' {notification_filter}
           AND evaluations.decision IN ('APPLY_TODAY', 'REVIEW')
         ORDER BY CASE evaluations.decision WHEN 'APPLY_TODAY' THEN 0 ELSE 1 END,
                  jobs.first_seen_at DESC
-        """
+        """,
+        parameters,
     ).fetchall()
 
     if not rows:

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import argparse
-from datetime import datetime
+from datetime import datetime, time, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -59,7 +59,6 @@ def main() -> None:
         print(f"Done: {new} new, {changed} changed, {failures} failures")
         return
 
-    digest, job_ids = build_digest(connection)
     if args.command == "email":
         local_now = datetime.now(ZoneInfo("America/New_York"))
         delivery_date = local_now.date().isoformat()
@@ -71,6 +70,17 @@ def main() -> None:
         ):
             print(f"Daily email already sent for {delivery_date}")
             return
+        first_seen_since = None
+        if args.force:
+            local_midnight = datetime.combine(
+                local_now.date(), time.min, tzinfo=local_now.tzinfo
+            )
+            first_seen_since = local_midnight.astimezone(timezone.utc).isoformat()
+        digest, job_ids = build_digest(
+            connection,
+            first_seen_since=first_seen_since,
+            include_notified=args.force,
+        )
         delivery = load_json(DELIVERY)
         send_digest(delivery["subject"], digest, delivery["recipient"])
         mark_notified(connection, job_ids)
@@ -79,6 +89,7 @@ def main() -> None:
         print(f"Sent digest with {len(job_ids)} jobs to {delivery['recipient']}")
         return
 
+    digest, job_ids = build_digest(connection)
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(digest, encoding="utf-8")

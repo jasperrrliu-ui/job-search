@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-11-v3",
+  "version": "2026-09-12-v4",
   "knowledge_status": "candidate-profile-v0.1",
   "search_scope": {
     "country": "US",
@@ -58,7 +58,113 @@
     "strong_negative_title_terms": [
       "lead",
       "staff",
-      "principal"
+      "principal",
+      "manager",
+      "director",
+      "head",
+      "vice president",
+      "vp",
+      "architect",
+      "supervisor"
+    ]
+  },
+  "candidate_generation": {
+    "primary_title_families": {
+      "DATA_SCIENCE": [
+        "data scientist",
+        "applied data scientist",
+        "decision scientist",
+        "health data scientist",
+        "clinical data scientist",
+        "quantitative scientist"
+      ],
+      "AI_SCIENTIST": [
+        "ai scientist",
+        "artificial intelligence scientist",
+        "applied ai scientist",
+        "machine learning scientist",
+        "applied scientist"
+      ],
+      "AI_MODEL_EVALUATION": [
+        "model evaluation scientist",
+        "ai evaluation scientist",
+        "model behavior scientist"
+      ]
+    },
+    "secondary_title_families": {
+      "APPLIED_AI_ENGINEERING": [
+        "applied ai engineer",
+        "ai engineer",
+        "artificial intelligence engineer",
+        "machine learning engineer",
+        "ml engineer",
+        "model evaluation engineer"
+      ]
+    },
+    "non_target_title_terms": [
+      "software engineer",
+      "backend engineer",
+      "frontend engineer",
+      "fullstack engineer",
+      "full stack engineer",
+      "analytics engineer",
+      "systems engineer",
+      "field engineer",
+      "support engineer",
+      "account executive",
+      "sales",
+      "counsel",
+      "legal",
+      "marketing",
+      "communications",
+      "financial analyst",
+      "business analyst",
+      "business systems analyst",
+      "systems administrator",
+      "technician",
+      "materials",
+      "recruiter",
+      "human resources",
+      "investigator",
+      "ehs specialist"
+    ],
+    "responsibility_headings": [
+      "what you'll do",
+      "what you will do",
+      "responsibilities",
+      "your responsibilities",
+      "the role",
+      "your impact"
+    ],
+    "ownership_actions": [
+      "build",
+      "develop",
+      "design",
+      "train",
+      "evaluate",
+      "validate",
+      "implement",
+      "deploy",
+      "own",
+      "create"
+    ],
+    "core_work_objects": [
+      "statistical model",
+      "predictive model",
+      "machine learning model",
+      "ml model",
+      "ai model",
+      "large language model",
+      "llm",
+      "rag",
+      "retrieval augmented",
+      "model evaluation",
+      "experimentation",
+      "causal inference",
+      "forecasting",
+      "classification",
+      "regression",
+      "anomaly detection"
     ]
   },
   "hard_fail_signals": {
@@ -88,8 +194,15 @@
   "role_signals": {
     "primary": {
       "APPLIED_DATA_SCIENCE": [
+        "statistical model",
         "predictive model",
         "machine learning model",
+        "experimentation",
+        "causal inference",
+        "forecasting",
+        "classification",
+        "regression",
+        "feature engineering",
         "model evaluation",
         "calibration",
         "monitoring",
@@ -105,6 +218,14 @@
         "agent workflow",
         "ai agent",
         "prompt evaluation"
+      ],
+      "AI_SCIENTIST": [
+        "ai scientist",
+        "ai model",
+        "machine learning scientist",
+        "applied scientist",
+        "machine learning research",
+        "model development"
       ],
       "AI_MODEL_EVALUATION": [
         "model behavior",
@@ -151,18 +272,6 @@
       ]
     }
   },
-  "title_plausibility_signals": [
-    "data scientist",
-    "applied scientist",
-    "research scientist",
-    "decision scientist",
-    "machine learning",
-    "ml engineer",
-    "ai engineer",
-    "artificial intelligence",
-    "model evaluation",
-    "model governance"
-  ],
   "resume_evidence": {
     "proven": [
       "machine learning",

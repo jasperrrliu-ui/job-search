@@ -204,18 +204,98 @@ def _evaluate_paths(paths: list[dict], candidate: dict) -> tuple[str, str]:
     return "FAIL", "Candidate does not satisfy any parsed qualification pathway."
 
 
-def _semantic_rules(job: dict, domain: dict) -> tuple[bool, dict]:
+def _title_has(title: str, term: str) -> bool:
+    return re.search(rf"\b{re.escape(term)}\b", title, flags=re.IGNORECASE) is not None
+
+
+def _responsibility_text(description: str, domain: dict) -> str:
+    lowered = description.lower()
+    starts = [
+        lowered.find(heading)
+        for heading in domain["candidate_generation"]["responsibility_headings"]
+        if lowered.find(heading) >= 0
+    ]
+    return description[min(starts):] if starts else description
+
+
+def _ownership_evidence(text: str, domain: dict) -> list[dict]:
+    rules = domain["candidate_generation"]
+    actions = rules["ownership_actions"]
+    objects = rules["core_work_objects"]
+    found = []
+    for sentence in _sentences(text):
+        lowered = sentence.lower()
+        if any(_title_has(lowered, action) for action in actions) and any(
+            obj in lowered for obj in objects
+        ):
+            found.append({"text": sentence[:300], "certainty": "EXPLICIT"})
+        if len(found) == 4:
+            break
+    return found
+
+
+def _candidate_gate(job: dict, domain: dict) -> dict:
     title = job["title"].lower()
-    description = job.get("description", "")
-    title_plausible = any(
-        term in title for term in domain["title_plausibility_signals"]
+    rules = domain["candidate_generation"]
+    for term in domain["seniority"]["strong_negative_title_terms"]:
+        if _title_has(title, term):
+            return {"status": "DROP", "family": "NON_TARGET_SENIORITY", "reason": term}
+
+    for term in rules["non_target_title_terms"]:
+        if _title_has(title, term):
+            return {"status": "DROP", "family": "NON_TARGET_OCCUPATION", "reason": term}
+
+    for family, terms in rules["primary_title_families"].items():
+        if any(_title_has(title, term) for term in terms):
+            return {"status": "PRIMARY", "family": family, "reason": "target title"}
+
+    if "research scientist" in title and any(
+        term in title for term in (" ai", "artificial intelligence", "machine learning", " ml ")
+    ):
+        return {"status": "PRIMARY", "family": "AI_SCIENTIST", "reason": "AI/ML research scientist title"}
+
+    for family, terms in rules["secondary_title_families"].items():
+        if any(_title_has(title, term) for term in terms):
+            return {"status": "SECONDARY", "family": family, "reason": "secondary target title"}
+
+    relevant_text = _responsibility_text(job.get("description", ""), domain)
+    ownership = _ownership_evidence(relevant_text, domain)
+    object_hits = sum(
+        term in relevant_text.lower() for term in rules["core_work_objects"]
     )
-    seniority_terms = domain["seniority"]["strong_negative_title_terms"]
-    seniority_signal = (
-        "STRONG_NEGATIVE"
-        if any(re.search(rf"\b{re.escape(term)}\b", title) for term in seniority_terms)
-        else "NEUTRAL"
-    )
+    if ownership and object_hits >= 2:
+        return {"status": "RESCUE", "family": "APPLIED_ML", "reason": "explicit model ownership"}
+    return {"status": "HOLD", "family": "UNKNOWN", "reason": "no target-role entry evidence"}
+
+
+def _semantic_rules(job: dict, domain: dict) -> tuple[bool, dict]:
+    description = _responsibility_text(job.get("description", ""), domain)
+    gate = _candidate_gate(job, domain)
+    plausible = gate["status"] in {"PRIMARY", "SECONDARY", "RESCUE"}
+    seniority_signal = "STRONG_NEGATIVE" if gate["family"] == "NON_TARGET_SENIORITY" else "NEUTRAL"
+    if not plausible:
+        return False, {
+            "role_interpretation": {
+                "role_archetype": gate["family"],
+                "seniority_signal": seniority_signal,
+                "candidate_gate": gate,
+                "business_domain": "UNKNOWN",
+                "primary_responsibilities": [],
+                "model_ownership": "UNKNOWN",
+                "decision_target": "UNKNOWN",
+                "ai_ml_centrality": "UNKNOWN",
+                "analytics_intensity": "UNKNOWN",
+                "engineering_intensity": "UNKNOWN",
+                "research_intensity": "UNKNOWN",
+                "product_business_orientation": "UNKNOWN",
+            },
+            "career_direction_fit": "UNKNOWN",
+            "capability_fit": "UNKNOWN",
+            "resume_signal_fit": "UNKNOWN",
+            "trajectory_fit": "UNKNOWN",
+            "evidence": {"role": [], "resume_proven": [], "resume_developing": []},
+            "uncertainties": [],
+        }
 
     buckets: dict[str, list[dict]] = {}
     bucket_counts: dict[str, int] = {}
@@ -233,7 +313,6 @@ def _semantic_rules(job: dict, domain: dict) -> tuple[bool, dict]:
                 category_counts[category] += hit_count
                 archetype_category[archetype] = category
 
-    plausible = title_plausible or bool(buckets)
     if buckets:
         max_count = max(bucket_counts.values())
         leaders = [name for name, count in bucket_counts.items() if count == max_count]
@@ -249,7 +328,7 @@ def _semantic_rules(job: dict, domain: dict) -> tuple[bool, dict]:
             next(iter(leader_categories)) if len(leader_categories) == 1 else "mixed"
         )
     else:
-        archetype = "UNKNOWN"
+        archetype = gate["family"] if plausible else "UNKNOWN"
         role_evidence = []
         leaders = []
         selected_category = "unknown"
@@ -257,12 +336,12 @@ def _semantic_rules(job: dict, domain: dict) -> tuple[bool, dict]:
     primary = category_counts["primary"]
     secondary = category_counts["secondary"]
     low = category_counts["low_priority"]
-    if primary >= 2 and primary >= low:
-        career_fit = "HIGH"
-    elif primary or secondary:
-        career_fit = "MEDIUM"
-    elif low >= 2:
+    if low >= 2 and primary == 0:
         career_fit = "LOW"
+    elif primary >= 2 and primary >= low:
+        career_fit = "HIGH"
+    elif primary or secondary or gate["status"] == "PRIMARY":
+        career_fit = "MEDIUM"
     else:
         career_fit = "UNKNOWN"
 
@@ -277,7 +356,7 @@ def _semantic_rules(job: dict, domain: dict) -> tuple[bool, dict]:
     else:
         capability_fit = resume_fit = "UNKNOWN"
 
-    if selected_category == "primary":
+    if gate["status"] == "PRIMARY" or selected_category == "primary":
         trajectory_fit = "HIGH" if career_fit == "HIGH" else "MEDIUM"
     elif selected_category == "secondary":
         trajectory_fit = "MEDIUM"
@@ -290,6 +369,7 @@ def _semantic_rules(job: dict, domain: dict) -> tuple[bool, dict]:
         "role_interpretation": {
             "role_archetype": archetype,
             "seniority_signal": seniority_signal,
+            "candidate_gate": gate,
             "business_domain": "UNKNOWN",
             "primary_responsibilities": [item["text"] for item in role_evidence],
             "model_ownership": "UNKNOWN",
@@ -319,18 +399,23 @@ def _decision(
 ) -> tuple[str, str]:
     if eligibility == "FAIL":
         return "SKIP", "LOW"
+    gate_status = result["role_interpretation"].get("candidate_gate", {}).get("status")
+    if gate_status == "DROP":
+        return "SKIP", "LOW"
     if location_status != "PASS":
         return "HOLD", "LOW"
     if not plausible:
         return "HOLD", "LOW"
     if result["role_interpretation"].get("seniority_signal") == "STRONG_NEGATIVE":
-        return "SAVE", "LOW"
+        return "SKIP", "LOW"
     career = result["career_direction_fit"]
     capability = result["capability_fit"]
     resume = result["resume_signal_fit"]
     trajectory = result["trajectory_fit"]
     if career == "LOW" or trajectory == "LOW":
         return "SAVE", "LOW"
+    if career == "UNKNOWN" or not result.get("evidence", {}).get("role"):
+        return "HOLD", "LOW"
     if (
         eligibility == "PASS"
         and result["role_interpretation"].get("seniority_signal") != "STRONG_NEGATIVE"
@@ -354,6 +439,7 @@ def evaluate(job: dict, domain: dict) -> dict:
 
     plausible, semantic = _semantic_rules(job, domain)
     deterministic_seniority = semantic["role_interpretation"]["seniority_signal"]
+    deterministic_gate = semantic["role_interpretation"]["candidate_gate"]
     if (
         eligibility != "FAIL"
         and plausible
@@ -362,6 +448,7 @@ def evaluate(job: dict, domain: dict) -> dict:
     ):
         semantic = evaluate_with_openai(job, domain)
         semantic["role_interpretation"]["seniority_signal"] = deterministic_seniority
+        semantic["role_interpretation"]["candidate_gate"] = deterministic_gate
 
     for key in (
         "career_direction_fit",
@@ -378,6 +465,8 @@ def evaluate(job: dict, domain: dict) -> dict:
     reasons = [
         f"Location {location_status}: {job.get('location', '') or 'Not listed'}.",
         f"Eligibility {eligibility}: {path_reason}",
+        f"Candidate gate {role.get('candidate_gate', {}).get('status', 'UNKNOWN')}: "
+        f"{role.get('candidate_gate', {}).get('reason', 'not recorded')}.",
     ]
     if role["role_archetype"] != "UNKNOWN":
         reasons.append(f"Role archetype: {role['role_archetype']}")
