@@ -12,11 +12,14 @@ history in SQLite, applies editable domain rules, and renders a daily digest.
 - Delivery: text digest preview; real email and cloud scheduling come after the
   local flow is validated
 
-The Lenny 100 is stored as a neutral-priority company registry. Eighty-one ATS
-sources have been verified. Anduril and SpaceX are recorded but disabled because
-each exposes more than 2,000 postings; companies without a source remain in the
-registry and are not polled yet. Their source types and next adapter work are
-recorded in `config/source_backlog.json`.
+The active registry currently polls 140 verified ATS sources. New companies are
+silently baselined on their first successful poll, so their historical openings
+are not misreported as newly posted jobs. A separate 503-company S&P 500
+candidate pool is retained for Company Lens screening and future adapter work.
+
+Company Lens uses 1,500 employees as the default minimum. Smaller companies stay
+out unless they are explicitly marked `EXCEPTION_HIGH_FIT`. Data Science and
+Applied/AI Scientist hiring are equally important screening signals.
 
 ## Run
 
@@ -66,14 +69,17 @@ or API keys to Git.
 
 ## GitHub Actions
 
-`.github/workflows/job-search.yml` polls every two hours and sends the digest at
-07:00 America/New_York. Add the Gmail app password as a repository Actions secret
-named `SMTP_PASSWORD`, then manually run the workflow once to create the baseline
-and verify delivery. The SQLite database is persisted in the Actions cache.
+`.github/workflows/job-search.yml` polls five times per day and sends one daily
+digest on the first run at or after 07:00 America/New_York. Add the Gmail app
+password as a repository Actions secret named `SMTP_PASSWORD`, then manually run
+the workflow once to verify delivery. The SQLite database is persisted in the
+Actions cache.
 
 ## Configuration
 
 - `config/companies.json`: mutable company registry and ATS source settings
+- `config/company_candidates.json`: non-active large-employer candidate pool
+- `config/company_lens.json`: company-size threshold and activation policy
 - `config/source_backlog.json`: classified companies that still need an adapter
 - `config/domain.json`: candidate facts, hard-fail rules, target role clusters,
   resume evidence, and optional semantic-interpreter settings
@@ -87,8 +93,8 @@ values live in configuration and may be changed without editing the tracker.
 The default evaluator is free and deterministic. Only explicitly US-located jobs
 enter the email; ambiguous `Remote` locations stay `UNKNOWN`/`HOLD`. It never
 rejects `Senior`, `Sr.`, `II`, or `III` from title alone and stores explicit
-degree/YOE pathways separately. Lead, Staff, and Principal are saved as strong
-negative review signals rather than eligibility failures.
+degree/YOE pathways separately. Lead, Staff, Principal, Manager, Director, Head,
+VP, Architect, and Supervisor titles are excluded at the candidate gate.
 
 For plausible or ambiguous jobs, an optional OpenAI Responses API interpreter
 can classify responsibilities and role identity with quoted JD evidence. It

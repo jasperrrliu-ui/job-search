@@ -1,0 +1,24 @@
+{
+  "version": "company-lens-v1",
+  "minimum_employee_count": 1500,
+  "below_threshold_default": "EXCLUDE",
+  "exception_label": "EXCEPTION_HIGH_FIT",
+  "required_before_activation": [
+    "US hiring presence",
+    "public ATS source verified",
+    "employee threshold pass or explicit high-fit exception"
+  ],
+  "screening_signals": [
+    "historical Data Science hiring",
+    "historical Applied Scientist or AI hiring",
+    "relevant-role frequency",
+    "sponsorship evidence",
+    "US location compatibility"
+  ],
+  "ring_1_sources": [
+    "Lenny 100",
+    "S&P 500 ATS Map",
+    "selected large public and private technology employers"
+  ],
+  "ring_2": "MANUAL_FOR_NOW"
+}

@@ -32,7 +32,19 @@ def poll_all(
         started_at = utc_now()
         try:
             jobs = fetch_jobs(company)
-            created, changed = upsert_jobs(connection, company["name"], jobs, baseline)
+            has_successful_poll = connection.execute(
+                """
+                SELECT 1 FROM poll_runs
+                JOIN companies ON companies.id = poll_runs.company_id
+                WHERE companies.name=? AND poll_runs.success=1
+                LIMIT 1
+                """,
+                (company["name"],),
+            ).fetchone()
+            company_baseline = baseline or has_successful_poll is None
+            created, changed = upsert_jobs(
+                connection, company["name"], jobs, company_baseline
+            )
             evaluate_company_jobs(connection, company["name"], domain)
             record_poll(connection, company["name"], started_at, True, len(jobs), None)
             total_new += created
@@ -118,7 +130,8 @@ def build_digest(
     include_notified: bool = False,
 ) -> tuple[str, list[int]]:
     notification_filter = (
-        "AND jobs.first_seen_at >= ?"
+        "AND jobs.first_seen_at >= ? "
+        "AND (jobs.notified_at IS NULL OR jobs.notified_at <> jobs.first_seen_at)"
         if include_notified
         else "AND jobs.notified_at IS NULL"
     )

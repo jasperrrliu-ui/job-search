@@ -3,7 +3,7 @@ name: Job search
 on:
   workflow_dispatch:
   schedule:
-    - cron: "17 0,2,4,6,8,10,11,12,14,16,18,20,22 * * *"
+    - cron: "17 0,6,12,16,20 * * *"
 
 concurrency:
   group: job-search
