@@ -2,15 +2,44 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-from .adapters import fetch_jobs
-from .database import record_poll, sync_companies, upsert_jobs, utc_now
+from .adapters import (
+    discover_workday_jobs,
+    enrich_workday_jobs,
+    fetch_jobs,
+    workday_listing_job,
+)
+from .database import (
+    reconcile_workday_discovery,
+    record_poll,
+    sync_companies,
+    upsert_jobs,
+    utc_now,
+)
 from .evaluation import evaluate
 
 
 def load_json(path: Path) -> dict | list:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def has_successful_poll(
+    connection: sqlite3.Connection, company_name: str
+) -> bool:
+    return (
+        connection.execute(
+            """
+            SELECT 1 FROM poll_runs
+            JOIN companies ON companies.id = poll_runs.company_id
+            WHERE companies.name=? AND poll_runs.success=1
+            LIMIT 1
+            """,
+            (company_name,),
+        ).fetchone()
+        is not None
+    )
 
 
 def poll_all(
@@ -26,22 +55,30 @@ def poll_all(
     total_changed = 0
     failures = 0
 
-    for company in companies:
-        if not company.get("active", True) or not company.get("source"):
-            continue
+    active = [
+        company
+        for company in companies
+        if company.get("active", True) and company.get("source")
+    ]
+    regular = [
+        company
+        for company in active
+        if company["source"]["provider"].lower() != "workday"
+    ]
+    workday = [
+        company
+        for company in active
+        if company["source"]["provider"].lower() == "workday"
+    ]
+
+    for company in regular:
         started_at = utc_now()
+        print(f"{company['name']}: polling started", flush=True)
         try:
             jobs = fetch_jobs(company, domain["candidate_generation"])
-            has_successful_poll = connection.execute(
-                """
-                SELECT 1 FROM poll_runs
-                JOIN companies ON companies.id = poll_runs.company_id
-                WHERE companies.name=? AND poll_runs.success=1
-                LIMIT 1
-                """,
-                (company["name"],),
-            ).fetchone()
-            company_baseline = baseline or has_successful_poll is None
+            company_baseline = baseline or not has_successful_poll(
+                connection, company["name"]
+            )
             created, changed = upsert_jobs(
                 connection, company["name"], jobs, company_baseline
             )
@@ -50,12 +87,126 @@ def poll_all(
             total_new += created
             total_changed += changed
             print(
-                f"{company['name']}: {len(jobs)} open, {created} new, {changed} changed"
+                f"{company['name']}: {len(jobs)} open, {created} new, {changed} changed",
+                flush=True,
             )
         except Exception as exc:
             failures += 1
             record_poll(connection, company["name"], started_at, False, None, str(exc))
-            print(f"{company['name']}: ERROR {exc}")
+            print(f"{company['name']}: ERROR {exc}", flush=True)
+
+    discoveries = {}
+    workday_started = {company["name"]: utc_now() for company in workday}
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        futures = {}
+        for company in workday:
+            future = executor.submit(
+                discover_workday_jobs, company, domain["candidate_generation"]
+            )
+            futures[future] = company
+        for future in as_completed(futures):
+            company = futures[future]
+            try:
+                discoveries[company["name"]] = future.result()
+            except Exception as exc:
+                failures += 1
+                record_poll(
+                    connection,
+                    company["name"],
+                    workday_started[company["name"]],
+                    False,
+                    None,
+                    str(exc),
+                )
+                print(f"{company['name']}: ERROR {exc}", flush=True)
+
+    enrichment_inputs = {}
+    for company in workday:
+        postings = discoveries.get(company["name"])
+        if postings is None:
+            continue
+        listing_jobs = [workday_listing_job(company, posting) for posting in postings]
+        new_listings = reconcile_workday_discovery(
+            connection, company["name"], listing_jobs
+        )
+        new_ids = {listing["source_listing_id"] for listing in new_listings}
+        new_postings = [
+            posting
+            for posting in postings
+            if posting["externalPath"] in new_ids
+        ]
+        company_baseline = baseline or not has_successful_poll(
+            connection, company["name"]
+        )
+        print(
+            f"{company['name']}: {len(postings)} discovered, "
+            f"{len(new_postings)} need enrichment",
+            flush=True,
+        )
+        if company_baseline:
+            created, changed = upsert_jobs(
+                connection, company["name"], new_listings, True, close_missing=False
+            )
+            evaluate_company_jobs(connection, company["name"], domain)
+            record_poll(
+                connection,
+                company["name"],
+                workday_started[company["name"]],
+                True,
+                len(postings),
+                None,
+            )
+            total_new += created
+            total_changed += changed
+            print(
+                f"{company['name']}: baseline saved without detail downloads",
+                flush=True,
+            )
+        else:
+            enrichment_inputs[company["name"]] = (company, new_postings, len(postings))
+
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        futures = {
+            executor.submit(enrich_workday_jobs, company, postings): (
+                company,
+                discovered_count,
+            )
+            for company, postings, discovered_count in enrichment_inputs.values()
+        }
+        for future in as_completed(futures):
+            company, discovered_count = futures[future]
+            try:
+                jobs = future.result()
+                created, changed = upsert_jobs(
+                    connection, company["name"], jobs, False, close_missing=False
+                )
+                evaluate_company_jobs(connection, company["name"], domain)
+                record_poll(
+                    connection,
+                    company["name"],
+                    workday_started[company["name"]],
+                    True,
+                    discovered_count,
+                    None,
+                )
+                total_new += created
+                total_changed += changed
+                print(
+                    f"{company['name']}: {discovered_count} open, "
+                    f"{created} new, {changed} changed",
+                    flush=True,
+                )
+            except Exception as exc:
+                failures += 1
+                record_poll(
+                    connection,
+                    company["name"],
+                    workday_started[company["name"]],
+                    False,
+                    None,
+                    str(exc),
+                )
+                print(f"{company['name']}: ERROR {exc}", flush=True)
 
     return total_new, total_changed, failures
 

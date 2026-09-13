@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 
 
 USER_AGENT = "job-search/0.1 (contact: jliu_Seeu@outlook.com)"
+WORKDAY_SEARCH_TERMS = ["data scientist", "applied scientist", "machine learning"]
 
 
 def _get_json(url: str) -> dict | list:
@@ -52,6 +53,100 @@ def _target_title(title: str, title_rules: dict | None) -> bool:
         "secondary_title_families"
     ]
     return any(term in lowered for terms in families.values() for term in terms)
+
+
+def discover_workday_jobs(
+    company: dict, title_rules: dict | None = None
+) -> list[dict]:
+    print(f"{company['name']}: polling started", flush=True)
+    source = company["source"]
+    host = source["host"]
+    tenant = source["tenant"]
+    site = source["site"]
+    list_url = f"https://{host}/wday/cxs/{tenant}/{site}/jobs"
+    postings = {}
+
+    for search_text in WORKDAY_SEARCH_TERMS:
+        offset = 0
+        pages = 0
+        while True:
+            payload = _post_json(
+                list_url,
+                {
+                    "appliedFacets": {},
+                    "limit": 20,
+                    "offset": offset,
+                    "searchText": search_text,
+                },
+            )
+            page = payload["jobPostings"]
+            pages += 1
+            for posting in page:
+                if _target_title(posting["title"], title_rules):
+                    postings[posting["externalPath"]] = posting
+            offset += len(page)
+            if offset >= payload["total"] or not page:
+                break
+        print(
+            f"{company['name']}: Workday '{search_text}' {pages} pages",
+            flush=True,
+        )
+
+    print(
+        f"{company['name']}: Workday {len(postings)} unique target postings",
+        flush=True,
+    )
+    return list(postings.values())
+
+
+def workday_listing_job(company: dict, posting: dict) -> dict:
+    source = company["source"]
+    external_path = posting["externalPath"]
+    return {
+        "source_listing_id": external_path,
+        "requisition_id": external_path,
+        "title": posting["title"],
+        "location": posting.get("locationsText", ""),
+        "official_url": f"https://{source['host']}/{source['site']}{external_path}",
+        "description": "",
+        "official_created_at": None,
+    }
+
+
+def enrich_workday_jobs(company: dict, postings: list[dict]) -> list[dict]:
+    source = company["source"]
+    host = source["host"]
+    tenant = source["tenant"]
+    site = source["site"]
+    jobs = []
+
+    for posting in postings:
+        external_path = posting["externalPath"]
+        detail = _get_json(
+            f"https://{host}/wday/cxs/{tenant}/{site}{external_path}"
+        )["jobPostingInfo"]
+        description = _plain_text(detail.get("jobDescription"))
+        if detail.get("timeType"):
+            description = f"Employment type: {detail['timeType']}. {description}"
+        start_date = detail.get("startDate")
+        jobs.append(
+            {
+                "source_listing_id": external_path,
+                "requisition_id": str(
+                    detail.get("jobReqId") or detail.get("id") or external_path
+                ),
+                "title": detail.get("title") or posting["title"],
+                "location": detail.get("location")
+                or posting.get("locationsText", ""),
+                "official_url": detail.get("externalUrl")
+                or f"https://{host}/{site}{external_path}",
+                "description": description,
+                "official_created_at": (
+                    f"{start_date}T00:00:00+00:00" if start_date else None
+                ),
+            }
+        )
+    return jobs
 
 
 def fetch_jobs(company: dict, title_rules: dict | None = None) -> list[dict]:
@@ -129,66 +224,6 @@ def fetch_jobs(company: dict, title_rules: dict | None = None) -> list[dict]:
         ]
 
     if provider == "workday":
-        host = source["host"]
-        tenant = source["tenant"]
-        site = source["site"]
-        list_url = f"https://{host}/wday/cxs/{tenant}/{site}/jobs"
-        search_terms = [
-            "data scientist",
-            "data science",
-            "applied scientist",
-            "quantitative scientist",
-            "machine learning",
-            "artificial intelligence",
-            "ai engineer",
-            "model evaluation",
-        ]
-        postings = {}
-        for search_text in search_terms:
-            offset = 0
-            while True:
-                payload = _post_json(
-                    list_url,
-                    {
-                        "appliedFacets": {},
-                        "limit": 20,
-                        "offset": offset,
-                        "searchText": search_text,
-                    },
-                )
-                page = payload["jobPostings"]
-                for posting in page:
-                    if _target_title(posting["title"], title_rules):
-                        postings[posting["externalPath"]] = posting
-                offset += len(page)
-                if offset >= payload["total"] or not page:
-                    break
-
-        jobs = []
-        for external_path, posting in postings.items():
-            detail = _get_json(
-                f"https://{host}/wday/cxs/{tenant}/{site}{external_path}"
-            )["jobPostingInfo"]
-            description = _plain_text(detail.get("jobDescription"))
-            if detail.get("timeType"):
-                description = f"Employment type: {detail['timeType']}. {description}"
-            start_date = detail.get("startDate")
-            jobs.append(
-                {
-                    "requisition_id": str(
-                        detail.get("jobReqId") or detail.get("id") or external_path
-                    ),
-                    "title": detail.get("title") or posting["title"],
-                    "location": detail.get("location")
-                    or posting.get("locationsText", ""),
-                    "official_url": detail.get("externalUrl")
-                    or f"https://{host}/{site}{external_path}",
-                    "description": description,
-                    "official_created_at": (
-                        f"{start_date}T00:00:00+00:00" if start_date else None
-                    ),
-                }
-            )
-        return jobs
+        raise ValueError("Workday must use incremental discovery")
 
     raise ValueError(f"Unsupported provider: {provider}")

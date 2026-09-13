@@ -24,6 +24,11 @@ Company Lens uses 1,500 employees as the default minimum. Smaller companies stay
 out unless they are explicitly marked `EXCEPTION_HIGH_FIT`. Data Science and
 Applied/AI Scientist hiring are equally important screening signals.
 
+Workday polling uses three discovery searches, five bounded network workers, and
+the listing `externalPath` as a persistent ID. Full job descriptions are fetched
+only for newly discovered postings; the first poll stores a baseline without
+downloading historical descriptions.
+
 ## Run
 
 Python 3.11+ is enough. There are no third-party dependencies.

@@ -35,6 +35,7 @@ def init_schema(connection: sqlite3.Connection) -> None:
             id INTEGER PRIMARY KEY,
             company_id INTEGER NOT NULL REFERENCES companies(id),
             requisition_id TEXT NOT NULL,
+            source_listing_id TEXT,
             title TEXT NOT NULL,
             location TEXT NOT NULL,
             official_url TEXT NOT NULL,
@@ -120,6 +121,15 @@ def init_schema(connection: sqlite3.Connection) -> None:
     for name, definition in additions.items():
         if name not in columns:
             connection.execute(f"ALTER TABLE evaluations ADD COLUMN {name} {definition}")
+    job_columns = {
+        row[1] for row in connection.execute("PRAGMA table_info(jobs)").fetchall()
+    }
+    if "source_listing_id" not in job_columns:
+        connection.execute("ALTER TABLE jobs ADD COLUMN source_listing_id TEXT")
+    connection.execute(
+        "CREATE UNIQUE INDEX IF NOT EXISTS jobs_source_listing "
+        "ON jobs(company_id, source_listing_id) WHERE source_listing_id IS NOT NULL"
+    )
     connection.commit()
 
 
@@ -152,6 +162,7 @@ def upsert_jobs(
     company_name: str,
     jobs: list[dict],
     baseline: bool,
+    close_missing: bool = True,
 ) -> tuple[int, int]:
     company = connection.execute(
         "SELECT id FROM companies WHERE name = ?", (company_name,)
@@ -178,14 +189,15 @@ def upsert_jobs(
             cursor = connection.execute(
                 """
                 INSERT INTO jobs(
-                    company_id, requisition_id, title, location, official_url,
+                    company_id, requisition_id, source_listing_id, title, location, official_url,
                     description, official_created_at, first_seen_at, last_seen_at,
                     status, content_hash, notified_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'OPEN', ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'OPEN', ?, ?)
                 """,
                 (
                     company_id,
                     requisition_id,
+                    job.get("source_listing_id"),
                     job["title"],
                     job.get("location", ""),
                     job["official_url"],
@@ -205,11 +217,12 @@ def upsert_jobs(
                 changed += 1
             connection.execute(
                 """
-                UPDATE jobs SET title=?, location=?, official_url=?, description=?,
+                UPDATE jobs SET source_listing_id=?, title=?, location=?, official_url=?, description=?,
                     official_created_at=?, last_seen_at=?, status='OPEN', content_hash=?
                 WHERE id=?
                 """,
                 (
+                    job.get("source_listing_id"),
                     job["title"],
                     job.get("location", ""),
                     job["official_url"],
@@ -230,7 +243,7 @@ def upsert_jobs(
                 (job_id, now, content_hash, payload),
             )
 
-    if seen_ids:
+    if seen_ids and close_missing:
         placeholders = ",".join("?" for _ in seen_ids)
         connection.execute(
             f"UPDATE jobs SET status='CLOSED' WHERE company_id=? AND requisition_id NOT IN ({placeholders})",
@@ -238,6 +251,69 @@ def upsert_jobs(
         )
     connection.commit()
     return created, changed
+
+
+def reconcile_workday_discovery(
+    connection: sqlite3.Connection, company_name: str, listings: list[dict]
+) -> list[dict]:
+    company = connection.execute(
+        "SELECT id FROM companies WHERE name=?", (company_name,)
+    ).fetchone()
+    company_id = company["id"]
+    existing = connection.execute(
+        "SELECT id, requisition_id, source_listing_id, official_url FROM jobs "
+        "WHERE company_id=?",
+        (company_id,),
+    ).fetchall()
+    by_listing_id = {
+        row["source_listing_id"]: row
+        for row in existing
+        if row["source_listing_id"] is not None
+    }
+    now = utc_now()
+    new_listings = []
+    seen_ids = []
+
+    for listing in listings:
+        listing_id = listing["source_listing_id"]
+        seen_ids.append(listing_id)
+        row = by_listing_id.get(listing_id)
+        if row is None:
+            row = next(
+                (
+                    candidate
+                    for candidate in existing
+                    if candidate["official_url"].endswith(listing_id)
+                    or candidate["requisition_id"] in listing_id
+                ),
+                None,
+            )
+        if row is None:
+            new_listings.append(listing)
+            continue
+        connection.execute(
+            "UPDATE jobs SET source_listing_id=?, title=?, location=?, official_url=?, "
+            "last_seen_at=?, status='OPEN' WHERE id=?",
+            (
+                listing_id,
+                listing["title"],
+                listing.get("location", ""),
+                listing["official_url"],
+                now,
+                row["id"],
+            ),
+        )
+
+    if seen_ids:
+        placeholders = ",".join("?" for _ in seen_ids)
+        connection.execute(
+            f"UPDATE jobs SET status='CLOSED' WHERE company_id=? "
+            f"AND source_listing_id IS NOT NULL "
+            f"AND source_listing_id NOT IN ({placeholders})",
+            (company_id, *seen_ids),
+        )
+    connection.commit()
+    return new_listings
 
 
 def record_poll(
