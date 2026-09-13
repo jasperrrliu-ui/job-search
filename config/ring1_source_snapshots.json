@@ -1,0 +1,66 @@
+{
+  "captured_on": "2026-09-13",
+  "sources": [
+    {
+      "name": "TrueUp AI 50",
+      "url": "https://www.trueup.io/ai50/companies",
+      "scope": "all 50 companies",
+      "companies": [
+        "AMI Labs", "Anduril", "Anthropic", "Applied Compute", "Axiom Math",
+        "Black Forest Labs", "Cognition", "Crusoe", "Decart", "DeepSeek",
+        "ElevenLabs", "Figure", "Fireworks", "Flourish", "General Intuition",
+        "Generalist", "Hark", "Harvey", "Helsing", "Higgsfield AI", "humans&",
+        "Ineffable Intelligence", "Lila Sciences", "Lovable", "Mercor", "MetaX",
+        "Mistral AI", "Moonshot AI", "Nexthop AI", "OpenAI", "OpenEvidence",
+        "Periodic Labs", "Perplexity", "Physical Intelligence", "Positron",
+        "Project Prometheus", "Reflection AI", "Safe Superintelligence", "Sierra",
+        "Skild", "Starcloud", "Surge AI", "The Bot Company", "Thinking Machines Lab",
+        "Together AI", "Unconventional", "Upscale AI", "Wonderful", "World Labs", "Z.ai"
+      ]
+    },
+    {
+      "name": "TrueUp Hot 200 indexed snapshot",
+      "url": "https://www.trueup.io/hot/companies",
+      "scope": "top 50 visible in the public search index",
+      "companies": [
+        "Safe Superintelligence", "Erebor", "Discovery Loop", "Reflection AI",
+        "Periodic Labs", "Volta", "Cognition", "Anthropic", "General Intuition",
+        "Thinking Machines Lab", "Mistral AI", "DeepSeek", "Physical Intelligence",
+        "Ineffable Intelligence", "Mercor", "Unconventional", "Sierra", "humans&",
+        "Project Prometheus", "Thrive Holdings", "Ricursive", "Perplexity", "AMI Labs",
+        "Skild", "ElevenLabs", "Base", "Etched", "Applied Compute", "Genesis AI",
+        "Moonshot AI", "Lumilens", "Legora", "Fireworks", "Flourish", "Lila Sciences",
+        "Chai Discovery", "Harvey", "Nexthop AI", "Simile", "Upscale AI", "Eon",
+        "DayOne", "Wonderful", "OpenEvidence", "Pragmatik Labs", "Axiom Math", "OpenAI",
+        "Olix", "Together AI", "Valar Atomics"
+      ]
+    },
+    {
+      "name": "TrueUp Cloud and Infrastructure indexed snapshot",
+      "url": "https://www.trueup.io/cloud/companies",
+      "scope": "top 25 visible in the public search index",
+      "companies": [
+        "Unconventional", "Flourish", "Fireworks", "Nexthop AI", "Eon", "Upscale AI",
+        "DayOne", "Together AI", "MetaX", "Surge AI", "Starcloud", "Decart",
+        "Chainguard", "Dream Security", "Fal", "Supabase", "Baseten", "Inferact",
+        "TensorWave", "Liquid AI", "Modal Labs", "Databricks", "Prentis", "Arena",
+        "Parallel Web Systems"
+      ]
+    },
+    {
+      "name": "Forbes Cloud 100 2025 indexed snapshot",
+      "url": "https://www.forbes.com/cloud100/",
+      "scope": "first 50 companies embedded in the public page",
+      "companies": [
+        "OpenAI", "Anthropic", "Stripe", "Databricks", "Canva", "Ramp", "Navan",
+        "Anysphere", "Deel", "Notion", "Grammarly", "Celonis", "Grafana Labs",
+        "Netskope", "Gusto", "Rippling", "Tanium", "Miro", "Abnormal AI", "Attentive",
+        "Cohesity", "Arctic Wolf", "Flock Safety", "VAST Data", "AlphaSense", "Perplexity",
+        "Checkr", "OneTrust", "Plaid", "Talkdesk", "Carta", "Postman", "Zoho", "Airtable",
+        "Dataiku", "Fivetran", "Cribl", "Dialpad", "1Password", "Checkout.com",
+        "Automation Anywhere", "Motive", "Vercel", "Glean", "Airwallex", "Clio",
+        "NinjaOne", "Zapier", "Lambda", "Brex"
+      ]
+    }
+  ]
+}

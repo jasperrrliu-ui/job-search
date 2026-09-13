@@ -14,8 +14,11 @@ history in SQLite, applies editable domain rules, and renders a daily digest.
 
 The active registry currently polls 209 verified ATS sources. New companies are
 silently baselined on their first successful poll, so their historical openings
-are not misreported as newly posted jobs. A separate 503-company S&P 500
-candidate pool is retained for Company Lens screening and future adapter work.
+are not misreported as newly posted jobs. A separate 1,586-company multi-source
+Ring 1 pool is retained for Company Lens screening and future adapter work. It
+combines the S&P 500, Lenny 100, a current unicorn database, AI/cloud rankings,
+and the existing registry; candidate entries do not increase scheduled polling
+cost.
 
 Company Lens uses 1,500 employees as the default minimum. Smaller companies stay
 out unless they are explicitly marked `EXCEPTION_HIGH_FIT`. Data Science and
