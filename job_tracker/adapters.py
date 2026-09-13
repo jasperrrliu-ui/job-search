@@ -16,6 +16,16 @@ def _get_json(url: str) -> dict | list:
         return json.load(response)
 
 
+def _post_json(url: str, payload: dict) -> dict:
+    request = urllib.request.Request(
+        url,
+        data=json.dumps(payload).encode(),
+        headers={"Content-Type": "application/json", "User-Agent": USER_AGENT},
+    )
+    with urllib.request.urlopen(request, timeout=30) as response:
+        return json.load(response)
+
+
 def _get_text(url: str) -> str:
     request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     with urllib.request.urlopen(request, timeout=30) as response:
@@ -34,10 +44,20 @@ def _iso_from_millis(value: int | None) -> str | None:
     return datetime.fromtimestamp(value / 1000, tz=timezone.utc).isoformat()
 
 
-def fetch_jobs(company: dict) -> list[dict]:
+def _target_title(title: str, title_rules: dict | None) -> bool:
+    if not title_rules:
+        return True
+    lowered = title.lower()
+    families = title_rules["primary_title_families"] | title_rules[
+        "secondary_title_families"
+    ]
+    return any(term in lowered for terms in families.values() for term in terms)
+
+
+def fetch_jobs(company: dict, title_rules: dict | None = None) -> list[dict]:
     source = company["source"]
     provider = source["provider"].lower()
-    token = source["token"]
+    token = source.get("token")
 
     if provider == "greenhouse":
         payload = _get_json(
@@ -107,5 +127,68 @@ def fetch_jobs(company: dict) -> list[dict]:
             }
             for job in payload
         ]
+
+    if provider == "workday":
+        host = source["host"]
+        tenant = source["tenant"]
+        site = source["site"]
+        list_url = f"https://{host}/wday/cxs/{tenant}/{site}/jobs"
+        search_terms = [
+            "data scientist",
+            "data science",
+            "applied scientist",
+            "quantitative scientist",
+            "machine learning",
+            "artificial intelligence",
+            "ai engineer",
+            "model evaluation",
+        ]
+        postings = {}
+        for search_text in search_terms:
+            offset = 0
+            while True:
+                payload = _post_json(
+                    list_url,
+                    {
+                        "appliedFacets": {},
+                        "limit": 20,
+                        "offset": offset,
+                        "searchText": search_text,
+                    },
+                )
+                page = payload["jobPostings"]
+                for posting in page:
+                    if _target_title(posting["title"], title_rules):
+                        postings[posting["externalPath"]] = posting
+                offset += len(page)
+                if offset >= payload["total"] or not page:
+                    break
+
+        jobs = []
+        for external_path, posting in postings.items():
+            detail = _get_json(
+                f"https://{host}/wday/cxs/{tenant}/{site}{external_path}"
+            )["jobPostingInfo"]
+            description = _plain_text(detail.get("jobDescription"))
+            if detail.get("timeType"):
+                description = f"Employment type: {detail['timeType']}. {description}"
+            start_date = detail.get("startDate")
+            jobs.append(
+                {
+                    "requisition_id": str(
+                        detail.get("jobReqId") or detail.get("id") or external_path
+                    ),
+                    "title": detail.get("title") or posting["title"],
+                    "location": detail.get("location")
+                    or posting.get("locationsText", ""),
+                    "official_url": detail.get("externalUrl")
+                    or f"https://{host}/{site}{external_path}",
+                    "description": description,
+                    "official_created_at": (
+                        f"{start_date}T00:00:00+00:00" if start_date else None
+                    ),
+                }
+            )
+        return jobs
 
     raise ValueError(f"Unsupported provider: {provider}")

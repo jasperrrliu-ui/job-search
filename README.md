@@ -5,14 +5,14 @@ history in SQLite, applies editable domain rules, and renders a daily digest.
 
 ## Current scope
 
-- Providers: Greenhouse API, Greenhouse board HTML, Ashby, Lever
+- Providers: Greenhouse API, Greenhouse board HTML, Ashby, Lever, Workday
 - Storage: local SQLite (`data/jobs.db`)
 - Evaluation: deterministic hard eligibility, parsed degree/YOE pathways, and
   separate direction/capability/resume/trajectory fit dimensions
 - Delivery: text digest preview; real email and cloud scheduling come after the
   local flow is validated
 
-The active registry currently polls 140 verified ATS sources. New companies are
+The active registry currently polls 209 verified ATS sources. New companies are
 silently baselined on their first successful poll, so their historical openings
 are not misreported as newly posted jobs. A separate 503-company S&P 500
 candidate pool is retained for Company Lens screening and future adapter work.

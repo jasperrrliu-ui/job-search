@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-12-v4",
+  "version": "2026-09-12-v5",
   "knowledge_status": "candidate-profile-v0.1",
   "search_scope": {
     "country": "US",
@@ -72,6 +72,7 @@
     "primary_title_families": {
       "DATA_SCIENCE": [
         "data scientist",
+        "data science",
         "applied data scientist",
         "decision scientist",
         "health data scientist",
@@ -83,6 +84,7 @@
         "artificial intelligence scientist",
         "applied ai scientist",
         "machine learning scientist",
+        "ml scientist",
         "applied scientist"
       ],
       "AI_MODEL_EVALUATION": [

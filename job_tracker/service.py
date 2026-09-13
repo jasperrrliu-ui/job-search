@@ -31,7 +31,7 @@ def poll_all(
             continue
         started_at = utc_now()
         try:
-            jobs = fetch_jobs(company)
+            jobs = fetch_jobs(company, domain["candidate_generation"])
             has_successful_poll = connection.execute(
                 """
                 SELECT 1 FROM poll_runs
