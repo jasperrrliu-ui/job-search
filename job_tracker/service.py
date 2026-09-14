@@ -311,6 +311,7 @@ def build_digest(
     rows = connection.execute(
         f"""
         SELECT jobs.id, jobs.title, jobs.location, jobs.official_url,
+               jobs.official_created_at, jobs.official_updated_at,
                jobs.first_seen_at, companies.name AS company,
                evaluations.decision, evaluations.eligibility,
                evaluations.role_archetype, evaluations.career_direction_fit,
@@ -338,6 +339,9 @@ def build_digest(
     ids = []
     for index, row in enumerate(rows, start=1):
         ids.append(row["id"])
+        source_event = (
+            "NEWLY_POSTED" if row["official_created_at"] else "NEWLY_DISCOVERED"
+        )
         lines.extend(
             [
                 f"{index}. {row['title']} — {row['company']}",
@@ -350,6 +354,9 @@ def build_digest(
                 f"{row['resume_signal_fit']} / {row['trajectory_fit']}",
                 f"Reason: {row['reasoning']}",
                 f"Uncertainty: {row['uncertainty'] or 'None recorded'}",
+                f"Source event: {source_event}",
+                f"Posted: {row['official_created_at'] or 'UNKNOWN'}",
+                f"Updated: {row['official_updated_at'] or 'UNKNOWN'}",
                 f"First seen: {row['first_seen_at']}",
                 f"URL: {row['official_url']}",
                 "",

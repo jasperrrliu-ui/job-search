@@ -41,6 +41,7 @@ def init_schema(connection: sqlite3.Connection) -> None:
             official_url TEXT NOT NULL,
             description TEXT NOT NULL,
             official_created_at TEXT,
+            official_updated_at TEXT,
             first_seen_at TEXT NOT NULL,
             last_seen_at TEXT NOT NULL,
             status TEXT NOT NULL,
@@ -126,6 +127,8 @@ def init_schema(connection: sqlite3.Connection) -> None:
     }
     if "source_listing_id" not in job_columns:
         connection.execute("ALTER TABLE jobs ADD COLUMN source_listing_id TEXT")
+    if "official_updated_at" not in job_columns:
+        connection.execute("ALTER TABLE jobs ADD COLUMN official_updated_at TEXT")
     connection.execute(
         "CREATE UNIQUE INDEX IF NOT EXISTS jobs_source_listing "
         "ON jobs(company_id, source_listing_id) WHERE source_listing_id IS NOT NULL"
@@ -190,9 +193,10 @@ def upsert_jobs(
                 """
                 INSERT INTO jobs(
                     company_id, requisition_id, source_listing_id, title, location, official_url,
-                    description, official_created_at, first_seen_at, last_seen_at,
+                    description, official_created_at, official_updated_at,
+                    first_seen_at, last_seen_at,
                     status, content_hash, notified_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'OPEN', ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'OPEN', ?, ?)
                 """,
                 (
                     company_id,
@@ -203,6 +207,7 @@ def upsert_jobs(
                     job["official_url"],
                     job.get("description", ""),
                     job.get("official_created_at"),
+                    job.get("official_updated_at"),
                     now,
                     now,
                     content_hash,
@@ -218,7 +223,8 @@ def upsert_jobs(
             connection.execute(
                 """
                 UPDATE jobs SET source_listing_id=?, title=?, location=?, official_url=?, description=?,
-                    official_created_at=?, last_seen_at=?, status='OPEN', content_hash=?
+                    official_created_at=?, official_updated_at=?, last_seen_at=?,
+                    status='OPEN', content_hash=?
                 WHERE id=?
                 """,
                 (
@@ -228,6 +234,7 @@ def upsert_jobs(
                     job["official_url"],
                     job.get("description", ""),
                     job.get("official_created_at"),
+                    job.get("official_updated_at"),
                     now,
                     content_hash,
                     job_id,

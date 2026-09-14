@@ -51,7 +51,8 @@ jobs:
           rows = connection.execute(
               """
               SELECT jobs.title, jobs.location, jobs.official_url,
-                     jobs.official_created_at, companies.name AS company,
+                     jobs.official_created_at, jobs.official_updated_at,
+                     jobs.first_seen_at, companies.name AS company,
                      evaluations.decision, evaluations.score
               FROM jobs
               JOIN companies ON companies.id = jobs.company_id
@@ -59,30 +60,34 @@ jobs:
                   SELECT id FROM evaluations e
                   WHERE e.job_id = jobs.id ORDER BY id DESC LIMIT 1
               )
-              WHERE jobs.status='OPEN' AND jobs.official_created_at IS NOT NULL
+              WHERE jobs.status='OPEN'
+                AND (jobs.official_created_at IS NOT NULL
+                     OR jobs.official_updated_at IS NOT NULL)
               """
           ).fetchall()
 
           grouped = {day: [] for day in days}
           for row in rows:
-              timestamp = datetime.fromisoformat(
-                  row["official_created_at"].replace("Z", "+00:00")
+              source_event = (
+                  "NEWLY_POSTED" if row["official_created_at"] else "UPDATED"
               )
+              source_time = row["official_created_at"] or row["official_updated_at"]
+              timestamp = datetime.fromisoformat(source_time.replace("Z", "+00:00"))
               day = timestamp.astimezone(eastern).date().isoformat()
               if day in grouped:
-                  grouped[day].append(row)
+                  grouped[day].append((row, source_event))
 
           for day in days:
               postings = grouped[day]
               jobs = sorted(
                   [
-                      row for row in postings
+                      (row, source_event) for row, source_event in postings
                       if row["decision"] in ("APPLY_TODAY", "REVIEW")
                   ],
-                  key=lambda row: (
-                      -row["score"],
-                      row["company"].lower(),
-                      row["title"].lower(),
+                  key=lambda item: (
+                      -item[0]["score"],
+                      item[0]["company"].lower(),
+                      item[0]["title"].lower(),
                   ),
               )
               matches = len(jobs)
@@ -90,15 +95,20 @@ jobs:
                   f"{day}: {len(postings)} postings",
                   f"Current DS / AI Scientist matches: {matches}",
                   "",
-                  "Greenhouse dates may represent a posting update rather than its original publication.",
+                  "NEWLY_POSTED uses an ATS publication timestamp; UPDATED uses an ATS update timestamp.",
+                  "NEWLY_DISCOVERED is reserved for live digests when no reliable ATS publication timestamp exists.",
                   "Only APPLY_TODAY and REVIEW jobs are listed below.",
                   "",
               ]
-              for index, row in enumerate(jobs, start=1):
+              for index, (row, source_event) in enumerate(jobs, start=1):
                   lines.extend(
                       [
                           f"{index}. {row['title']} — {row['company']}",
                           f"Location: {row['location'] or 'Not listed'}",
+                          f"Source event: {source_event}",
+                          f"Posted: {row['official_created_at'] or 'UNKNOWN'}",
+                          f"Updated: {row['official_updated_at'] or 'UNKNOWN'}",
+                          f"First seen: {row['first_seen_at']}",
                           f"URL: {row['official_url']}",
                           "",
                       ]

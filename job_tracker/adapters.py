@@ -110,6 +110,7 @@ def workday_listing_job(company: dict, posting: dict) -> dict:
         "official_url": f"https://{source['host']}/{source['site']}{external_path}",
         "description": "",
         "official_created_at": None,
+        "official_updated_at": None,
     }
 
 
@@ -144,6 +145,7 @@ def enrich_workday_jobs(company: dict, postings: list[dict]) -> list[dict]:
                 "official_created_at": (
                     f"{start_date}T00:00:00+00:00" if start_date else None
                 ),
+                "official_updated_at": None,
             }
         )
     return jobs
@@ -165,7 +167,8 @@ def fetch_jobs(company: dict, title_rules: dict | None = None) -> list[dict]:
                 "location": (job.get("location") or {}).get("name", ""),
                 "official_url": job["absolute_url"],
                 "description": _plain_text(job.get("content")),
-                "official_created_at": job.get("updated_at"),
+                "official_created_at": None,
+                "official_updated_at": job.get("updated_at"),
             }
             for job in payload["jobs"]
         ]
@@ -187,6 +190,7 @@ def fetch_jobs(company: dict, title_rules: dict | None = None) -> list[dict]:
                 "official_url": match.group("url"),
                 "description": "",
                 "official_created_at": None,
+                "official_updated_at": None,
             }
             for match in pattern.finditer(page)
         ]
@@ -203,6 +207,7 @@ def fetch_jobs(company: dict, title_rules: dict | None = None) -> list[dict]:
                     job.get("descriptionHtml") or job.get("descriptionPlain")
                 ),
                 "official_created_at": job.get("publishedAt"),
+                "official_updated_at": job.get("updatedAt"),
             }
             for job in payload["jobs"]
         ]
@@ -219,6 +224,7 @@ def fetch_jobs(company: dict, title_rules: dict | None = None) -> list[dict]:
                     job.get("descriptionPlain") or job.get("description")
                 ),
                 "official_created_at": _iso_from_millis(job.get("createdAt")),
+                "official_updated_at": _iso_from_millis(job.get("updatedAt")),
             }
             for job in payload
         ]
@@ -255,6 +261,7 @@ def fetch_jobs(company: dict, title_rules: dict | None = None) -> list[dict]:
                     "official_url": detail.get("postingUrl") or posting.get("ref"),
                     "description": _plain_text(description),
                     "official_created_at": posting.get("releasedDate"),
+                    "official_updated_at": None,
                 }
             )
         return jobs
