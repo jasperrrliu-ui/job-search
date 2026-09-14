@@ -223,6 +223,42 @@ def fetch_jobs(company: dict, title_rules: dict | None = None) -> list[dict]:
             for job in payload
         ]
 
+    if provider == "smartrecruiters":
+        postings = []
+        offset = 0
+        while True:
+            payload = _get_json(
+                f"https://api.smartrecruiters.com/v1/companies/{token}/postings"
+                f"?limit=100&offset={offset}"
+            )
+            postings.extend(payload["content"])
+            offset += len(payload["content"])
+            if offset >= payload["totalFound"] or not payload["content"]:
+                break
+        jobs = []
+        for posting in postings:
+            if not _target_title(posting["name"], title_rules):
+                continue
+            detail = _get_json(
+                f"https://api.smartrecruiters.com/v1/companies/{token}/postings/"
+                f"{posting['id']}"
+            )
+            sections = detail.get("jobAd", {}).get("sections", {})
+            description = " ".join(
+                section.get("text", "") for section in sections.values()
+            )
+            jobs.append(
+                {
+                    "requisition_id": str(posting["id"]),
+                    "title": posting["name"],
+                    "location": posting.get("location", {}).get("fullLocation", ""),
+                    "official_url": detail.get("postingUrl") or posting.get("ref"),
+                    "description": _plain_text(description),
+                    "official_created_at": posting.get("releasedDate"),
+                }
+            )
+        return jobs
+
     if provider == "workday":
         raise ValueError("Workday must use incremental discovery")
 

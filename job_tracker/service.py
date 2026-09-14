@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import sqlite3
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from .adapters import (
@@ -42,6 +43,25 @@ def has_successful_poll(
     )
 
 
+def company_is_due(connection: sqlite3.Connection, company: dict) -> bool:
+    interval = company.get("poll_interval_hours")
+    if not interval:
+        return True
+    row = connection.execute(
+        """
+        SELECT poll_runs.finished_at FROM poll_runs
+        JOIN companies ON companies.id = poll_runs.company_id
+        WHERE companies.name=? AND poll_runs.success=1
+        ORDER BY poll_runs.id DESC LIMIT 1
+        """,
+        (company["name"],),
+    ).fetchone()
+    if row is None:
+        return True
+    last_poll = datetime.fromisoformat(row["finished_at"])
+    return datetime.now(timezone.utc) - last_poll >= timedelta(hours=interval)
+
+
 def poll_all(
     connection: sqlite3.Connection,
     companies_path: Path,
@@ -59,6 +79,7 @@ def poll_all(
         company
         for company in companies
         if company.get("active", True) and company.get("source")
+        and company_is_due(connection, company)
     ]
     regular = [
         company

@@ -1,228 +1,4352 @@
 [
-  {"name": "Abridge", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "abridge"}},
-  {"name": "Anthropic", "priority": "neutral", "active": true, "source": {"provider": "greenhouse", "token": "anthropic"}},
-  {"name": "ClickHouse", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "clickhouse"}},
-  {"name": "Gamma", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "gamma"}},
-  {"name": "Linear", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "Linear"}},
-  {"name": "Airbnb", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "airbnb"}},
-  {"name": "Airwallex", "priority": "neutral", "active": true},
-  {"name": "Anduril", "priority": "neutral", "active": false, "source": {"provider": "greenhouse", "token": "andurilindustries"}},
-  {"name": "Applied Compute", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "Applied%20Compute"}},
-  {"name": "Applied Intuition", "priority": "neutral", "active": true},
-  {"name": "Base", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "base"}},
-  {"name": "Baseten", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "baseten"}},
-  {"name": "Basis", "priority": "neutral", "active": true, "source": {"provider": "lever", "token": "basis"}},
-  {"name": "Bedrock Robotics", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "bedrock-robotics"}},
-  {"name": "Black Forest Labs", "priority": "neutral", "active": true},
-  {"name": "Chai Discovery", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "chaidiscovery"}},
-  {"name": "Chainguard", "priority": "neutral", "active": true, "source": {"provider": "greenhouse", "token": "chainguard"}},
-  {"name": "Clay", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "claylabs"}},
-  {"name": "Cloudflare", "priority": "neutral", "active": true, "source": {"provider": "greenhouse", "token": "cloudflare"}},
-  {"name": "Cognition", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "cognition"}},
-  {"name": "CoreWeave", "priority": "neutral", "active": true, "source": {"provider": "greenhouse", "token": "coreweave"}},
-  {"name": "Crusoe", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "crusoe"}},
-  {"name": "Cursor", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "cursor"}},
-  {"name": "Cyera", "priority": "neutral", "active": true},
-  {"name": "Databricks", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "databricks"}},
-  {"name": "Decagon", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "decagon"}},
-  {"name": "Deel", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "deel"}},
-  {"name": "ElevenLabs", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "elevenlabs"}},
-  {"name": "Etched", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "etched"}},
-  {"name": "Exa", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "exa"}},
-  {"name": "Factory", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "factory"}},
-  {"name": "Fal", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "fal-ai"}},
-  {"name": "Figma", "priority": "neutral", "active": true, "source": {"provider": "greenhouse", "token": "figma"}},
-  {"name": "Figure", "priority": "neutral", "active": true, "source": {"provider": "greenhouse", "token": "figureai"}},
-  {"name": "Fireworks", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "fireworks"}},
-  {"name": "Genspark", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "genspark"}},
-  {"name": "Glean", "priority": "neutral", "active": true, "source": {"provider": "greenhouse", "token": "gleanwork"}},
-  {"name": "Google", "priority": "neutral", "active": true},
-  {"name": "Granola", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "granola"}},
-  {"name": "Handshake", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "handshake"}},
-  {"name": "Harvey", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "harvey"}},
-  {"name": "Helsing", "priority": "neutral", "active": true},
-  {"name": "Hex", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "hex"}},
-  {"name": "Kalshi", "priority": "neutral", "active": true, "source": {"provider": "greenhouse", "token": "kalshi"}},
-  {"name": "Lambda", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "lambda"}},
-  {"name": "LangChain", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "langchain"}},
-  {"name": "Legora", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "legora"}},
-  {"name": "Liquid AI", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "liquid-ai"}},
-  {"name": "Lovable", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "lovable"}},
-  {"name": "Mercor", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "mercor"}},
-  {"name": "Mercury", "priority": "neutral", "active": true, "source": {"provider": "greenhouse", "token": "mercury"}},
-  {"name": "Mistral AI", "priority": "neutral", "active": true, "source": {"provider": "lever", "token": "mistral"}},
-  {"name": "Modal", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "modal"}},
-  {"name": "n8n", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "n8n"}},
-  {"name": "Notion", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "notion"}},
-  {"name": "NVIDIA", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "NVIDIAExternalCareerSite", "host": "nvidia.wd5.myworkdayjobs.com", "tenant": "nvidia", "site": "NVIDIAExternalCareerSite"}},
-  {"name": "OpenAI", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "openai"}},
-  {"name": "OpenEvidence", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "openevidence"}},
-  {"name": "Palantir", "priority": "neutral", "active": true, "source": {"provider": "lever", "token": "palantir"}},
-  {"name": "Parallel Web Systems", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "parallel"}},
-  {"name": "Periodic Labs", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "periodic-labs"}},
-  {"name": "Perplexity", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "perplexity"}},
-  {"name": "Physical Intelligence", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "physicalintelligence"}},
-  {"name": "Pierre Computer", "priority": "neutral", "active": true},
-  {"name": "Polymarket", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "polymarket"}},
-  {"name": "PostHog", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "posthog"}},
-  {"name": "Prime Intellect", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "primeintellect"}},
-  {"name": "Profound", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "profound"}},
-  {"name": "Railway", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "railway"}},
-  {"name": "Ramp", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "ramp"}},
-  {"name": "Reflection AI", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "reflectionai"}},
-  {"name": "Replit", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "replit"}},
-  {"name": "Revolut", "priority": "neutral", "active": true},
-  {"name": "Ricursive", "priority": "neutral", "active": true},
-  {"name": "Rippling", "priority": "neutral", "active": true},
-  {"name": "Runway", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "runway"}},
-  {"name": "Safe Superintelligence", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "ssi"}},
-  {"name": "Saronic", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "saronic"}},
-  {"name": "Shield AI", "priority": "neutral", "active": true, "source": {"provider": "lever", "token": "shieldai"}},
-  {"name": "Shopify", "priority": "neutral", "active": true},
-  {"name": "Sierra", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "sierra"}},
-  {"name": "Skild", "priority": "neutral", "active": true, "source": {"provider": "greenhouse_html", "token": "skildai-careers"}},
-  {"name": "SpaceX", "priority": "neutral", "active": false, "source": {"provider": "greenhouse", "token": "spacex"}},
-  {"name": "Stripe", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "stripe"}},
-  {"name": "Sunday Robotics", "priority": "neutral", "active": true},
-  {"name": "Supabase", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "supabase"}},
-  {"name": "Surge AI", "priority": "neutral", "active": true},
-  {"name": "Temporal", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "temporal"}},
-  {"name": "Tesla", "priority": "neutral", "active": true},
-  {"name": "Thinking Machines", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "thinkingmachines"}},
-  {"name": "Together", "priority": "neutral", "active": true, "source": {"provider": "greenhouse", "token": "togetherai"}},
-  {"name": "Turbopuffer", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "turbopuffer"}},
-  {"name": "Valon", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "valon"}},
-  {"name": "Vanta", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "vanta"}},
-  {"name": "Vercel", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "vercel"}},
-  {"name": "Waymo", "priority": "neutral", "active": true, "source": {"provider": "greenhouse", "token": "waymo"}},
-  {"name": "Whatnot", "priority": "neutral", "active": true},
-  {"name": "Wispr Flow", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "wispr-flow"}},
-  {"name": "WorkOS", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "workos"}},
-  {"name": "World Labs", "priority": "neutral", "active": true, "source": {"provider": "ashby", "token": "worldlabs"}},
-  {"name": "Affirm", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "affirm"}},
-  {"name": "AppLovin", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "applovin"}},
-  {"name": "Asana", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "asana"}},
-  {"name": "Axon Enterprise", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "axon"}},
-  {"name": "Baxter International", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "bax"}},
-  {"name": "Block", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "block"}},
-  {"name": "Braze", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "braze"}},
-  {"name": "Carvana", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "carvana"}},
-  {"name": "Chime", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "chime"}},
-  {"name": "Coinbase", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "coinbase"}},
-  {"name": "CoStar Group", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "costar"}},
-  {"name": "Datadog", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "datadog"}},
-  {"name": "DoorDash", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "doordashusa"}},
-  {"name": "Dropbox", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "dropbox"}},
-  {"name": "Edison International", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "edison"}},
-  {"name": "Elastic", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "elastic"}},
-  {"name": "Epic Games", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "epicgames"}},
-  {"name": "Essex Property Trust", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "ess"}},
-  {"name": "FactSet", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "fds"}},
-  {"name": "Flexport", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "flexport"}},
-  {"name": "Fox Corporation", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "fox"}},
-  {"name": "GitLab", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "gitlab"}},
-  {"name": "GoDaddy", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "godaddy"}},
-  {"name": "Hasbro", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "hasbro"}},
-  {"name": "HubSpot", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "hubspotjobs"}},
-  {"name": "IDEX Corporation", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "iex"}},
-  {"name": "IMC", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "imc"}},
-  {"name": "Instacart", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "instacart"}},
-  {"name": "Jane Street", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "janestreet"}},
-  {"name": "Klaviyo", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "klaviyo"}},
-  {"name": "Lucid Motors", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "lucidmotors"}},
-  {"name": "Lyft", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "lyft"}},
-  {"name": "MongoDB", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "mongodb"}},
-  {"name": "Mosaic Company", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "mos"}},
-  {"name": "Natera", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "natera"}},
-  {"name": "New Relic", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "newrelic"}},
-  {"name": "Okta", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "okta"}},
-  {"name": "Oscar Health", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "oscar"}},
-  {"name": "Peloton", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "peloton"}},
-  {"name": "Pinterest", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "pinterest"}},
-  {"name": "Qualtrics", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "qualtrics"}},
-  {"name": "Reddit", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "reddit"}},
-  {"name": "Robinhood", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "robinhood"}},
-  {"name": "Roblox", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "roblox"}},
-  {"name": "Roku", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "roku"}},
-  {"name": "Rubrik", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "rubrik"}},
-  {"name": "Samsara", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "samsara"}},
-  {"name": "Scale AI", "priority": "neutral", "active": true, "company_screening": "EXCEPTION_HIGH_FIT", "source": {"provider": "greenhouse", "token": "scaleai"}},
-  {"name": "SoFi", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "sofi"}},
-  {"name": "Squarespace", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "squarespace"}},
-  {"name": "Toast", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "toast"}},
-  {"name": "TransDigm Group", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "tdg"}},
-  {"name": "Tripadvisor", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "tripadvisor"}},
-  {"name": "Twilio", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "twilio"}},
-  {"name": "Veeva Systems", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "lever", "token": "veeva"}},
-  {"name": "Verkada", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "verkada"}},
-  {"name": "Zoox", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "lever", "token": "zoox"}},
-  {"name": "Zscaler", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "greenhouse", "token": "zscaler"}},
-  {"name": "3M", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "Search", "host": "3m.wd1.myworkdayjobs.com", "tenant": "3m", "site": "Search"}},
-  {"name": "Abbott Laboratories", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "abbottcareers", "host": "abbott.wd5.myworkdayjobs.com", "tenant": "abbott", "site": "abbottcareers"}},
-  {"name": "Accenture", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "AccentureCareers", "host": "accenture.wd103.myworkdayjobs.com", "tenant": "accenture", "site": "AccentureCareers"}},
-  {"name": "AES Corporation", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "AES_US", "host": "aes.wd1.myworkdayjobs.com", "tenant": "aes", "site": "AES_US"}},
-  {"name": "Agilent Technologies", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "Agilent_Careers", "host": "agilent.wd5.myworkdayjobs.com", "tenant": "agilent", "site": "Agilent_Careers"}},
-  {"name": "Air Products", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "AP0001", "host": "airproducts.wd5.myworkdayjobs.com", "tenant": "airproducts", "site": "AP0001"}},
-  {"name": "Allegion", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "careers", "host": "allegion.wd5.myworkdayjobs.com", "tenant": "allegion", "site": "careers"}},
-  {"name": "Alliant Energy", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "alliant", "host": "alliantenergy.wd1.myworkdayjobs.com", "tenant": "alliantenergy", "site": "alliant"}},
-  {"name": "Allstate", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "allstate_careers", "host": "allstate.wd5.myworkdayjobs.com", "tenant": "allstate", "site": "allstate_careers"}},
-  {"name": "Amgen", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "Careers", "host": "amgen.wd1.myworkdayjobs.com", "tenant": "amgen", "site": "Careers"}},
-  {"name": "Apollo Global Management", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "Apollo_Careers", "host": "athene.wd5.myworkdayjobs.com", "tenant": "athene", "site": "Apollo_Careers"}},
-  {"name": "AT&T", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "ATTGeneral", "host": "att.wd1.myworkdayjobs.com", "tenant": "att", "site": "ATTGeneral"}},
-  {"name": "Bank of America", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "lateral-us", "host": "ghr.wd1.myworkdayjobs.com", "tenant": "ghr", "site": "lateral-us"}},
-  {"name": "Biogen", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "external", "host": "biibhr.wd3.myworkdayjobs.com", "tenant": "biibhr", "site": "external"}},
-  {"name": "Boeing", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "EXTERNAL_CAREERS", "host": "boeing.wd1.myworkdayjobs.com", "tenant": "boeing", "site": "EXTERNAL_CAREERS"}},
-  {"name": "Bristol Myers Squibb", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "BMS", "host": "bristolmyerssquibb.wd5.myworkdayjobs.com", "tenant": "bristolmyerssquibb", "site": "BMS"}},
-  {"name": "Brown & Brown", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "Careers", "host": "bbinsurance.wd1.myworkdayjobs.com", "tenant": "bbinsurance", "site": "Careers"}},
-  {"name": "Brown-Forman", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "USA_Canada", "host": "bf.wd5.myworkdayjobs.com", "tenant": "bf", "site": "USA_Canada"}},
-  {"name": "C.H. Robinson", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "CHRobinson", "host": "chrobinson.wd5.myworkdayjobs.com", "tenant": "chrobinson", "site": "CHRobinson"}},
-  {"name": "Church & Dwight", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "chdcareers", "host": "churchdwight.wd1.myworkdayjobs.com", "tenant": "churchdwight", "site": "chdcareers"}},
-  {"name": "Cigna", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "cignacareers", "host": "cigna.wd5.myworkdayjobs.com", "tenant": "cigna", "site": "cignacareers"}},
-  {"name": "Comcast", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "Comcast_Careers", "host": "comcast.wd115.myworkdayjobs.com", "tenant": "comcast", "site": "Comcast_Careers"}},
-  {"name": "Comfort Systems USA", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "Corpcareers", "host": "comfortsystemsusa.wd1.myworkdayjobs.com", "tenant": "comfortsystemsusa", "site": "Corpcareers"}},
-  {"name": "ConocoPhillips", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "External", "host": "conocophillips.wd1.myworkdayjobs.com", "tenant": "conocophillips", "site": "External"}},
-  {"name": "Constellation Brands", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "CBI_External_Careers", "host": "cbrands.wd5.myworkdayjobs.com", "tenant": "cbrands", "site": "CBI_External_Careers"}},
-  {"name": "CrowdStrike", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "crowdstrikecareers", "host": "crowdstrike.wd5.myworkdayjobs.com", "tenant": "crowdstrike", "site": "crowdstrikecareers"}},
-  {"name": "Edwards Lifesciences", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "EdwardsCareers", "host": "edwards.wd5.myworkdayjobs.com", "tenant": "edwards", "site": "EdwardsCareers"}},
-  {"name": "Elevance Health", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "ANT", "host": "elevancehealth.wd1.myworkdayjobs.com", "tenant": "elevancehealth", "site": "ANT"}},
-  {"name": "Extra Space Storage", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "ESS_External", "host": "extraspace.wd5.myworkdayjobs.com", "tenant": "extraspace", "site": "ESS_External"}},
-  {"name": "F5", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "f5jobs", "host": "ffive.wd5.myworkdayjobs.com", "tenant": "ffive", "site": "f5jobs"}},
-  {"name": "GE Vernova", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "Vernova_ExternalSite", "host": "gevernova.wd5.myworkdayjobs.com", "tenant": "gevernova", "site": "Vernova_ExternalSite"}},
-  {"name": "General Mills", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "GMI_External_Careers", "host": "genmills.wd1.myworkdayjobs.com", "tenant": "genmills", "site": "GMI_External_Careers"}},
-  {"name": "Gilead Sciences", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "gileadcareers", "host": "gilead.wd1.myworkdayjobs.com", "tenant": "gilead", "site": "gileadcareers"}},
-  {"name": "Invitation Homes", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "INVH", "host": "invitationhomes.wd503.myworkdayjobs.com", "tenant": "invitationhomes", "site": "INVH"}},
-  {"name": "IQVIA", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "IQVIA", "host": "iqvia.wd1.myworkdayjobs.com", "tenant": "iqvia", "site": "IQVIA"}},
-  {"name": "J.B. Hunt", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "Careers", "host": "jbhunt.wd501.myworkdayjobs.com", "tenant": "jbhunt", "site": "Careers"}},
-  {"name": "Jabil", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "Jabil_Careers", "host": "jabil.wd5.myworkdayjobs.com", "tenant": "jabil", "site": "Jabil_Careers"}},
-  {"name": "Johnson Controls", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "JCI", "host": "jci.wd5.myworkdayjobs.com", "tenant": "jci", "site": "JCI"}},
-  {"name": "Kenvue", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "kenvue", "host": "kenvue.wd5.myworkdayjobs.com", "tenant": "kenvue", "site": "kenvue"}},
-  {"name": "KLA", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "Search", "host": "kla.wd1.myworkdayjobs.com", "tenant": "kla", "site": "Search"}},
-  {"name": "Live Nation Entertainment", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "LNExternalSite", "host": "livenation.wd503.myworkdayjobs.com", "tenant": "livenation", "site": "LNExternalSite"}},
-  {"name": "Lumentum", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "LITE", "host": "lumentum.wd5.myworkdayjobs.com", "tenant": "lumentum", "site": "LITE"}},
-  {"name": "M&T Bank", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "MTB", "host": "mtb.wd5.myworkdayjobs.com", "tenant": "mtb", "site": "MTB"}},
-  {"name": "Mastercard", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "CorporateCareers", "host": "mastercard.wd1.myworkdayjobs.com", "tenant": "mastercard", "site": "CorporateCareers"}},
-  {"name": "Merck", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "SearchJobs", "host": "msd.wd5.myworkdayjobs.com", "tenant": "msd", "site": "SearchJobs"}},
-  {"name": "Moderna", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "M_tx", "host": "modernatx.wd1.myworkdayjobs.com", "tenant": "modernatx", "site": "M_tx"}},
-  {"name": "Nasdaq", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "Global_External_Site", "host": "nasdaq.wd1.myworkdayjobs.com", "tenant": "nasdaq", "site": "Global_External_Site"}},
-  {"name": "Nike", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "nke", "host": "nike.wd1.myworkdayjobs.com", "tenant": "nike", "site": "nke"}},
-  {"name": "NiSource", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "NiSource", "host": "nisource.wd1.myworkdayjobs.com", "tenant": "nisource", "site": "NiSource"}},
-  {"name": "Northern Trust", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "northerntrust", "host": "ntrs.wd1.myworkdayjobs.com", "tenant": "ntrs", "site": "northerntrust"}},
-  {"name": "ONEOK", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "ONEOK", "host": "oneok.wd1.myworkdayjobs.com", "tenant": "oneok", "site": "ONEOK"}},
-  {"name": "Palo Alto Networks", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "panwexternalcareers", "host": "paloaltonetworks.wd5.myworkdayjobs.com", "tenant": "paloaltonetworks", "site": "panwexternalcareers"}},
-  {"name": "PTC", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "PTC", "host": "ptc.wd1.myworkdayjobs.com", "tenant": "ptc", "site": "PTC"}},
-  {"name": "ResMed", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "ResMed_External_Careers", "host": "resmed.wd3.myworkdayjobs.com", "tenant": "resmed", "site": "ResMed_External_Careers"}},
-  {"name": "Rockwell Automation", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "External_Rockwell_Automation", "host": "rockwellautomation.wd1.myworkdayjobs.com", "tenant": "rockwellautomation", "site": "External_Rockwell_Automation"}},
-  {"name": "S&P Global", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "SPGI_Careers", "host": "spgi.wd5.myworkdayjobs.com", "tenant": "spgi", "site": "SPGI_Careers"}},
-  {"name": "Simon Property Group", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "Simon", "host": "simon.wd1.myworkdayjobs.com", "tenant": "simon", "site": "Simon"}},
-  {"name": "Stryker", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "StrykerCareers", "host": "stryker.wd1.myworkdayjobs.com", "tenant": "stryker", "site": "StrykerCareers"}},
-  {"name": "T. Rowe Price", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "TRowePrice", "host": "troweprice.wd5.myworkdayjobs.com", "tenant": "troweprice", "site": "TRowePrice"}},
-  {"name": "Tapestry", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "Tapestry_Careers", "host": "tapestry.wd108.myworkdayjobs.com", "tenant": "tapestry", "site": "Tapestry_Careers"}},
-  {"name": "Target", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "targetcareers", "host": "target.wd5.myworkdayjobs.com", "tenant": "target", "site": "targetcareers"}},
-  {"name": "United Rentals", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "URcareers", "host": "ur.wd1.myworkdayjobs.com", "tenant": "ur", "site": "URcareers"}},
-  {"name": "Visa", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "Visa", "host": "visa.wd5.myworkdayjobs.com", "tenant": "visa", "site": "Visa"}},
-  {"name": "Viatris", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "External", "host": "viatris.wd5.myworkdayjobs.com", "tenant": "viatris", "site": "External"}},
-  {"name": "Workday", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "Workday", "host": "workday.wd5.myworkdayjobs.com", "tenant": "workday", "site": "Workday"}},
-  {"name": "Xcel Energy", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "External", "host": "xcelenergy.wd1.myworkdayjobs.com", "tenant": "xcelenergy", "site": "External"}},
-  {"name": "Xylem", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "xylem-careers", "host": "xylem.wd5.myworkdayjobs.com", "tenant": "xylem", "site": "xylem-careers"}},
-  {"name": "Zebra Technologies", "priority": "neutral", "active": true, "company_screening": "PASS_1500_PLUS", "source": {"provider": "workday", "token": "Zebra_careers", "host": "zebra.wd501.myworkdayjobs.com", "tenant": "zebra", "site": "Zebra_careers"}}
+  {
+    "name": "Abridge",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "abridge"
+    }
+  },
+  {
+    "name": "Anthropic",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "greenhouse",
+      "token": "anthropic"
+    }
+  },
+  {
+    "name": "ClickHouse",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "clickhouse"
+    }
+  },
+  {
+    "name": "Gamma",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "gamma"
+    }
+  },
+  {
+    "name": "Linear",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "Linear"
+    }
+  },
+  {
+    "name": "Airbnb",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "airbnb"
+    }
+  },
+  {
+    "name": "Airwallex",
+    "priority": "neutral",
+    "active": true
+  },
+  {
+    "name": "Anduril",
+    "priority": "neutral",
+    "active": false,
+    "source": {
+      "provider": "greenhouse",
+      "token": "andurilindustries"
+    }
+  },
+  {
+    "name": "Applied Compute",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "Applied%20Compute"
+    }
+  },
+  {
+    "name": "Applied Intuition",
+    "priority": "neutral",
+    "active": true
+  },
+  {
+    "name": "Base",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "base"
+    }
+  },
+  {
+    "name": "Baseten",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "baseten"
+    }
+  },
+  {
+    "name": "Basis",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "lever",
+      "token": "basis"
+    }
+  },
+  {
+    "name": "Bedrock Robotics",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "bedrock-robotics"
+    }
+  },
+  {
+    "name": "Black Forest Labs",
+    "priority": "neutral",
+    "active": true
+  },
+  {
+    "name": "Chai Discovery",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "chaidiscovery"
+    }
+  },
+  {
+    "name": "Chainguard",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "greenhouse",
+      "token": "chainguard"
+    }
+  },
+  {
+    "name": "Clay",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "claylabs"
+    }
+  },
+  {
+    "name": "Cloudflare",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "greenhouse",
+      "token": "cloudflare"
+    }
+  },
+  {
+    "name": "Cognition",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "cognition"
+    }
+  },
+  {
+    "name": "CoreWeave",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "greenhouse",
+      "token": "coreweave"
+    }
+  },
+  {
+    "name": "Crusoe",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "crusoe"
+    }
+  },
+  {
+    "name": "Cursor",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "cursor"
+    }
+  },
+  {
+    "name": "Cyera",
+    "priority": "neutral",
+    "active": true
+  },
+  {
+    "name": "Databricks",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "databricks"
+    }
+  },
+  {
+    "name": "Decagon",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "decagon"
+    }
+  },
+  {
+    "name": "Deel",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "deel"
+    }
+  },
+  {
+    "name": "ElevenLabs",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "elevenlabs"
+    }
+  },
+  {
+    "name": "Etched",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "etched"
+    }
+  },
+  {
+    "name": "Exa",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "exa"
+    }
+  },
+  {
+    "name": "Factory",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "factory"
+    }
+  },
+  {
+    "name": "Fal",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "fal-ai"
+    }
+  },
+  {
+    "name": "Figma",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "greenhouse",
+      "token": "figma"
+    }
+  },
+  {
+    "name": "Figure",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "greenhouse",
+      "token": "figureai"
+    }
+  },
+  {
+    "name": "Fireworks",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "fireworks"
+    }
+  },
+  {
+    "name": "Genspark",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "genspark"
+    }
+  },
+  {
+    "name": "Glean",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "greenhouse",
+      "token": "gleanwork"
+    }
+  },
+  {
+    "name": "Google",
+    "priority": "neutral",
+    "active": true
+  },
+  {
+    "name": "Granola",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "granola"
+    }
+  },
+  {
+    "name": "Handshake",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "handshake"
+    }
+  },
+  {
+    "name": "Harvey",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "harvey"
+    }
+  },
+  {
+    "name": "Helsing",
+    "priority": "neutral",
+    "active": true
+  },
+  {
+    "name": "Hex",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "hex"
+    }
+  },
+  {
+    "name": "Kalshi",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "greenhouse",
+      "token": "kalshi"
+    }
+  },
+  {
+    "name": "Lambda",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "lambda"
+    }
+  },
+  {
+    "name": "LangChain",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "langchain"
+    }
+  },
+  {
+    "name": "Legora",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "legora"
+    }
+  },
+  {
+    "name": "Liquid AI",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "liquid-ai"
+    }
+  },
+  {
+    "name": "Lovable",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "lovable"
+    }
+  },
+  {
+    "name": "Mercor",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "mercor"
+    }
+  },
+  {
+    "name": "Mercury",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "greenhouse",
+      "token": "mercury"
+    }
+  },
+  {
+    "name": "Mistral AI",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "lever",
+      "token": "mistral"
+    }
+  },
+  {
+    "name": "Modal",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "modal"
+    }
+  },
+  {
+    "name": "n8n",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "n8n"
+    }
+  },
+  {
+    "name": "Notion",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "notion"
+    }
+  },
+  {
+    "name": "NVIDIA",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "NVIDIAExternalCareerSite",
+      "host": "nvidia.wd5.myworkdayjobs.com",
+      "tenant": "nvidia",
+      "site": "NVIDIAExternalCareerSite"
+    }
+  },
+  {
+    "name": "OpenAI",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "openai"
+    }
+  },
+  {
+    "name": "OpenEvidence",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "openevidence"
+    }
+  },
+  {
+    "name": "Palantir",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "lever",
+      "token": "palantir"
+    }
+  },
+  {
+    "name": "Parallel Web Systems",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "parallel"
+    }
+  },
+  {
+    "name": "Periodic Labs",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "periodic-labs"
+    }
+  },
+  {
+    "name": "Perplexity",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "perplexity"
+    }
+  },
+  {
+    "name": "Physical Intelligence",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "physicalintelligence"
+    }
+  },
+  {
+    "name": "Pierre Computer",
+    "priority": "neutral",
+    "active": true
+  },
+  {
+    "name": "Polymarket",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "polymarket"
+    }
+  },
+  {
+    "name": "PostHog",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "posthog"
+    }
+  },
+  {
+    "name": "Prime Intellect",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "primeintellect"
+    }
+  },
+  {
+    "name": "Profound",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "profound"
+    }
+  },
+  {
+    "name": "Railway",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "railway"
+    }
+  },
+  {
+    "name": "Ramp",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "ramp"
+    }
+  },
+  {
+    "name": "Reflection AI",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "reflectionai"
+    }
+  },
+  {
+    "name": "Replit",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "replit"
+    }
+  },
+  {
+    "name": "Revolut",
+    "priority": "neutral",
+    "active": true
+  },
+  {
+    "name": "Ricursive",
+    "priority": "neutral",
+    "active": true
+  },
+  {
+    "name": "Rippling",
+    "priority": "neutral",
+    "active": true
+  },
+  {
+    "name": "Runway",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "runway"
+    }
+  },
+  {
+    "name": "Safe Superintelligence",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "ssi"
+    }
+  },
+  {
+    "name": "Saronic",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "saronic"
+    }
+  },
+  {
+    "name": "Shield AI",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "lever",
+      "token": "shieldai"
+    }
+  },
+  {
+    "name": "Shopify",
+    "priority": "neutral",
+    "active": true
+  },
+  {
+    "name": "Sierra",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "sierra"
+    }
+  },
+  {
+    "name": "Skild",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "greenhouse_html",
+      "token": "skildai-careers"
+    }
+  },
+  {
+    "name": "SpaceX",
+    "priority": "neutral",
+    "active": false,
+    "source": {
+      "provider": "greenhouse",
+      "token": "spacex"
+    }
+  },
+  {
+    "name": "Stripe",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "stripe"
+    }
+  },
+  {
+    "name": "Sunday Robotics",
+    "priority": "neutral",
+    "active": true
+  },
+  {
+    "name": "Supabase",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "supabase"
+    }
+  },
+  {
+    "name": "Surge AI",
+    "priority": "neutral",
+    "active": true
+  },
+  {
+    "name": "Temporal",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "temporal"
+    }
+  },
+  {
+    "name": "Tesla",
+    "priority": "neutral",
+    "active": true
+  },
+  {
+    "name": "Thinking Machines",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "thinkingmachines"
+    }
+  },
+  {
+    "name": "Together",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "greenhouse",
+      "token": "togetherai"
+    }
+  },
+  {
+    "name": "Turbopuffer",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "turbopuffer"
+    }
+  },
+  {
+    "name": "Valon",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "valon"
+    }
+  },
+  {
+    "name": "Vanta",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "vanta"
+    }
+  },
+  {
+    "name": "Vercel",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "vercel"
+    }
+  },
+  {
+    "name": "Waymo",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "greenhouse",
+      "token": "waymo"
+    }
+  },
+  {
+    "name": "Whatnot",
+    "priority": "neutral",
+    "active": true
+  },
+  {
+    "name": "Wispr Flow",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "wispr-flow"
+    }
+  },
+  {
+    "name": "WorkOS",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "workos"
+    }
+  },
+  {
+    "name": "World Labs",
+    "priority": "neutral",
+    "active": true,
+    "source": {
+      "provider": "ashby",
+      "token": "worldlabs"
+    }
+  },
+  {
+    "name": "Affirm",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "affirm"
+    }
+  },
+  {
+    "name": "AppLovin",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "applovin"
+    }
+  },
+  {
+    "name": "Asana",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "asana"
+    }
+  },
+  {
+    "name": "Axon Enterprise",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "axon"
+    }
+  },
+  {
+    "name": "Baxter International",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "bax"
+    }
+  },
+  {
+    "name": "Block",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "block"
+    }
+  },
+  {
+    "name": "Braze",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "braze"
+    }
+  },
+  {
+    "name": "Carvana",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "carvana"
+    }
+  },
+  {
+    "name": "Chime",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "chime"
+    }
+  },
+  {
+    "name": "Coinbase",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "coinbase"
+    }
+  },
+  {
+    "name": "CoStar Group",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "costar"
+    }
+  },
+  {
+    "name": "Datadog",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "datadog"
+    }
+  },
+  {
+    "name": "DoorDash",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "doordashusa"
+    }
+  },
+  {
+    "name": "Dropbox",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "dropbox"
+    }
+  },
+  {
+    "name": "Edison International",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "edison"
+    }
+  },
+  {
+    "name": "Elastic",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "elastic"
+    }
+  },
+  {
+    "name": "Epic Games",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "epicgames"
+    }
+  },
+  {
+    "name": "Essex Property Trust",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "ess"
+    }
+  },
+  {
+    "name": "FactSet",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "fds"
+    }
+  },
+  {
+    "name": "Flexport",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "flexport"
+    }
+  },
+  {
+    "name": "Fox Corporation",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "fox"
+    }
+  },
+  {
+    "name": "GitLab",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "gitlab"
+    }
+  },
+  {
+    "name": "GoDaddy",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "godaddy"
+    }
+  },
+  {
+    "name": "Hasbro",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "hasbro"
+    }
+  },
+  {
+    "name": "HubSpot",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "hubspotjobs"
+    }
+  },
+  {
+    "name": "IDEX Corporation",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "iex"
+    }
+  },
+  {
+    "name": "IMC",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "imc"
+    }
+  },
+  {
+    "name": "Instacart",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "instacart"
+    }
+  },
+  {
+    "name": "Jane Street",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "janestreet"
+    }
+  },
+  {
+    "name": "Klaviyo",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "klaviyo"
+    }
+  },
+  {
+    "name": "Lucid Motors",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "lucidmotors"
+    }
+  },
+  {
+    "name": "Lyft",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "lyft"
+    }
+  },
+  {
+    "name": "MongoDB",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "mongodb"
+    }
+  },
+  {
+    "name": "Mosaic Company",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "mos"
+    }
+  },
+  {
+    "name": "Natera",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "natera"
+    }
+  },
+  {
+    "name": "New Relic",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "newrelic"
+    }
+  },
+  {
+    "name": "Okta",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "okta"
+    }
+  },
+  {
+    "name": "Oscar Health",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "oscar"
+    }
+  },
+  {
+    "name": "Peloton",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "peloton"
+    }
+  },
+  {
+    "name": "Pinterest",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "pinterest"
+    }
+  },
+  {
+    "name": "Qualtrics",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "qualtrics"
+    }
+  },
+  {
+    "name": "Reddit",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "reddit"
+    }
+  },
+  {
+    "name": "Robinhood",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "robinhood"
+    }
+  },
+  {
+    "name": "Roblox",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "roblox"
+    }
+  },
+  {
+    "name": "Roku",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "roku"
+    }
+  },
+  {
+    "name": "Rubrik",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "rubrik"
+    }
+  },
+  {
+    "name": "Samsara",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "samsara"
+    }
+  },
+  {
+    "name": "Scale AI",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "source": {
+      "provider": "greenhouse",
+      "token": "scaleai"
+    }
+  },
+  {
+    "name": "SoFi",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "sofi"
+    }
+  },
+  {
+    "name": "Squarespace",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "squarespace"
+    }
+  },
+  {
+    "name": "Toast",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "toast"
+    }
+  },
+  {
+    "name": "TransDigm Group",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "tdg"
+    }
+  },
+  {
+    "name": "Tripadvisor",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "tripadvisor"
+    }
+  },
+  {
+    "name": "Twilio",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "twilio"
+    }
+  },
+  {
+    "name": "Veeva Systems",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "lever",
+      "token": "veeva"
+    }
+  },
+  {
+    "name": "Verkada",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "verkada"
+    }
+  },
+  {
+    "name": "Zoox",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "lever",
+      "token": "zoox"
+    }
+  },
+  {
+    "name": "Zscaler",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "greenhouse",
+      "token": "zscaler"
+    }
+  },
+  {
+    "name": "3M",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "Search",
+      "host": "3m.wd1.myworkdayjobs.com",
+      "tenant": "3m",
+      "site": "Search"
+    }
+  },
+  {
+    "name": "Abbott Laboratories",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "abbottcareers",
+      "host": "abbott.wd5.myworkdayjobs.com",
+      "tenant": "abbott",
+      "site": "abbottcareers"
+    }
+  },
+  {
+    "name": "Accenture",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "AccentureCareers",
+      "host": "accenture.wd103.myworkdayjobs.com",
+      "tenant": "accenture",
+      "site": "AccentureCareers"
+    }
+  },
+  {
+    "name": "AES Corporation",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "AES_US",
+      "host": "aes.wd1.myworkdayjobs.com",
+      "tenant": "aes",
+      "site": "AES_US"
+    }
+  },
+  {
+    "name": "Agilent Technologies",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "Agilent_Careers",
+      "host": "agilent.wd5.myworkdayjobs.com",
+      "tenant": "agilent",
+      "site": "Agilent_Careers"
+    }
+  },
+  {
+    "name": "Air Products",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "AP0001",
+      "host": "airproducts.wd5.myworkdayjobs.com",
+      "tenant": "airproducts",
+      "site": "AP0001"
+    }
+  },
+  {
+    "name": "Allegion",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "careers",
+      "host": "allegion.wd5.myworkdayjobs.com",
+      "tenant": "allegion",
+      "site": "careers"
+    }
+  },
+  {
+    "name": "Alliant Energy",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "alliant",
+      "host": "alliantenergy.wd1.myworkdayjobs.com",
+      "tenant": "alliantenergy",
+      "site": "alliant"
+    }
+  },
+  {
+    "name": "Allstate",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "allstate_careers",
+      "host": "allstate.wd5.myworkdayjobs.com",
+      "tenant": "allstate",
+      "site": "allstate_careers"
+    }
+  },
+  {
+    "name": "Amgen",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "Careers",
+      "host": "amgen.wd1.myworkdayjobs.com",
+      "tenant": "amgen",
+      "site": "Careers"
+    }
+  },
+  {
+    "name": "Apollo Global Management",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "Apollo_Careers",
+      "host": "athene.wd5.myworkdayjobs.com",
+      "tenant": "athene",
+      "site": "Apollo_Careers"
+    }
+  },
+  {
+    "name": "AT&T",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "ATTGeneral",
+      "host": "att.wd1.myworkdayjobs.com",
+      "tenant": "att",
+      "site": "ATTGeneral"
+    }
+  },
+  {
+    "name": "Bank of America",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "lateral-us",
+      "host": "ghr.wd1.myworkdayjobs.com",
+      "tenant": "ghr",
+      "site": "lateral-us"
+    }
+  },
+  {
+    "name": "Biogen",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "external",
+      "host": "biibhr.wd3.myworkdayjobs.com",
+      "tenant": "biibhr",
+      "site": "external"
+    }
+  },
+  {
+    "name": "Boeing",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "EXTERNAL_CAREERS",
+      "host": "boeing.wd1.myworkdayjobs.com",
+      "tenant": "boeing",
+      "site": "EXTERNAL_CAREERS"
+    }
+  },
+  {
+    "name": "Bristol Myers Squibb",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "BMS",
+      "host": "bristolmyerssquibb.wd5.myworkdayjobs.com",
+      "tenant": "bristolmyerssquibb",
+      "site": "BMS"
+    }
+  },
+  {
+    "name": "Brown & Brown",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "Careers",
+      "host": "bbinsurance.wd1.myworkdayjobs.com",
+      "tenant": "bbinsurance",
+      "site": "Careers"
+    }
+  },
+  {
+    "name": "Brown-Forman",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "USA_Canada",
+      "host": "bf.wd5.myworkdayjobs.com",
+      "tenant": "bf",
+      "site": "USA_Canada"
+    }
+  },
+  {
+    "name": "C.H. Robinson",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "CHRobinson",
+      "host": "chrobinson.wd5.myworkdayjobs.com",
+      "tenant": "chrobinson",
+      "site": "CHRobinson"
+    }
+  },
+  {
+    "name": "Church & Dwight",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "chdcareers",
+      "host": "churchdwight.wd1.myworkdayjobs.com",
+      "tenant": "churchdwight",
+      "site": "chdcareers"
+    }
+  },
+  {
+    "name": "Cigna",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "cignacareers",
+      "host": "cigna.wd5.myworkdayjobs.com",
+      "tenant": "cigna",
+      "site": "cignacareers"
+    }
+  },
+  {
+    "name": "Comcast",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "Comcast_Careers",
+      "host": "comcast.wd115.myworkdayjobs.com",
+      "tenant": "comcast",
+      "site": "Comcast_Careers"
+    }
+  },
+  {
+    "name": "Comfort Systems USA",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "Corpcareers",
+      "host": "comfortsystemsusa.wd1.myworkdayjobs.com",
+      "tenant": "comfortsystemsusa",
+      "site": "Corpcareers"
+    }
+  },
+  {
+    "name": "ConocoPhillips",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "External",
+      "host": "conocophillips.wd1.myworkdayjobs.com",
+      "tenant": "conocophillips",
+      "site": "External"
+    }
+  },
+  {
+    "name": "Constellation Brands",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "CBI_External_Careers",
+      "host": "cbrands.wd5.myworkdayjobs.com",
+      "tenant": "cbrands",
+      "site": "CBI_External_Careers"
+    }
+  },
+  {
+    "name": "CrowdStrike",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "crowdstrikecareers",
+      "host": "crowdstrike.wd5.myworkdayjobs.com",
+      "tenant": "crowdstrike",
+      "site": "crowdstrikecareers"
+    }
+  },
+  {
+    "name": "Edwards Lifesciences",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "EdwardsCareers",
+      "host": "edwards.wd5.myworkdayjobs.com",
+      "tenant": "edwards",
+      "site": "EdwardsCareers"
+    }
+  },
+  {
+    "name": "Elevance Health",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "ANT",
+      "host": "elevancehealth.wd1.myworkdayjobs.com",
+      "tenant": "elevancehealth",
+      "site": "ANT"
+    }
+  },
+  {
+    "name": "Extra Space Storage",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "ESS_External",
+      "host": "extraspace.wd5.myworkdayjobs.com",
+      "tenant": "extraspace",
+      "site": "ESS_External"
+    }
+  },
+  {
+    "name": "F5",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "f5jobs",
+      "host": "ffive.wd5.myworkdayjobs.com",
+      "tenant": "ffive",
+      "site": "f5jobs"
+    }
+  },
+  {
+    "name": "GE Vernova",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "Vernova_ExternalSite",
+      "host": "gevernova.wd5.myworkdayjobs.com",
+      "tenant": "gevernova",
+      "site": "Vernova_ExternalSite"
+    }
+  },
+  {
+    "name": "General Mills",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "GMI_External_Careers",
+      "host": "genmills.wd1.myworkdayjobs.com",
+      "tenant": "genmills",
+      "site": "GMI_External_Careers"
+    }
+  },
+  {
+    "name": "Gilead Sciences",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "gileadcareers",
+      "host": "gilead.wd1.myworkdayjobs.com",
+      "tenant": "gilead",
+      "site": "gileadcareers"
+    }
+  },
+  {
+    "name": "Invitation Homes",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "INVH",
+      "host": "invitationhomes.wd503.myworkdayjobs.com",
+      "tenant": "invitationhomes",
+      "site": "INVH"
+    }
+  },
+  {
+    "name": "IQVIA",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "IQVIA",
+      "host": "iqvia.wd1.myworkdayjobs.com",
+      "tenant": "iqvia",
+      "site": "IQVIA"
+    }
+  },
+  {
+    "name": "J.B. Hunt",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "Careers",
+      "host": "jbhunt.wd501.myworkdayjobs.com",
+      "tenant": "jbhunt",
+      "site": "Careers"
+    }
+  },
+  {
+    "name": "Jabil",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "Jabil_Careers",
+      "host": "jabil.wd5.myworkdayjobs.com",
+      "tenant": "jabil",
+      "site": "Jabil_Careers"
+    }
+  },
+  {
+    "name": "Johnson Controls",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "JCI",
+      "host": "jci.wd5.myworkdayjobs.com",
+      "tenant": "jci",
+      "site": "JCI"
+    }
+  },
+  {
+    "name": "Kenvue",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "kenvue",
+      "host": "kenvue.wd5.myworkdayjobs.com",
+      "tenant": "kenvue",
+      "site": "kenvue"
+    }
+  },
+  {
+    "name": "KLA",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "Search",
+      "host": "kla.wd1.myworkdayjobs.com",
+      "tenant": "kla",
+      "site": "Search"
+    }
+  },
+  {
+    "name": "Live Nation Entertainment",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "LNExternalSite",
+      "host": "livenation.wd503.myworkdayjobs.com",
+      "tenant": "livenation",
+      "site": "LNExternalSite"
+    }
+  },
+  {
+    "name": "Lumentum",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "LITE",
+      "host": "lumentum.wd5.myworkdayjobs.com",
+      "tenant": "lumentum",
+      "site": "LITE"
+    }
+  },
+  {
+    "name": "M&T Bank",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "MTB",
+      "host": "mtb.wd5.myworkdayjobs.com",
+      "tenant": "mtb",
+      "site": "MTB"
+    }
+  },
+  {
+    "name": "Mastercard",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "CorporateCareers",
+      "host": "mastercard.wd1.myworkdayjobs.com",
+      "tenant": "mastercard",
+      "site": "CorporateCareers"
+    }
+  },
+  {
+    "name": "Merck",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "SearchJobs",
+      "host": "msd.wd5.myworkdayjobs.com",
+      "tenant": "msd",
+      "site": "SearchJobs"
+    }
+  },
+  {
+    "name": "Moderna",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "M_tx",
+      "host": "modernatx.wd1.myworkdayjobs.com",
+      "tenant": "modernatx",
+      "site": "M_tx"
+    }
+  },
+  {
+    "name": "Nasdaq",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "Global_External_Site",
+      "host": "nasdaq.wd1.myworkdayjobs.com",
+      "tenant": "nasdaq",
+      "site": "Global_External_Site"
+    }
+  },
+  {
+    "name": "Nike",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "nke",
+      "host": "nike.wd1.myworkdayjobs.com",
+      "tenant": "nike",
+      "site": "nke"
+    }
+  },
+  {
+    "name": "NiSource",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "NiSource",
+      "host": "nisource.wd1.myworkdayjobs.com",
+      "tenant": "nisource",
+      "site": "NiSource"
+    }
+  },
+  {
+    "name": "Northern Trust",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "northerntrust",
+      "host": "ntrs.wd1.myworkdayjobs.com",
+      "tenant": "ntrs",
+      "site": "northerntrust"
+    }
+  },
+  {
+    "name": "ONEOK",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "ONEOK",
+      "host": "oneok.wd1.myworkdayjobs.com",
+      "tenant": "oneok",
+      "site": "ONEOK"
+    }
+  },
+  {
+    "name": "Palo Alto Networks",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "panwexternalcareers",
+      "host": "paloaltonetworks.wd5.myworkdayjobs.com",
+      "tenant": "paloaltonetworks",
+      "site": "panwexternalcareers"
+    }
+  },
+  {
+    "name": "PTC",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "PTC",
+      "host": "ptc.wd1.myworkdayjobs.com",
+      "tenant": "ptc",
+      "site": "PTC"
+    }
+  },
+  {
+    "name": "ResMed",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "ResMed_External_Careers",
+      "host": "resmed.wd3.myworkdayjobs.com",
+      "tenant": "resmed",
+      "site": "ResMed_External_Careers"
+    }
+  },
+  {
+    "name": "Rockwell Automation",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "External_Rockwell_Automation",
+      "host": "rockwellautomation.wd1.myworkdayjobs.com",
+      "tenant": "rockwellautomation",
+      "site": "External_Rockwell_Automation"
+    }
+  },
+  {
+    "name": "S&P Global",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "SPGI_Careers",
+      "host": "spgi.wd5.myworkdayjobs.com",
+      "tenant": "spgi",
+      "site": "SPGI_Careers"
+    }
+  },
+  {
+    "name": "Simon Property Group",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "Simon",
+      "host": "simon.wd1.myworkdayjobs.com",
+      "tenant": "simon",
+      "site": "Simon"
+    }
+  },
+  {
+    "name": "Stryker",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "StrykerCareers",
+      "host": "stryker.wd1.myworkdayjobs.com",
+      "tenant": "stryker",
+      "site": "StrykerCareers"
+    }
+  },
+  {
+    "name": "T. Rowe Price",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "TRowePrice",
+      "host": "troweprice.wd5.myworkdayjobs.com",
+      "tenant": "troweprice",
+      "site": "TRowePrice"
+    }
+  },
+  {
+    "name": "Tapestry",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "Tapestry_Careers",
+      "host": "tapestry.wd108.myworkdayjobs.com",
+      "tenant": "tapestry",
+      "site": "Tapestry_Careers"
+    }
+  },
+  {
+    "name": "Target",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "targetcareers",
+      "host": "target.wd5.myworkdayjobs.com",
+      "tenant": "target",
+      "site": "targetcareers"
+    }
+  },
+  {
+    "name": "United Rentals",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "URcareers",
+      "host": "ur.wd1.myworkdayjobs.com",
+      "tenant": "ur",
+      "site": "URcareers"
+    }
+  },
+  {
+    "name": "Visa",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "Visa",
+      "host": "visa.wd5.myworkdayjobs.com",
+      "tenant": "visa",
+      "site": "Visa"
+    }
+  },
+  {
+    "name": "Viatris",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "External",
+      "host": "viatris.wd5.myworkdayjobs.com",
+      "tenant": "viatris",
+      "site": "External"
+    }
+  },
+  {
+    "name": "Workday",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "Workday",
+      "host": "workday.wd5.myworkdayjobs.com",
+      "tenant": "workday",
+      "site": "Workday"
+    }
+  },
+  {
+    "name": "Xcel Energy",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "External",
+      "host": "xcelenergy.wd1.myworkdayjobs.com",
+      "tenant": "xcelenergy",
+      "site": "External"
+    }
+  },
+  {
+    "name": "Xylem",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "xylem-careers",
+      "host": "xylem.wd5.myworkdayjobs.com",
+      "tenant": "xylem",
+      "site": "xylem-careers"
+    }
+  },
+  {
+    "name": "Zebra Technologies",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "PASS_1500_PLUS",
+    "source": {
+      "provider": "workday",
+      "token": "Zebra_careers",
+      "host": "zebra.wd501.myworkdayjobs.com",
+      "tenant": "zebra",
+      "site": "Zebra_careers"
+    }
+  },
+  {
+    "name": "Ameriprise Financial",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "Ameriprise",
+      "host": "ameriprise.wd5.myworkdayjobs.com",
+      "tenant": "ameriprise",
+      "site": "Ameriprise"
+    }
+  },
+  {
+    "name": "Arch Capital Group",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "careers",
+      "host": "archgroup.wd1.myworkdayjobs.com",
+      "tenant": "archgroup",
+      "site": "careers"
+    }
+  },
+  {
+    "name": "Blackstone Inc.",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "Blackstone_Careers",
+      "host": "blackstone.wd1.myworkdayjobs.com",
+      "tenant": "blackstone",
+      "site": "Blackstone_Careers"
+    }
+  },
+  {
+    "name": "Citigroup",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "2",
+      "host": "citi.wd5.myworkdayjobs.com",
+      "tenant": "citi",
+      "site": "2"
+    }
+  },
+  {
+    "name": "Expedia Group",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "search",
+      "host": "expedia.wd108.myworkdayjobs.com",
+      "tenant": "expedia",
+      "site": "search"
+    }
+  },
+  {
+    "name": "Host Hotels & Resorts",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "HostHotels",
+      "host": "hosthotels.wd5.myworkdayjobs.com",
+      "tenant": "hosthotels",
+      "site": "HostHotels"
+    }
+  },
+  {
+    "name": "Pfizer",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "PfizerCareers",
+      "host": "pfizer.wd1.myworkdayjobs.com",
+      "tenant": "pfizer",
+      "site": "PfizerCareers"
+    }
+  },
+  {
+    "name": "Realty Income",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "realty_income_careers",
+      "host": "realtyincome.wd108.myworkdayjobs.com",
+      "tenant": "realtyincome",
+      "site": "realty_income_careers"
+    }
+  },
+  {
+    "name": "Verisign",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "verisign"
+    }
+  },
+  {
+    "name": "SBA Communications",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "SBA_Communications_Careers",
+      "host": "sbasite.wd5.myworkdayjobs.com",
+      "tenant": "sbasite",
+      "site": "SBA_Communications_Careers"
+    }
+  },
+  {
+    "name": "State Street Corporation",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "Global",
+      "host": "statestreet.wd1.myworkdayjobs.com",
+      "tenant": "statestreet",
+      "site": "Global"
+    }
+  },
+  {
+    "name": "Teledyne Technologies",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "flircareers",
+      "host": "flir.wd1.myworkdayjobs.com",
+      "tenant": "flir",
+      "site": "flircareers"
+    }
+  },
+  {
+    "name": "U.S. Bancorp",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "US_Bank_Careers",
+      "host": "usbank.wd1.myworkdayjobs.com",
+      "tenant": "usbank",
+      "site": "US_Bank_Careers"
+    }
+  },
+  {
+    "name": "Atmos Energy",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "External_Career_Site",
+      "host": "atmosenergy.wd108.myworkdayjobs.com",
+      "tenant": "atmosenergy",
+      "site": "External_Career_Site"
+    }
+  },
+  {
+    "name": "Henry Schein",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "External_Careers",
+      "host": "henryschein.wd1.myworkdayjobs.com",
+      "tenant": "henryschein",
+      "site": "External_Careers"
+    }
+  },
+  {
+    "name": "Invesco",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "IVZ",
+      "host": "invesco.wd1.myworkdayjobs.com",
+      "tenant": "invesco",
+      "site": "IVZ"
+    }
+  },
+  {
+    "name": "McKesson Corporation",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "Ontada_Careers",
+      "host": "mckesson.wd3.myworkdayjobs.com",
+      "tenant": "mckesson",
+      "site": "Ontada_Careers"
+    }
+  },
+  {
+    "name": "Abnormal Security",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "abnormalsecurity"
+    }
+  },
+  {
+    "name": "ActiveCampaign",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "lever",
+      "token": "activecampaign"
+    }
+  },
+  {
+    "name": "Adyen",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "adyen"
+    }
+  },
+  {
+    "name": "Aircall",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "lever",
+      "token": "aircall"
+    }
+  },
+  {
+    "name": "Alloy",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "alloy"
+    }
+  },
+  {
+    "name": "Amplitude",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "amplitude"
+    }
+  },
+  {
+    "name": "Apollo.io",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "apolloio"
+    }
+  },
+  {
+    "name": "Arena",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "arena"
+    }
+  },
+  {
+    "name": "Articul8",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "articul8"
+    }
+  },
+  {
+    "name": "Attentive",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "attentive"
+    }
+  },
+  {
+    "name": "Back Market",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "backmarket"
+    }
+  },
+  {
+    "name": "Binance",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "lever",
+      "token": "binance"
+    }
+  },
+  {
+    "name": "Brex",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "brex"
+    }
+  },
+  {
+    "name": "Bringg",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "bringg"
+    }
+  },
+  {
+    "name": "C6 Bank",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "c6bank"
+    }
+  },
+  {
+    "name": "Cabify",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "cabify"
+    }
+  },
+  {
+    "name": "Cato Networks",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "catonetworks"
+    }
+  },
+  {
+    "name": "Celonis",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "celonis"
+    }
+  },
+  {
+    "name": "Cerebras",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "cerebras"
+    }
+  },
+  {
+    "name": "Checkr",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "checkr"
+    }
+  },
+  {
+    "name": "Clara",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "clara"
+    }
+  },
+  {
+    "name": "Clubhouse",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "clubhouse"
+    }
+  },
+  {
+    "name": "Coalition",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "coalition"
+    }
+  },
+  {
+    "name": "Cognite",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "cognite"
+    }
+  },
+  {
+    "name": "Cohere",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "cohere"
+    }
+  },
+  {
+    "name": "Collibra",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "collibra"
+    }
+  },
+  {
+    "name": "Coupang",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "coupang"
+    }
+  },
+  {
+    "name": "Cresta",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "cresta"
+    }
+  },
+  {
+    "name": "Culture Amp",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "cultureamp"
+    }
+  },
+  {
+    "name": "Dashlane",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "dashlane"
+    }
+  },
+  {
+    "name": "Dataiku",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "dataiku"
+    }
+  },
+  {
+    "name": "Deliveroo",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "deliveroo"
+    }
+  },
+  {
+    "name": "Dialpad",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "dialpad"
+    }
+  },
+  {
+    "name": "Discord",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "discord"
+    }
+  },
+  {
+    "name": "Dragos",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "dragos"
+    }
+  },
+  {
+    "name": "Dream Games",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "dreamgames"
+    }
+  },
+  {
+    "name": "Duolingo",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "duolingo"
+    }
+  },
+  {
+    "name": "EQT Corporation",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "eqtcorporation"
+    }
+  },
+  {
+    "name": "Faire",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "faire"
+    }
+  },
+  {
+    "name": "Farfetch",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "lever",
+      "token": "farfetch"
+    }
+  },
+  {
+    "name": "Fireblocks",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "fireblocks"
+    }
+  },
+  {
+    "name": "Fivetran",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "fivetran"
+    }
+  },
+  {
+    "name": "Flo Health",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "flohealth"
+    }
+  },
+  {
+    "name": "Gemini",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "gemini"
+    }
+  },
+  {
+    "name": "Gen Digital",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "gen-digital"
+    }
+  },
+  {
+    "name": "Generalist",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "generalist"
+    }
+  },
+  {
+    "name": "GetYourGuide",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "getyourguide"
+    }
+  },
+  {
+    "name": "Glance",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "glance"
+    }
+  },
+  {
+    "name": "GoCardless",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "gocardless"
+    }
+  },
+  {
+    "name": "Grafana Labs",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "grafanalabs"
+    }
+  },
+  {
+    "name": "Gusto",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "gusto"
+    }
+  },
+  {
+    "name": "Gymshark",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "gymshark"
+    }
+  },
+  {
+    "name": "Headway",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "headway"
+    }
+  },
+  {
+    "name": "Higgsfield AI",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "higgsfieldai"
+    }
+  },
+  {
+    "name": "Hightouch",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "hightouch"
+    }
+  },
+  {
+    "name": "HoneyBook",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "honeybook"
+    }
+  },
+  {
+    "name": "Illumio",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "illumio"
+    }
+  },
+  {
+    "name": "InMobi",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "inmobi"
+    }
+  },
+  {
+    "name": "Intercom",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "intercom"
+    }
+  },
+  {
+    "name": "Iterable",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "iterable"
+    }
+  },
+  {
+    "name": "Jumpcloud",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "lever",
+      "token": "jumpcloud"
+    }
+  },
+  {
+    "name": "Krafton",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "krafton"
+    }
+  },
+  {
+    "name": "Lila Sciences",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "lilasciences"
+    }
+  },
+  {
+    "name": "MOLOCO",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "moloco"
+    }
+  },
+  {
+    "name": "Make",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "make"
+    }
+  },
+  {
+    "name": "Marshmallow",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "marshmallow"
+    }
+  },
+  {
+    "name": "Matillion",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "lever",
+      "token": "matillion"
+    }
+  },
+  {
+    "name": "Meesho",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "lever",
+      "token": "meesho"
+    }
+  },
+  {
+    "name": "Melio",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "melio"
+    }
+  },
+  {
+    "name": "Mixpanel",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "mixpanel"
+    }
+  },
+  {
+    "name": "Mollie",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "mollie"
+    }
+  },
+  {
+    "name": "Moniepoint",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "moniepoint"
+    }
+  },
+  {
+    "name": "Monzo",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "monzo"
+    }
+  },
+  {
+    "name": "MoonPay",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "lever",
+      "token": "moonpay"
+    }
+  },
+  {
+    "name": "Multiverse",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "multiverse"
+    }
+  },
+  {
+    "name": "N26",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "n26"
+    }
+  },
+  {
+    "name": "Netskope",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "netskope"
+    }
+  },
+  {
+    "name": "Neuralink",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "neuralink"
+    }
+  },
+  {
+    "name": "Nextiva",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "nextiva"
+    }
+  },
+  {
+    "name": "Nubank",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "nubank"
+    }
+  },
+  {
+    "name": "Nuro",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "nuro"
+    }
+  },
+  {
+    "name": "Outreach",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "lever",
+      "token": "outreach"
+    }
+  },
+  {
+    "name": "Patreon",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "patreon"
+    }
+  },
+  {
+    "name": "Pennylane",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "pennylane"
+    }
+  },
+  {
+    "name": "Pika",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "pika"
+    }
+  },
+  {
+    "name": "Plaid",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "plaid"
+    }
+  },
+  {
+    "name": "PointClickCare",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "lever",
+      "token": "pointclickcare"
+    }
+  },
+  {
+    "name": "Postman",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "postman"
+    }
+  },
+  {
+    "name": "Pure Storage",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "purestorage"
+    }
+  },
+  {
+    "name": "Qonto",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "qonto"
+    }
+  },
+  {
+    "name": "Quince",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "quince"
+    }
+  },
+  {
+    "name": "QuintoAndar",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "quintoandar"
+    }
+  },
+  {
+    "name": "Quora",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "quora"
+    }
+  },
+  {
+    "name": "Rain",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "rain"
+    }
+  },
+  {
+    "name": "Rho",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "rho"
+    }
+  },
+  {
+    "name": "Ripple",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "ripple"
+    }
+  },
+  {
+    "name": "Riskified",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "riskified"
+    }
+  },
+  {
+    "name": "Rohlik",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "rohlik"
+    }
+  },
+  {
+    "name": "SandboxAQ",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "sandboxaq"
+    }
+  },
+  {
+    "name": "Shift Technology",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "shifttechnology"
+    }
+  },
+  {
+    "name": "Sift",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "sift"
+    }
+  },
+  {
+    "name": "Snowflake",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "snowflake"
+    }
+  },
+  {
+    "name": "Socure",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "socure"
+    }
+  },
+  {
+    "name": "Solarisbank",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "solarisbank"
+    }
+  },
+  {
+    "name": "Sonatype",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "lever",
+      "token": "sonatype"
+    }
+  },
+  {
+    "name": "Spotify",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "lever",
+      "token": "spotify"
+    }
+  },
+  {
+    "name": "Substrate",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "substrate"
+    }
+  },
+  {
+    "name": "Suno",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "suno"
+    }
+  },
+  {
+    "name": "Sword Health",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "swordhealth"
+    }
+  },
+  {
+    "name": "Synthesia",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "synthesia"
+    }
+  },
+  {
+    "name": "Tamara",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "tamara"
+    }
+  },
+  {
+    "name": "Tanium",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "tanium"
+    }
+  },
+  {
+    "name": "Tekion",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "tekion"
+    }
+  },
+  {
+    "name": "TensorWave",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "tensorwave"
+    }
+  },
+  {
+    "name": "Tenstorrent",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "tenstorrent"
+    }
+  },
+  {
+    "name": "The Bot Company",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "thebotcompany"
+    }
+  },
+  {
+    "name": "Thumbtack",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "thumbtack"
+    }
+  },
+  {
+    "name": "Truecaller",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "truecaller"
+    }
+  },
+  {
+    "name": "Trustly",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "trustly"
+    }
+  },
+  {
+    "name": "Typeface",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "typeface"
+    }
+  },
+  {
+    "name": "Udemy",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "udemy"
+    }
+  },
+  {
+    "name": "UiPath",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "uipath"
+    }
+  },
+  {
+    "name": "Vannevar Labs",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "vannevarlabs"
+    }
+  },
+  {
+    "name": "Veepee",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "lever",
+      "token": "veepee"
+    }
+  },
+  {
+    "name": "Vestiaire Collective",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "lever",
+      "token": "vestiairecollective"
+    }
+  },
+  {
+    "name": "Via",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "via"
+    }
+  },
+  {
+    "name": "Vonage",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "vonage"
+    }
+  },
+  {
+    "name": "Voodoo",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "voodoo"
+    }
+  },
+  {
+    "name": "Vox Media",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "voxmedia"
+    }
+  },
+  {
+    "name": "WHOOP",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "whoop"
+    }
+  },
+  {
+    "name": "Wayflyer",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "wayflyer"
+    }
+  },
+  {
+    "name": "Wealthsimple",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "wealthsimple"
+    }
+  },
+  {
+    "name": "Webflow",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "webflow"
+    }
+  },
+  {
+    "name": "Workato",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "workato"
+    }
+  },
+  {
+    "name": "Writer",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "ashby",
+      "token": "writer"
+    }
+  },
+  {
+    "name": "Zocdoc",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "zocdoc"
+    }
+  },
+  {
+    "name": "Zopa",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "lever",
+      "token": "zopa"
+    }
+  },
+  {
+    "name": "dLocal",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "lever",
+      "token": "dlocal"
+    }
+  },
+  {
+    "name": "xAI",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "greenhouse",
+      "token": "xai"
+    }
+  },
+  {
+    "name": "AbbVie",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "smartrecruiters",
+      "token": "abbvie"
+    }
+  },
+  {
+    "name": "Arista Networks",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "smartrecruiters",
+      "token": "aristanetworks"
+    }
+  },
+  {
+    "name": "Arthur J. Gallagher & Co.",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "smartrecruiters",
+      "token": "arthurjgallagherco"
+    }
+  },
+  {
+    "name": "Avery Dennison",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "smartrecruiters",
+      "token": "averydennison"
+    }
+  },
+  {
+    "name": "CRH plc",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "smartrecruiters",
+      "token": "crhplc"
+    }
+  },
+  {
+    "name": "Canva",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "smartrecruiters",
+      "token": "canva"
+    }
+  },
+  {
+    "name": "Caterpillar Inc.",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "smartrecruiters",
+      "token": "caterpillarinc"
+    }
+  },
+  {
+    "name": "Domino's",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "smartrecruiters",
+      "token": "dominos"
+    }
+  },
+  {
+    "name": "Ecovadis",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "smartrecruiters",
+      "token": "ecovadis"
+    }
+  },
+  {
+    "name": "Freshworks",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "smartrecruiters",
+      "token": "freshworks"
+    }
+  },
+  {
+    "name": "Grab",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "smartrecruiters",
+      "token": "grab"
+    }
+  },
+  {
+    "name": "Insulet Corporation",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "smartrecruiters",
+      "token": "insuletcorporation"
+    }
+  },
+  {
+    "name": "Iron Mountain",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "smartrecruiters",
+      "token": "ironmountain"
+    }
+  },
+  {
+    "name": "Kimberly-Clark",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "smartrecruiters",
+      "token": "kimberlyclark"
+    }
+  },
+  {
+    "name": "Nexthink",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "smartrecruiters",
+      "token": "nexthink"
+    }
+  },
+  {
+    "name": "Nium",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "lever",
+      "token": "nium"
+    }
+  },
+  {
+    "name": "Omnicom Group",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "smartrecruiters",
+      "token": "omnicomgroup"
+    }
+  },
+  {
+    "name": "Public Storage",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "smartrecruiters",
+      "token": "publicstorage"
+    }
+  },
+  {
+    "name": "Sandisk",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "smartrecruiters",
+      "token": "sandisk"
+    }
+  },
+  {
+    "name": "ServiceNow",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "smartrecruiters",
+      "token": "servicenow"
+    }
+  },
+  {
+    "name": "Sportradar",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "smartrecruiters",
+      "token": "sportradar"
+    }
+  },
+  {
+    "name": "Uber",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "smartrecruiters",
+      "token": "uber"
+    }
+  },
+  {
+    "name": "Wabtec",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "smartrecruiters",
+      "token": "wabtec"
+    }
+  },
+  {
+    "name": "Wynn Resorts",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "smartrecruiters",
+      "token": "wynnresorts"
+    }
+  },
+  {
+    "name": "Wise",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "EXCEPTION_HIGH_FIT",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "smartrecruiters",
+      "token": "wise"
+    }
+  }
 ]
