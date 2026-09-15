@@ -62,13 +62,15 @@ def main() -> None:
     if args.command == "email":
         local_now = datetime.now(ZoneInfo("America/New_York"))
         delivery_date = local_now.date().isoformat()
+        delivery_slot = "morning" if local_now.hour < 14 else "afternoon"
+        delivery_key = f"{delivery_date}:{delivery_slot}"
         if args.daily and not args.force and local_now.hour < 7:
             print(f"Daily email not due yet: {local_now:%H:%M}")
             return
         if args.daily and not args.force and daily_delivery_exists(
-            connection, delivery_date
+            connection, delivery_key
         ):
-            print(f"Daily email already sent for {delivery_date}")
+            print(f"Daily email already sent for {delivery_key}")
             return
         first_seen_since = None
         if args.force:
@@ -85,7 +87,7 @@ def main() -> None:
         send_digest(delivery["subject"], digest, delivery["recipient"])
         mark_notified(connection, job_ids)
         if args.daily:
-            record_daily_delivery(connection, delivery_date, len(job_ids))
+            record_daily_delivery(connection, delivery_key, len(job_ids))
         print(f"Sent digest with {len(job_ids)} jobs to {delivery['recipient']}")
         return
 

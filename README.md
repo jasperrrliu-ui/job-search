@@ -77,8 +77,8 @@ or API keys to Git.
 
 ## GitHub Actions
 
-`.github/workflows/job-search.yml` polls five times per day and sends one daily
-digest on the first run at or after 07:00 America/New_York. Add the Gmail app
+`.github/workflows/job-search.yml` polls twice per day and sends a morning and
+afternoon digest at about 08:17 and 14:17 America/New_York during daylight saving time. Add the Gmail app
 password as a repository Actions secret named `SMTP_PASSWORD`, then manually run
 the workflow once to verify delivery. The SQLite database is persisted in the
 Actions cache.
