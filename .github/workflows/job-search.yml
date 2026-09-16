@@ -3,7 +3,14 @@ name: Job search
 on:
   workflow_dispatch:
   schedule:
-    - cron: "17 12,18 * * *"
+    - cron: "17 8 * * *"
+      timezone: "America/New_York"
+    - cron: "17 9 * * *"
+      timezone: "America/New_York"
+    - cron: "17 14 * * *"
+      timezone: "America/New_York"
+    - cron: "17 15 * * *"
+      timezone: "America/New_York"
 
 concurrency:
   group: job-search
@@ -29,7 +36,27 @@ jobs:
           restore-keys: |
             job-db-
 
+      - name: Check whether this delivery slot is due
+        id: delivery
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            case "${{ github.event.schedule }}" in
+              "17 8 * * *"|"17 9 * * *") slot=morning ;;
+              *) slot=afternoon ;;
+            esac
+            echo "slot=$slot" >> "$GITHUB_OUTPUT"
+            if [ ! -f data/jobs.db ] || python -m job_tracker due --delivery-slot "$slot"; then
+              echo "run=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "run=false" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
       - name: Poll jobs or create the first baseline
+        if: steps.delivery.outputs.run == 'true'
         shell: bash
         run: |
           if [ -f data/jobs.db ]; then
@@ -39,6 +66,7 @@ jobs:
           fi
 
       - name: Send daily digest
+        if: steps.delivery.outputs.run == 'true'
         env:
           SMTP_HOST: smtp.gmail.com
           SMTP_PORT: "587"
@@ -49,11 +77,11 @@ jobs:
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             python -m job_tracker email --daily --force
           else
-            python -m job_tracker email --daily
+            python -m job_tracker email --daily --delivery-slot "${{ steps.delivery.outputs.slot }}"
           fi
 
       - name: Save job database
-        if: success()
+        if: success() && steps.delivery.outputs.run == 'true'
         uses: actions/cache/save@v4
         with:
           path: data/jobs.db

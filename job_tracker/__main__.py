@@ -26,13 +26,14 @@ DELIVERY = ROOT / "config" / "delivery.json"
 def main() -> None:
     parser = argparse.ArgumentParser(description="Target-company job tracker")
     parser.add_argument(
-        "command", choices=["bootstrap", "poll", "digest", "email", "feedback"]
+        "command", choices=["bootstrap", "poll", "digest", "email", "feedback", "due"]
     )
     parser.add_argument("--db", type=Path, default=DEFAULT_DB)
     parser.add_argument("--output", type=Path)
     parser.add_argument("--mark-sent", action="store_true")
     parser.add_argument("--daily", action="store_true")
     parser.add_argument("--force", action="store_true")
+    parser.add_argument("--delivery-slot", choices=["morning", "afternoon"])
     parser.add_argument("--job-id", type=int)
     parser.add_argument(
         "--decision",
@@ -43,6 +44,17 @@ def main() -> None:
 
     connection = connect(args.db)
     init_schema(connection)
+
+    if args.command == "due":
+        if not args.delivery_slot:
+            parser.error("due requires --delivery-slot")
+        delivery_date = datetime.now(ZoneInfo("America/New_York")).date().isoformat()
+        delivery_key = f"{delivery_date}:{args.delivery_slot}"
+        if daily_delivery_exists(connection, delivery_key):
+            print(f"Daily email already sent for {delivery_key}")
+            raise SystemExit(1)
+        print(f"Daily email is due for {delivery_key}")
+        return
 
     if args.command == "feedback":
         record_feedback(connection, args.job_id, args.decision, args.reason)
@@ -62,7 +74,9 @@ def main() -> None:
     if args.command == "email":
         local_now = datetime.now(ZoneInfo("America/New_York"))
         delivery_date = local_now.date().isoformat()
-        delivery_slot = "morning" if local_now.hour < 14 else "afternoon"
+        delivery_slot = args.delivery_slot or (
+            "morning" if local_now.hour < 14 else "afternoon"
+        )
         delivery_key = f"{delivery_date}:{delivery_slot}"
         if args.daily and not args.force and local_now.hour < 7:
             print(f"Daily email not due yet: {local_now:%H:%M}")

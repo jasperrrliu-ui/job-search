@@ -77,8 +77,9 @@ or API keys to Git.
 
 ## GitHub Actions
 
-`.github/workflows/job-search.yml` polls twice per day and sends a morning and
-afternoon digest at about 08:17 and 14:17 America/New_York during daylight saving time. Add the Gmail app
+`.github/workflows/job-search.yml` sends morning and afternoon digests at about
+08:17 and 14:17 America/New_York, with 09:17 and 15:17 fallback triggers. A
+fallback skips polling when its delivery slot already succeeded. Add the Gmail app
 password as a repository Actions secret named `SMTP_PASSWORD`, then manually run
 the workflow once to verify delivery. The SQLite database is persisted in the
 Actions cache.

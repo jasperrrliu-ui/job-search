@@ -1,5 +1,6 @@
 {
   "timezone": "America/New_York",
   "polls_per_day": 2,
-  "digest_times": ["08:17", "14:17"]
+  "digest_times": ["08:17", "14:17"],
+  "fallback_times": ["09:17", "15:17"]
 }
