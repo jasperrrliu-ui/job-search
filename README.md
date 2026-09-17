@@ -24,7 +24,7 @@ Company Lens uses 1,500 employees as the default minimum. Smaller companies stay
 out unless they are explicitly marked `EXCEPTION_HIGH_FIT`. Data Science and
 Applied/AI Scientist hiring are equally important screening signals.
 
-Workday polling uses three discovery searches, five bounded network workers, and
+Workday polling uses four focused discovery searches, five bounded network workers, and
 the listing `externalPath` as a persistent ID. Full job descriptions are fetched
 only for newly discovered postings; the first poll stores a baseline without
 downloading historical descriptions.
@@ -100,10 +100,14 @@ values live in configuration and may be changed without editing the tracker.
 ## Optional LLM evaluation
 
 The default evaluator is free and deterministic. Only explicitly US-located jobs
-enter the email; ambiguous `Remote` locations stay `UNKNOWN`/`HOLD`. It never
-rejects `Senior`, `Sr.`, `II`, or `III` from title alone and stores explicit
-degree/YOE pathways separately. Lead, Staff, Principal, Manager, Director, Head,
-VP, Architect, and Supervisor titles are excluded at the candidate gate.
+enter the email; ambiguous `Remote` locations stay `UNKNOWN`/`HOLD`. The target
+titles are Data Scientist, AI/ML Scientist, and non-research-heavy Applied
+Scientist. Senior/Sr. titles are excluded unless the JD contains an explicit
+qualification path requiring no more than two years of experience; those rare
+exceptions remain low-priority review items. Lead, Staff, Principal, Manager,
+Director, Head, VP, Architect, and Supervisor titles are excluded at the
+candidate gate. Digests group results into New Grad/Campus, Early Career,
+Standard, and Senior Exception sections.
 
 For plausible or ambiguous jobs, an optional OpenAI Responses API interpreter
 can classify responsibilities and role identity with quoted JD evidence. It

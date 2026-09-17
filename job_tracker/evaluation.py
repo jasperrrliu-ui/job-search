@@ -69,7 +69,7 @@ def _hard_eligibility(
     job: dict, domain: dict, qualification_paths: list[dict]
 ) -> tuple[str, list[dict], str]:
     description = job.get("description", "")
-    text = f"{job.get('location', '')}\n{description}".lower()
+    text = f"{job.get('title', '')}\n{job.get('location', '')}\n{description}".lower()
     failures = []
 
     for category, terms in domain["hard_fail_signals"].items():
@@ -90,7 +90,7 @@ def _hard_eligibility(
 
     if any(
         signal in text for signal in domain["search_scope"]["non_full_time_signals"]
-    ):
+    ) or re.search(r"\b(intern|internship)\b", text):
         failures.append(
             {
                 "field": "employment_type",
@@ -234,7 +234,29 @@ def _ownership_evidence(text: str, domain: dict) -> list[dict]:
     return found
 
 
-def _candidate_gate(job: dict, domain: dict) -> dict:
+def _research_heavy(job: dict, domain: dict) -> bool:
+    title = job["title"].lower()
+    text = job.get("description", "").lower()
+    signals = domain["candidate_generation"]["research_heavy_signals"]
+    return "research scientist" in title or sum(signal in text for signal in signals) >= 2
+
+
+def _career_stage(job: dict, paths: list[dict], domain: dict) -> str:
+    title = job["title"].lower()
+    text = f"{title}\n{job.get('description', '')}".lower()
+    rules = domain["candidate_generation"]
+    if any(_title_has(title, term) for term in domain["seniority"]["senior_title_terms"]):
+        return "SENIOR_EXCEPTION"
+    if any(signal in text for signal in rules["early_career_signals"]):
+        return "NEW_GRAD"
+    if any(_title_has(title, term) for term in rules["entry_title_terms"]):
+        return "EARLY_CAREER"
+    if paths and min(path["years"] for path in paths) <= 2:
+        return "EARLY_CAREER"
+    return "STANDARD"
+
+
+def _candidate_gate(job: dict, domain: dict, paths: list[dict]) -> dict:
     title = job["title"].lower()
     rules = domain["candidate_generation"]
     for term in domain["seniority"]["strong_negative_title_terms"]:
@@ -245,40 +267,49 @@ def _candidate_gate(job: dict, domain: dict) -> dict:
         if _title_has(title, term):
             return {"status": "DROP", "family": "NON_TARGET_OCCUPATION", "reason": term}
 
+    senior_title = any(
+        _title_has(title, term) for term in domain["seniority"]["senior_title_terms"]
+    )
+    senior_exception = senior_title and any(path["years"] <= 2 for path in paths)
+    if senior_title and not senior_exception:
+        return {
+            "status": "DROP",
+            "family": "NON_TARGET_SENIORITY",
+            "reason": "senior title without an explicit <=2 YOE pathway",
+        }
+
+    if _research_heavy(job, domain):
+        return {
+            "status": "DROP",
+            "family": "RESEARCH_HEAVY",
+            "reason": "research-heavy title or responsibilities",
+        }
+
     for family, terms in rules["primary_title_families"].items():
         if any(_title_has(title, term) for term in terms):
-            return {"status": "PRIMARY", "family": family, "reason": "target title"}
-
-    if "research scientist" in title and any(
-        term in title for term in (" ai", "artificial intelligence", "machine learning", " ml ")
-    ):
-        return {"status": "PRIMARY", "family": "AI_SCIENTIST", "reason": "AI/ML research scientist title"}
+            status = "STRETCH" if senior_exception else "PRIMARY"
+            return {"status": status, "family": family, "reason": "target title"}
 
     for family, terms in rules["secondary_title_families"].items():
         if any(_title_has(title, term) for term in terms):
             return {"status": "SECONDARY", "family": family, "reason": "secondary target title"}
 
-    relevant_text = _responsibility_text(job.get("description", ""), domain)
-    ownership = _ownership_evidence(relevant_text, domain)
-    object_hits = sum(
-        term in relevant_text.lower() for term in rules["core_work_objects"]
-    )
-    if ownership and object_hits >= 2:
-        return {"status": "RESCUE", "family": "APPLIED_ML", "reason": "explicit model ownership"}
     return {"status": "HOLD", "family": "UNKNOWN", "reason": "no target-role entry evidence"}
 
 
-def _semantic_rules(job: dict, domain: dict) -> tuple[bool, dict]:
+def _semantic_rules(job: dict, domain: dict, paths: list[dict]) -> tuple[bool, dict]:
     description = _responsibility_text(job.get("description", ""), domain)
-    gate = _candidate_gate(job, domain)
-    plausible = gate["status"] in {"PRIMARY", "SECONDARY", "RESCUE"}
+    gate = _candidate_gate(job, domain, paths)
+    plausible = gate["status"] in {"PRIMARY", "STRETCH"}
     seniority_signal = "STRONG_NEGATIVE" if gate["family"] == "NON_TARGET_SENIORITY" else "NEUTRAL"
+    career_stage = _career_stage(job, paths, domain) if plausible else "NOT_TARGET"
     if not plausible:
         return False, {
             "role_interpretation": {
                 "role_archetype": gate["family"],
                 "seniority_signal": seniority_signal,
                 "candidate_gate": gate,
+                "career_stage": career_stage,
                 "business_domain": "UNKNOWN",
                 "primary_responsibilities": [],
                 "model_ownership": "UNKNOWN",
@@ -370,6 +401,7 @@ def _semantic_rules(job: dict, domain: dict) -> tuple[bool, dict]:
             "role_archetype": archetype,
             "seniority_signal": seniority_signal,
             "candidate_gate": gate,
+            "career_stage": career_stage,
             "business_domain": "UNKNOWN",
             "primary_responsibilities": [item["text"] for item in role_evidence],
             "model_ownership": "UNKNOWN",
@@ -408,6 +440,7 @@ def _decision(
         return "HOLD", "LOW"
     if result["role_interpretation"].get("seniority_signal") == "STRONG_NEGATIVE":
         return "SKIP", "LOW"
+    career_stage = result["role_interpretation"].get("career_stage")
     career = result["career_direction_fit"]
     capability = result["capability_fit"]
     resume = result["resume_signal_fit"]
@@ -416,6 +449,8 @@ def _decision(
         return "SAVE", "LOW"
     if career == "UNKNOWN" or not result.get("evidence", {}).get("role"):
         return "HOLD", "LOW"
+    if career_stage == "SENIOR_EXCEPTION":
+        return "REVIEW", "LOW"
     if (
         eligibility == "PASS"
         and result["role_interpretation"].get("seniority_signal") != "STRONG_NEGATIVE"
@@ -437,9 +472,10 @@ def evaluate(job: dict, domain: dict) -> dict:
     if eligibility != "FAIL":
         eligibility = path_eligibility
 
-    plausible, semantic = _semantic_rules(job, domain)
+    plausible, semantic = _semantic_rules(job, domain, paths)
     deterministic_seniority = semantic["role_interpretation"]["seniority_signal"]
     deterministic_gate = semantic["role_interpretation"]["candidate_gate"]
+    deterministic_stage = semantic["role_interpretation"]["career_stage"]
     if (
         eligibility != "FAIL"
         and plausible
@@ -449,6 +485,7 @@ def evaluate(job: dict, domain: dict) -> dict:
         semantic = evaluate_with_openai(job, domain)
         semantic["role_interpretation"]["seniority_signal"] = deterministic_seniority
         semantic["role_interpretation"]["candidate_gate"] = deterministic_gate
+        semantic["role_interpretation"]["career_stage"] = deterministic_stage
 
     for key in (
         "career_direction_fit",

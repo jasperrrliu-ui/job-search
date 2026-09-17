@@ -315,9 +315,9 @@ def build_digest(
                jobs.first_seen_at, companies.name AS company,
                evaluations.decision, evaluations.eligibility,
                evaluations.role_archetype, evaluations.career_direction_fit,
-               evaluations.capability_fit, evaluations.resume_signal_fit,
-               evaluations.trajectory_fit, evaluations.reasoning,
-               evaluations.uncertainty
+                evaluations.capability_fit, evaluations.resume_signal_fit,
+                evaluations.trajectory_fit, evaluations.reasoning,
+                evaluations.uncertainty, evaluations.role_interpretation_json
         FROM jobs
         JOIN companies ON companies.id = jobs.company_id
         JOIN evaluations ON evaluations.id = (
@@ -335,33 +335,80 @@ def build_digest(
     if not rows:
         return "Today: 0 new matching jobs\n", []
 
-    lines = [f"Today: {len(rows)} new matching jobs", ""]
-    ids = []
-    for index, row in enumerate(rows, start=1):
-        ids.append(row["id"])
-        source_event = (
-            "NEWLY_POSTED" if row["official_created_at"] else "NEWLY_DISCOVERED"
+    active_rows = connection.execute(
+        """
+        SELECT companies.name AS company, evaluations.role_interpretation_json
+        FROM jobs
+        JOIN companies ON companies.id = jobs.company_id
+        JOIN evaluations ON evaluations.id = (
+            SELECT id FROM evaluations e
+            WHERE e.job_id = jobs.id ORDER BY id DESC LIMIT 1
         )
+        WHERE jobs.status='OPEN'
+          AND evaluations.decision IN ('APPLY_TODAY', 'REVIEW')
+        """
+    ).fetchall()
+    employer_counts: dict[str, int] = {}
+    for row in active_rows:
+        stage = json.loads(row["role_interpretation_json"]).get("career_stage")
+        if stage in {"NEW_GRAD", "EARLY_CAREER"}:
+            employer_counts[row["company"]] = employer_counts.get(row["company"], 0) + 1
+
+    lines = [f"Today: {len(rows)} new matching jobs"]
+    if employer_counts:
+        signals = sorted(employer_counts.items(), key=lambda item: (-item[1], item[0]))
         lines.extend(
             [
-                f"{index}. {row['title']} — {row['company']}",
-                f"Location: {row['location'] or 'Not listed'}",
-                f"Recommendation: {row['decision']}",
-                f"Eligibility: {row['eligibility']}",
-                f"Role: {row['role_archetype']}",
-                f"Direction / Capability / Resume / Trajectory: "
-                f"{row['career_direction_fit']} / {row['capability_fit']} / "
-                f"{row['resume_signal_fit']} / {row['trajectory_fit']}",
-                f"Reason: {row['reasoning']}",
-                f"Uncertainty: {row['uncertainty'] or 'None recorded'}",
-                f"Source event: {source_event}",
-                f"Posted: {row['official_created_at'] or 'UNKNOWN'}",
-                f"Updated: {row['official_updated_at'] or 'UNKNOWN'}",
-                f"First seen: {row['first_seen_at']}",
-                f"URL: {row['official_url']}",
-                "",
+                f"Active early-career employers: {len(signals)}",
+                "Signals: " + ", ".join(f"{company} ({count})" for company, count in signals[:15]),
             ]
         )
+    lines.append("")
+
+    sections = [
+        ("NEW_GRAD", "Priority 1 — New Grad / Campus"),
+        ("EARLY_CAREER", "Priority 2 — Early Career"),
+        ("STANDARD", "Priority 3 — Standard Data/AI Scientist"),
+        ("SENIOR_EXCEPTION", "Stretch — Senior title with explicit <=2 YOE path"),
+    ]
+    grouped = {stage: [] for stage, _ in sections}
+    for row in rows:
+        stage = json.loads(row["role_interpretation_json"]).get("career_stage", "STANDARD")
+        grouped.setdefault(stage, []).append(row)
+
+    ids = []
+    index = 0
+    for stage, heading in sections:
+        if not grouped[stage]:
+            continue
+        lines.extend([heading, ""])
+        for row in grouped[stage]:
+            index += 1
+            ids.append(row["id"])
+            source_event = (
+                "NEWLY_POSTED" if row["official_created_at"] else "NEWLY_DISCOVERED"
+            )
+            lines.extend(
+                [
+                    f"{index}. {row['title']} — {row['company']}",
+                    f"Location: {row['location'] or 'Not listed'}",
+                    f"Career stage: {stage}",
+                    f"Recommendation: {row['decision']}",
+                    f"Eligibility: {row['eligibility']}",
+                    f"Role: {row['role_archetype']}",
+                    f"Direction / Capability / Resume / Trajectory: "
+                    f"{row['career_direction_fit']} / {row['capability_fit']} / "
+                    f"{row['resume_signal_fit']} / {row['trajectory_fit']}",
+                    f"Reason: {row['reasoning']}",
+                    f"Uncertainty: {row['uncertainty'] or 'None recorded'}",
+                    f"Source event: {source_event}",
+                    f"Posted: {row['official_created_at'] or 'UNKNOWN'}",
+                    f"Updated: {row['official_updated_at'] or 'UNKNOWN'}",
+                    f"First seen: {row['first_seen_at']}",
+                    f"URL: {row['official_url']}",
+                    "",
+                ]
+            )
     return "\n".join(lines), ids
 
 

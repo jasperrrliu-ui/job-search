@@ -1,4 +1,4 @@
-name: Backfill Sep 7-10
+name: Backfill Sep 14-17
 
 on:
   workflow_dispatch:
@@ -43,7 +43,7 @@ jobs:
           from job_tracker.mailer import send_digest
 
 
-          days = ["2026-09-07", "2026-09-08", "2026-09-09", "2026-09-10"]
+          days = ["2026-09-14", "2026-09-15", "2026-09-16", "2026-09-17"]
           eastern = ZoneInfo("America/New_York")
           connection = sqlite3.connect("data/jobs.db")
           connection.row_factory = sqlite3.Row

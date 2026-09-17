@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-12-v5",
+  "version": "2026-09-17-v6",
   "knowledge_status": "candidate-profile-v0.1",
   "search_scope": {
     "country": "US",
@@ -55,6 +55,10 @@
     "needs_visa_sponsorship": true
   },
   "seniority": {
+    "senior_title_terms": [
+      "senior",
+      "sr"
+    ],
     "strong_negative_title_terms": [
       "lead",
       "staff",
@@ -69,15 +73,42 @@
     ]
   },
   "candidate_generation": {
+    "early_career_signals": [
+      "new grad",
+      "new graduate",
+      "recent graduate",
+      "university graduate",
+      "campus hire",
+      "campus recruiting",
+      "early career",
+      "entry level",
+      "new graduate program",
+      "class of 2026",
+      "class of 2027"
+    ],
+    "entry_title_terms": [
+      "junior",
+      "associate",
+      "new grad",
+      "graduate"
+    ],
+    "research_heavy_signals": [
+      "research scientist",
+      "research agenda",
+      "foundation model research",
+      "novel algorithms",
+      "publish research",
+      "publication record",
+      "top-tier conference",
+      "peer-reviewed publications"
+    ],
     "primary_title_families": {
       "DATA_SCIENCE": [
         "data scientist",
         "data science",
         "applied data scientist",
-        "decision scientist",
         "health data scientist",
-        "clinical data scientist",
-        "quantitative scientist"
+        "clinical data scientist"
       ],
       "AI_SCIENTIST": [
         "ai scientist",
@@ -85,24 +116,15 @@
         "applied ai scientist",
         "machine learning scientist",
         "ml scientist",
-        "applied scientist"
-      ],
-      "AI_MODEL_EVALUATION": [
         "model evaluation scientist",
         "ai evaluation scientist",
         "model behavior scientist"
+      ],
+      "APPLIED_SCIENTIST": [
+        "applied scientist"
       ]
     },
-    "secondary_title_families": {
-      "APPLIED_AI_ENGINEERING": [
-        "applied ai engineer",
-        "ai engineer",
-        "artificial intelligence engineer",
-        "machine learning engineer",
-        "ml engineer",
-        "model evaluation engineer"
-      ]
-    },
+    "secondary_title_families": {},
     "non_target_title_terms": [
       "software engineer",
       "backend engineer",
@@ -121,6 +143,11 @@
       "communications",
       "financial analyst",
       "business analyst",
+      "data analyst",
+      "product analyst",
+      "decision analyst",
+      "decision scientist",
+      "quantitative scientist",
       "business systems analyst",
       "systems administrator",
       "technician",
@@ -238,20 +265,7 @@
         "evaluation system"
       ]
     },
-    "secondary": {
-      "DECISION_SCIENCE": [
-        "decision scientist",
-        "causal inference",
-        "optimization",
-        "decision modeling"
-      ],
-      "APPLIED_AI_ENGINEERING": [
-        "ai engineer",
-        "machine learning engineer",
-        "production machine learning",
-        "ml application"
-      ]
-    },
+    "secondary": {},
     "low_priority": {
       "PRODUCT_ANALYTICS": [
         "product analytics",

@@ -8,7 +8,12 @@ from datetime import datetime, timezone
 
 
 USER_AGENT = "job-search/0.1 (contact: jliu_Seeu@outlook.com)"
-WORKDAY_SEARCH_TERMS = ["data scientist", "applied scientist", "machine learning"]
+WORKDAY_SEARCH_TERMS = [
+    "data scientist",
+    "ai scientist",
+    "machine learning scientist",
+    "applied scientist",
+]
 
 
 def _get_json(url: str) -> dict | list:
