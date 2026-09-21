@@ -12,6 +12,7 @@ from .database import (
     record_daily_delivery,
     record_feedback,
 )
+from .campus import build_campus_report
 from .mailer import send_digest
 from .service import build_digest, load_json, mark_notified, poll_all
 
@@ -26,7 +27,7 @@ DELIVERY = ROOT / "config" / "delivery.json"
 def main() -> None:
     parser = argparse.ArgumentParser(description="Target-company job tracker")
     parser.add_argument(
-        "command", choices=["bootstrap", "poll", "digest", "email", "feedback", "due"]
+        "command", choices=["bootstrap", "poll", "digest", "email", "feedback", "due", "campus-report"]
     )
     parser.add_argument("--db", type=Path, default=DEFAULT_DB)
     parser.add_argument("--output", type=Path)
@@ -44,6 +45,16 @@ def main() -> None:
 
     connection = connect(args.db)
     init_schema(connection)
+
+    if args.command == "campus-report":
+        report = build_campus_report(connection, load_json(DOMAIN))
+        if args.output:
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            args.output.write_text(report, encoding="utf-8")
+            print(f"Wrote {args.output}")
+        else:
+            print(report)
+        return
 
     if args.command == "due":
         if not args.delivery_slot:

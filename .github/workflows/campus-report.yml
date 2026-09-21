@@ -1,0 +1,46 @@
+name: Campus and New Grad Report
+
+on:
+  workflow_dispatch:
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/cache/restore@v4
+        with:
+          path: data/jobs.db
+          key: campus-report-${{ github.run_id }}
+          restore-keys: |
+            job-db-
+
+      - name: Build historical campus report
+        run: python -m job_tracker campus-report --output outputs/campus-report.txt
+
+      - name: Email report
+        env:
+          SMTP_HOST: smtp.gmail.com
+          SMTP_PORT: "587"
+          SMTP_USER: jasperrrliu@gmail.com
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          MAIL_FROM: jasperrrliu@gmail.com
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          from job_tracker.mailer import send_digest
+
+          delivery = json.load(open("config/delivery.json", encoding="utf-8"))
+          report = Path("outputs/campus-report.txt").read_text(encoding="utf-8")
+          send_digest("Campus / New Grad reverse tracking report", report, delivery["recipient"])
+          PY

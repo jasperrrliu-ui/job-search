@@ -1,4 +1,5 @@
 [
+  {"name": "Boston Consulting Group (BCG)", "classification": "custom_dynamic", "official_url": "https://careers.bcg.com/global/en/search-results", "next_step": "custom_adapter"},
   {"name": "Airbnb", "classification": "custom_dynamic", "official_url": "https://careers.airbnb.com/positions/", "next_step": "custom_adapter"},
   {"name": "Airwallex", "classification": "custom_dynamic", "official_url": "https://careers.airwallex.com/jobs/", "next_step": "custom_adapter"},
   {"name": "Applied Intuition", "classification": "custom_dynamic", "official_url": "https://www.appliedintuition.com/careers", "next_step": "custom_adapter"},

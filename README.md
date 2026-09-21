@@ -45,6 +45,9 @@ python -m job_tracker digest
 
 # Save the preview to a file.
 python -m job_tracker digest --output outputs/digest.txt
+
+# Analyze all retained jobs for campus/new-grad supply and recurring employers.
+python -m job_tracker campus-report --output outputs/campus-report.txt
 ```
 
 To mark the current digest as sent:
@@ -83,6 +86,11 @@ fallback skips polling when its delivery slot already succeeded. Add the Gmail a
 password as a repository Actions secret named `SMTP_PASSWORD`, then manually run
 the workflow once to verify delivery. The SQLite database is persisted in the
 Actions cache.
+
+Run the manual `Campus and New Grad Report` workflow to analyze every job retained
+in that cache. It emails separate counts for explicit campus/new-grad roles and
+roles that merely appear compatible with zero to two years of experience, plus
+company-level recurrence signals.
 
 ## Configuration
 
