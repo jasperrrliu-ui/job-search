@@ -5,6 +5,8 @@ import json
 import re
 import urllib.request
 from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
+from xml.etree import ElementTree
 
 
 USER_AGENT = "job-search/0.1 (contact: jliu_Seeu@outlook.com)"
@@ -270,6 +272,32 @@ def fetch_jobs(company: dict, title_rules: dict | None = None) -> list[dict]:
                 }
             )
         return jobs
+
+    if provider == "successfactors_rss":
+        jobs = []
+        for search_text in WORKDAY_SEARCH_TERMS:
+            feed_url = source["feed_url"]
+            separator = "&" if "?" in feed_url else "?"
+            page = _get_text(f"{feed_url}{separator}keywords={search_text.replace(' ', '%20')}")
+            root = ElementTree.fromstring(page)
+            for item in root.findall("./channel/item"):
+                title = _plain_text(item.findtext("title"))
+                if not _target_title(title, title_rules):
+                    continue
+                url = item.findtext("link") or ""
+                published = item.findtext("pubDate")
+                jobs.append(
+                    {
+                        "requisition_id": url or title,
+                        "title": title,
+                        "location": title.rsplit("(", 1)[-1].rstrip(")") if "(" in title else "",
+                        "official_url": url,
+                        "description": _plain_text(item.findtext("description")),
+                        "official_created_at": parsedate_to_datetime(published).isoformat() if published else None,
+                        "official_updated_at": None,
+                    }
+                )
+        return list({job["requisition_id"]: job for job in jobs}.values())
 
     if provider == "workday":
         raise ValueError("Workday must use incremental discovery")

@@ -367,8 +367,9 @@ def build_digest(
 
     sections = [
         ("NEW_GRAD", "Priority 1 — New Grad / Campus"),
-        ("EARLY_CAREER", "Priority 2 — Early Career"),
-        ("STANDARD", "Priority 3 — Standard Data/AI Scientist"),
+        ("EARLY_CAREER", "Priority 2 — Explicit Early Career"),
+        ("LOW_YOE_COMPATIBLE", "Priority 3 — Explicit <=2 YOE compatible (not a campus signal)"),
+        ("STANDARD", "Priority 4 — Standard Data/AI Scientist"),
         ("SENIOR_EXCEPTION", "Stretch — Senior title with explicit <=2 YOE path"),
     ]
     grouped = {stage: [] for stage, _ in sections}

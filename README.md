@@ -12,13 +12,23 @@ history in SQLite, applies editable domain rules, and renders a daily digest.
 - Delivery: text digest preview; real email and cloud scheduling come after the
   local flow is validated
 
-The active registry currently polls 209 verified ATS sources. New companies are
+The active registry polls verified ATS sources. New companies are
 silently baselined on their first successful poll, so their historical openings
 are not misreported as newly posted jobs. A separate 1,586-company multi-source
 Ring 1 pool is retained for Company Lens screening and future adapter work. It
 combines the S&P 500, Lenny 100, a current unicorn database, AI/cloud rankings,
 and the existing registry; candidate entries do not increase scheduled polling
-cost.
+cost until their official source is verified.
+
+Run a source-coverage pass to promote candidates with an official careers entry
+that resolves to a supported public ATS. It also writes a transparent ledger of
+companies that are `verified_active`, `known_unsupported`,
+`needs_official_url`, or `unverified`; being in the candidate pool never means a
+company is silently treated as monitored.
+
+```powershell
+python scripts/discover_company_sources.py --all-candidates --workers 20
+```
 
 Company Lens uses 1,500 employees as the default minimum. Smaller companies stay
 out unless they are explicitly marked `EXCEPTION_HIGH_FIT`. Data Science and
@@ -115,7 +125,10 @@ qualification path requiring no more than two years of experience; those rare
 exceptions remain low-priority review items. Lead, Staff, Principal, Manager,
 Director, Head, VP, Architect, and Supervisor titles are excluded at the
 candidate gate. Digests group results into New Grad/Campus, Early Career,
-Standard, and Senior Exception sections.
+explicit <=2 YOE compatible, Standard, and Senior Exception sections. A
+standard role with neither direct early-career evidence nor an explicit <=2 YOE
+path is retained as employer-market intelligence but is not sent as an
+application recommendation.
 
 For plausible or ambiguous jobs, an optional OpenAI Responses API interpreter
 can classify responsibilities and role identity with quoted JD evidence. It

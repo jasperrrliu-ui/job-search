@@ -7,7 +7,7 @@ import re
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urlencode, urljoin, urlparse, urlunparse
 
 
 HEADERS = {"User-Agent": "job-search/0.1"}
@@ -17,6 +17,41 @@ BLOCKED_CANDIDATES = {
     "Builders FirstSource",
     "Healthpeak Properties",
 }
+SUPPORTED_ATS_NAMES = {
+    "Workday",
+    "Greenhouse",
+    "Ashby",
+    "Lever",
+    "SmartRecruiters",
+}
+
+
+def candidate_urls(candidate: dict) -> list[str]:
+    urls = [candidate.get("careers_url"), candidate.get("ats_url")]
+    urls = [url for url in urls if url]
+    if urls:
+        return list(dict.fromkeys(urls))
+    domain = candidate.get("domain")
+    if domain:
+        return [f"https://{domain}/careers", f"https://www.{domain}/careers"]
+    return []
+
+
+def search_result_urls(candidate: dict) -> list[str]:
+    if candidate.get("detected_ats") not in {"Phenom People", "iCIMS"}:
+        return []
+    urls = []
+    for url in candidate_urls(candidate):
+        parsed = urlparse(url)
+        parts = [part for part in parsed.path.split("/") if part]
+        prefix = "/".join(parts[:2]) if len(parts) >= 2 else ""
+        path = f"/{prefix}/search-results" if prefix else "/search-results"
+        urls.append(
+            urlunparse(
+                (parsed.scheme, parsed.netloc, path, "", urlencode({"keywords": "data scientist"}), "")
+            )
+        )
+    return list(dict.fromkeys(urls))
 
 
 def get(url: str) -> tuple[str, str]:
@@ -70,6 +105,8 @@ def source_from_text(text: str) -> dict | None:
 
 def valid_source(source: dict) -> bool:
     provider = source["provider"]
+    if provider == "successfactors_rss":
+        return "<rss" in get(source["feed_url"])[1].lower()
     token = source["token"]
     if provider == "greenhouse":
         url = f"https://boards-api.greenhouse.io/v1/boards/{token}/jobs"
@@ -100,38 +137,61 @@ def valid_source(source: dict) -> bool:
     return False
 
 
+def provider_source(candidate: dict) -> dict | None:
+    if candidate.get("detected_ats") != "SAP SuccessFactors":
+        return None
+    url = next(iter(candidate_urls(candidate)), None)
+    if not url:
+        return None
+    parsed = urlparse(url)
+    feed_url = urlunparse(
+        (
+            parsed.scheme,
+            parsed.netloc,
+            "/services/rss/job/",
+            "",
+            urlencode({"locale": "en_US"}),
+            "",
+        )
+    )
+    return {"provider": "successfactors_rss", "feed_url": feed_url}
+
+
 def discover(candidate: dict) -> tuple[str, dict] | None:
     if candidate.get("source") and valid_source(candidate["source"]):
         return candidate["name"], candidate["source"]
-    url = candidate.get("careers_url")
-    if not url:
-        return None
-    final_url, page = get(url)
-    source = source_from_text(final_url + " " + page)
-    if source and valid_source(source):
-        return candidate["name"], source
-
-    links = [urljoin(final_url, "/careers"), urljoin(final_url, "/jobs")]
-    links += [
-        urljoin(final_url, link)
-        for link in re.findall(r'href=["\']([^"\']+)["\']', page, re.I)
-        if re.search(r"job|career|position|opening", link, re.I)
-    ]
-    links.sort(
-        key=lambda link: 0
-        if re.search(
-            r"greenhouse|ashbyhq|lever|myworkdayjobs|smartrecruiters",
-            link,
-            re.I,
-        )
-        else 1
-    )
-    for link in list(dict.fromkeys(links))[:5]:
+    embedded = candidate.get("registry", {}).get("source")
+    if embedded and valid_source(embedded):
+        return candidate["name"], embedded
+    known = provider_source(candidate)
+    if known and valid_source(known):
+        return candidate["name"], known
+    for url in candidate_urls(candidate) + search_result_urls(candidate):
         try:
-            linked_url, linked_page = get(link)
-            source = source_from_text(linked_url + " " + linked_page)
+            final_url, page = get(url)
+            source = source_from_text(final_url + " " + page)
             if source and valid_source(source):
                 return candidate["name"], source
+            links = [urljoin(final_url, "/careers"), urljoin(final_url, "/jobs")]
+            links += [
+                urljoin(final_url, link)
+                for link in re.findall(r'href=["\']([^"\']+)["\']', page, re.I)
+                if re.search(r"job|career|position|opening", link, re.I)
+            ]
+            links.sort(
+                key=lambda link: 0
+                if re.search(
+                    r"greenhouse|ashbyhq|lever|myworkdayjobs|smartrecruiters",
+                    link,
+                    re.I,
+                )
+                else 1
+            )
+            for link in list(dict.fromkeys(links))[:5]:
+                linked_url, linked_page = get(link)
+                source = source_from_text(linked_url + " " + linked_page)
+                if source and valid_source(source):
+                    return candidate["name"], source
         except Exception:
             pass
     return None
@@ -204,6 +264,10 @@ def main() -> None:
     parser.add_argument("--registry", type=Path, default=Path("config/companies.json"))
     parser.add_argument("--workers", type=int, default=20)
     parser.add_argument("--include-unicorns", action="store_true")
+    parser.add_argument("--all-candidates", action="store_true")
+    parser.add_argument("--report", type=Path, default=Path("outputs/source-coverage.json"))
+    parser.add_argument("--only-provider")
+    parser.add_argument("--no-report", action="store_true")
     args = parser.parse_args()
 
     pool = json.loads(args.pool.read_text(encoding="utf-8"))["companies"]
@@ -217,9 +281,11 @@ def main() -> None:
     candidates = [
         company
         for company in pool
-        if "S&P 500 ATS Map" in company.get("lists", [])
-        and company["name"].casefold() not in registered
+        if company["name"].casefold() not in registered
         and company["name"] not in BLOCKED_CANDIDATES
+        and (args.all_candidates or "S&P 500 ATS Map" in company.get("lists", []))
+        and candidate_urls(company)
+        and (not args.only_provider or company.get("detected_ats") == args.only_provider)
     ]
     if args.include_unicorns:
         candidates.extend(
@@ -266,7 +332,28 @@ def main() -> None:
     args.registry.write_text(
         json.dumps(registry, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
+    if args.no_report:
+        print(f"Added {added} sources; registry now has {len(registry)} companies")
+        return
+    found_by_name = {name.casefold() for name, _ in found}
+    coverage = {"verified_active": [], "known_unsupported": [], "needs_official_url": [], "unverified": []}
+    for company in pool:
+        name = company["name"]
+        if name.casefold() in registered or name.casefold() in found_by_name:
+            coverage["verified_active"].append(name)
+        elif (
+            company.get("detected_ats")
+            and company["detected_ats"] not in {"Unknown", *SUPPORTED_ATS_NAMES}
+        ):
+            coverage["known_unsupported"].append({"name": name, "provider": company["detected_ats"]})
+        elif not candidate_urls(company):
+            coverage["needs_official_url"].append(name)
+        else:
+            coverage["unverified"].append(name)
+    args.report.parent.mkdir(parents=True, exist_ok=True)
+    args.report.write_text(json.dumps(coverage, indent=2) + "\n", encoding="utf-8")
     print(f"Added {added} sources; registry now has {len(registry)} companies")
+    print("Coverage: " + ", ".join(f"{key}={len(value)}" for key, value in coverage.items()))
 
 
 if __name__ == "__main__":

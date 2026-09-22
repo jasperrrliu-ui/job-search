@@ -54,7 +54,7 @@ def _required_evidence(text: str, subject_pattern: str) -> list[dict]:
 def _location_status(location: str, domain: dict) -> str:
     lowered = location.lower()
     markers = domain["search_scope"]["us_location_markers"]
-    state_codes = set(re.findall(r"\b[A-Z]{2}\b", location))
+    state_codes = set(re.findall(r",\s*([A-Z]{2})\b", location))
     if any(marker in lowered for marker in markers) or state_codes & US_STATE_CODES:
         return "PASS"
     if any(
@@ -247,12 +247,12 @@ def _career_stage(job: dict, paths: list[dict], domain: dict) -> str:
     rules = domain["candidate_generation"]
     if any(_title_has(title, term) for term in domain["seniority"]["senior_title_terms"]):
         return "SENIOR_EXCEPTION"
-    if any(signal in text for signal in rules["early_career_signals"]):
+    if any(signal in text for signal in rules["new_grad_signals"]):
         return "NEW_GRAD"
-    if any(_title_has(title, term) for term in rules["entry_title_terms"]):
+    if any(signal in text for signal in rules["early_career_signals"]):
         return "EARLY_CAREER"
     if paths and min(path["years"] for path in paths) <= 2:
-        return "EARLY_CAREER"
+        return "LOW_YOE_COMPATIBLE"
     return "STANDARD"
 
 
@@ -451,6 +451,8 @@ def _decision(
         return "HOLD", "LOW"
     if career_stage == "SENIOR_EXCEPTION":
         return "REVIEW", "LOW"
+    if career_stage == "STANDARD":
+        return "SAVE", "LOW"
     if (
         eligibility == "PASS"
         and result["role_interpretation"].get("seniority_signal") != "STRONG_NEGATIVE"

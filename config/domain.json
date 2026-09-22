@@ -73,18 +73,24 @@
     ]
   },
   "candidate_generation": {
-    "early_career_signals": [
+    "new_grad_signals": [
       "new grad",
       "new graduate",
       "recent graduate",
       "university graduate",
       "campus hire",
       "campus recruiting",
-      "early career",
-      "entry level",
       "new graduate program",
+      "graduate program",
+      "university program",
       "class of 2026",
       "class of 2027"
+    ],
+    "early_career_signals": [
+      "early career",
+      "early careers",
+      "early talent",
+      "entry level"
     ],
     "entry_title_terms": [
       "junior",

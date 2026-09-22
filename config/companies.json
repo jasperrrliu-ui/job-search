@@ -4348,5 +4348,731 @@
       "provider": "smartrecruiters",
       "token": "wise"
     }
+  },
+  {
+    "name": "Ameren",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "External",
+      "host": "ameren.wd1.myworkdayjobs.com",
+      "tenant": "ameren",
+      "site": "External"
+    }
+  },
+  {
+    "name": "Duke Energy",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "search",
+      "host": "dukeenergy.wd1.myworkdayjobs.com",
+      "tenant": "dukeenergy",
+      "site": "search"
+    }
+  },
+  {
+    "name": "Loews Corporation",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "loewshotels",
+      "host": "loewshotels.wd5.myworkdayjobs.com",
+      "tenant": "loewshotels",
+      "site": "loewshotels"
+    }
+  },
+  {
+    "name": "PulteGroup",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "PGI",
+      "host": "pultegroup.wd1.myworkdayjobs.com",
+      "tenant": "pultegroup",
+      "site": "PGI"
+    }
+  },
+  {
+    "name": "T-Mobile US",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "External",
+      "host": "tmobile.wd1.myworkdayjobs.com",
+      "tenant": "tmobile",
+      "site": "External"
+    }
+  },
+  {
+    "name": "Aflac",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "successfactors_rss",
+      "feed_url": "https://careers.aflac.com/services/rss/job/?locale=en_US"
+    }
+  },
+  {
+    "name": "Altria",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "successfactors_rss",
+      "feed_url": "https://careers.altria.com/services/rss/job/?locale=en_US"
+    }
+  },
+  {
+    "name": "CenterPoint Energy",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "successfactors_rss",
+      "feed_url": "https://careers.centerpointenergy.com/services/rss/job/?locale=en_US"
+    }
+  },
+  {
+    "name": "Charles River Laboratories",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "successfactors_rss",
+      "feed_url": "https://careers.criver.com/services/rss/job/?locale=en_US"
+    }
+  },
+  {
+    "name": "DTE Energy",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "successfactors_rss",
+      "feed_url": "https://careers.dteenergy.com/services/rss/job/?locale=en_US"
+    }
+  },
+  {
+    "name": "Dominion Energy",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "successfactors_rss",
+      "feed_url": "https://careers.dominionenergy.com/services/rss/job/?locale=en_US"
+    }
+  },
+  {
+    "name": "Entergy",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "successfactors_rss",
+      "feed_url": "https://jobs.entergy.com/services/rss/job/?locale=en_US"
+    }
+  },
+  {
+    "name": "Expand Energy",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "successfactors_rss",
+      "feed_url": "https://jobs.expandenergy.com/services/rss/job/?locale=en_US"
+    }
+  },
+  {
+    "name": "Freeport-McMoRan",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "successfactors_rss",
+      "feed_url": "https://jobs.fcx.com/services/rss/job/?locale=en_US"
+    }
+  },
+  {
+    "name": "Hershey Company (The)",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "successfactors_rss",
+      "feed_url": "https://careers.thehersheycompany.com/services/rss/job/?locale=en_US"
+    }
+  },
+  {
+    "name": "Hubbell Incorporated",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "successfactors_rss",
+      "feed_url": "https://careers.hubbell.com/services/rss/job/?locale=en_US"
+    }
+  },
+  {
+    "name": "L3Harris",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "successfactors_rss",
+      "feed_url": "https://jobs.l3harris.com/services/rss/job/?locale=en_US"
+    }
+  },
+  {
+    "name": "LyondellBasell",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "successfactors_rss",
+      "feed_url": "https://careers.lyondellbasell.com/services/rss/job/?locale=en_US"
+    }
+  },
+  {
+    "name": "McCormick & Company",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "successfactors_rss",
+      "feed_url": "https://careers.mccormick.com/services/rss/job/?locale=en_US"
+    }
+  },
+  {
+    "name": "McDonald's",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "successfactors_rss",
+      "feed_url": "https://jobs.mcdonalds.com/services/rss/job/?locale=en_US"
+    }
+  },
+  {
+    "name": "NextEra Energy",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "successfactors_rss",
+      "feed_url": "https://jobs.nexteraenergy.com/services/rss/job/?locale=en_US"
+    }
+  },
+  {
+    "name": "Nucor",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "successfactors_rss",
+      "feed_url": "https://jobs.nucor.com/services/rss/job/?locale=en_US"
+    }
+  },
+  {
+    "name": "Paccar",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "successfactors_rss",
+      "feed_url": "https://jobs.paccar.com/services/rss/job/?locale=en_US"
+    }
+  },
+  {
+    "name": "Skyworks Solutions",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "successfactors_rss",
+      "feed_url": "https://careers.skyworksinc.com/services/rss/job/?locale=en_US"
+    }
+  },
+  {
+    "name": "Supermicro",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "successfactors_rss",
+      "feed_url": "https://jobs.supermicro.com/services/rss/job/?locale=en_US"
+    }
+  },
+  {
+    "name": "TE Connectivity",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "successfactors_rss",
+      "feed_url": "https://careers.te.com/services/rss/job/?locale=en_US"
+    }
+  },
+  {
+    "name": "Teradyne",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "successfactors_rss",
+      "feed_url": "https://jobs.teradyne.com/services/rss/job/?locale=en_US"
+    }
+  },
+  {
+    "name": "Union Pacific Corporation",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "successfactors_rss",
+      "feed_url": "https://up.jobs/services/rss/job/?locale=en_US"
+    }
+  },
+  {
+    "name": "Vistra Corp.",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "successfactors_rss",
+      "feed_url": "https://careers.vistra.com/services/rss/job/?locale=en_US"
+    }
+  },
+  {
+    "name": "Adobe Inc.",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "external_experienced",
+      "host": "adobe.wd5.myworkdayjobs.com",
+      "tenant": "adobe",
+      "site": "external_experienced"
+    }
+  },
+  {
+    "name": "CVS Health",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "CVS_Health_Careers",
+      "host": "cvshealth.wd1.myworkdayjobs.com",
+      "tenant": "cvshealth",
+      "site": "CVS_Health_Careers"
+    }
+  },
+  {
+    "name": "Cboe Global Markets",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "External_Career_CBOE",
+      "host": "cboe.wd1.myworkdayjobs.com",
+      "tenant": "cboe",
+      "site": "External_Career_CBOE"
+    }
+  },
+  {
+    "name": "Cencora",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "Global",
+      "host": "myhrabc.wd5.myworkdayjobs.com",
+      "tenant": "myhrabc",
+      "site": "Global"
+    }
+  },
+  {
+    "name": "Cisco",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "Cisco_Careers",
+      "host": "cisco.wd5.myworkdayjobs.com",
+      "tenant": "cisco",
+      "site": "Cisco_Careers"
+    }
+  },
+  {
+    "name": "Conagra Brands",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "Careers_US",
+      "host": "conagrabrands.wd1.myworkdayjobs.com",
+      "tenant": "conagrabrands",
+      "site": "Careers_US"
+    }
+  },
+  {
+    "name": "Danaher Corporation",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "DanaherJobs",
+      "host": "danaher.wd1.myworkdayjobs.com",
+      "tenant": "danaher",
+      "site": "DanaherJobs"
+    }
+  },
+  {
+    "name": "Dollar Tree",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "dollartreeus",
+      "host": "dollartree.wd5.myworkdayjobs.com",
+      "tenant": "dollartree",
+      "site": "dollartreeus"
+    }
+  },
+  {
+    "name": "Fiserv",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "EXT",
+      "host": "fiserv.wd5.myworkdayjobs.com",
+      "tenant": "fiserv",
+      "site": "EXT"
+    }
+  },
+  {
+    "name": "GE Aerospace",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "GE_ExternalSite",
+      "host": "geaerospace.wd5.myworkdayjobs.com",
+      "tenant": "geaerospace",
+      "site": "GE_ExternalSite"
+    }
+  },
+  {
+    "name": "GE HealthCare",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "GEHC_ExternalSite",
+      "host": "gehc.wd5.myworkdayjobs.com",
+      "tenant": "gehc",
+      "site": "GEHC_ExternalSite"
+    }
+  },
+  {
+    "name": "Hewlett Packard Enterprise",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "Jobsathpe",
+      "host": "hpe.wd5.myworkdayjobs.com",
+      "tenant": "hpe",
+      "site": "Jobsathpe"
+    }
+  },
+  {
+    "name": "Humana",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "Humana_External_Career_Site",
+      "host": "humana.wd5.myworkdayjobs.com",
+      "tenant": "humana",
+      "site": "Humana_External_Career_Site"
+    }
+  },
+  {
+    "name": "Idexx Laboratories",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "IDEXX",
+      "host": "idexx.wd115.myworkdayjobs.com",
+      "tenant": "idexx",
+      "site": "IDEXX"
+    }
+  },
+  {
+    "name": "Labcorp",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "External",
+      "host": "labcorp.wd1.myworkdayjobs.com",
+      "tenant": "labcorp",
+      "site": "External"
+    }
+  },
+  {
+    "name": "Lowe's",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "LWS_External_CS",
+      "host": "lowes.wd5.myworkdayjobs.com",
+      "tenant": "lowes",
+      "site": "LWS_External_CS"
+    }
+  },
+  {
+    "name": "Marsh McLennan",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "MMC",
+      "host": "mmc.wd1.myworkdayjobs.com",
+      "tenant": "mmc",
+      "site": "MMC"
+    }
+  },
+  {
+    "name": "Masco",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "Masco",
+      "host": "masco.wd1.myworkdayjobs.com",
+      "tenant": "masco",
+      "site": "Masco"
+    }
+  },
+  {
+    "name": "PNC Financial Services",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "External",
+      "host": "pnc.wd5.myworkdayjobs.com",
+      "tenant": "pnc",
+      "site": "External"
+    }
+  },
+  {
+    "name": "PPG Industries",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "PPG_CAREERS",
+      "host": "ppg.wd5.myworkdayjobs.com",
+      "tenant": "ppg",
+      "site": "PPG_CAREERS"
+    }
+  },
+  {
+    "name": "Pentair",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "Pentair_Careers",
+      "host": "pentair.wd5.myworkdayjobs.com",
+      "tenant": "pentair",
+      "site": "Pentair_Careers"
+    }
+  },
+  {
+    "name": "Procter & Gamble",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "1000",
+      "host": "pg.wd5.myworkdayjobs.com",
+      "tenant": "pg",
+      "site": "1000"
+    }
+  },
+  {
+    "name": "Qnity Electronics",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "Jobs",
+      "host": "qnity.wd503.myworkdayjobs.com",
+      "tenant": "qnity",
+      "site": "Jobs"
+    }
+  },
+  {
+    "name": "Republic Services",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "Republic",
+      "host": "republic.wd5.myworkdayjobs.com",
+      "tenant": "republic",
+      "site": "Republic"
+    }
+  },
+  {
+    "name": "Southwest Airlines",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "external",
+      "host": "swa.wd1.myworkdayjobs.com",
+      "tenant": "swa",
+      "site": "external"
+    }
+  },
+  {
+    "name": "Truist Financial",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "Careers",
+      "host": "truist.wd1.myworkdayjobs.com",
+      "tenant": "truist",
+      "site": "Careers"
+    }
+  },
+  {
+    "name": "Warner Bros. Discovery",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "global",
+      "host": "warnerbros.wd5.myworkdayjobs.com",
+      "tenant": "warnerbros",
+      "site": "global"
+    }
+  },
+  {
+    "name": "eBay Inc.",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "apply",
+      "host": "ebay.wd5.myworkdayjobs.com",
+      "tenant": "ebay",
+      "site": "apply"
+    }
   }
 ]
