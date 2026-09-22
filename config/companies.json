@@ -5074,5 +5074,495 @@
       "tenant": "ebay",
       "site": "apply"
     }
+  },
+  {
+    "name": "Aon plc",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "icims_jibe",
+      "api_url": "https://jobs.aon.com/api/jobs",
+      "careers_url": "https://jobs.aon.com/jobs"
+    }
+  },
+  {
+    "name": "Constellation Energy",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "icims_jibe",
+      "api_url": "https://jobs.constellationenergy.com/api/jobs",
+      "careers_url": "https://jobs.constellationenergy.com/jobs"
+    }
+  },
+  {
+    "name": "Costco",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "icims_jibe",
+      "api_url": "https://careers.costco.com/api/jobs",
+      "careers_url": "https://careers.costco.com/jobs"
+    }
+  },
+  {
+    "name": "Exelon",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "icims_jibe",
+      "api_url": "https://careers.exeloncorp.com/api/jobs",
+      "careers_url": "https://careers.exeloncorp.com/jobs"
+    }
+  },
+  {
+    "name": "FedEx Freight",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "icims_jibe",
+      "api_url": "https://careers.fedexfreight.com/api/jobs",
+      "careers_url": "https://careers.fedexfreight.com/jobs"
+    }
+  },
+  {
+    "name": "Garmin",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "icims_jibe",
+      "api_url": "https://careers.garmin.com/api/jobs",
+      "careers_url": "https://careers.garmin.com/jobs"
+    }
+  },
+  {
+    "name": "Incyte",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "icims_jibe",
+      "api_url": "https://careers.incyte.com/api/jobs",
+      "careers_url": "https://careers.incyte.com/jobs"
+    }
+  },
+  {
+    "name": "Intercontinental Exchange",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "icims_jibe",
+      "api_url": "https://careers.ice.com/api/jobs",
+      "careers_url": "https://careers.ice.com/jobs"
+    }
+  },
+  {
+    "name": "Keysight Technologies",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "icims_jibe",
+      "api_url": "https://careers.keysight.com/api/jobs",
+      "careers_url": "https://careers.keysight.com/jobs"
+    }
+  },
+  {
+    "name": "Kinder Morgan",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "icims_jibe",
+      "api_url": "https://careers.kindermorgan.com/api/jobs",
+      "careers_url": "https://careers.kindermorgan.com/jobs"
+    }
+  },
+  {
+    "name": "Paychex",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "icims_jibe",
+      "api_url": "https://careers.paychex.com/api/jobs",
+      "careers_url": "https://careers.paychex.com/jobs"
+    }
+  },
+  {
+    "name": "PepsiCo",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "icims_jibe",
+      "api_url": "https://www.pepsicojobs.com/api/jobs",
+      "careers_url": "https://www.pepsicojobs.com/jobs"
+    }
+  },
+  {
+    "name": "Principal Financial Group",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "icims_jibe",
+      "api_url": "https://careers.principal.com/api/jobs",
+      "careers_url": "https://careers.principal.com/jobs"
+    }
+  },
+  {
+    "name": "Ulta Beauty",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "icims_jibe",
+      "api_url": "https://careers.ulta.com/api/jobs",
+      "careers_url": "https://careers.ulta.com/jobs"
+    }
+  },
+  {
+    "name": "AutoZone",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "oracle_hcm",
+      "api_base": "https://careers.autozone.com",
+      "site": "CX_1",
+      "site_url": "https://careers.autozone.com/hcmUI/CandidateExperience/en/sites/CX_1"
+    }
+  },
+  {
+    "name": "Chubb Limited",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "oracle_hcm",
+      "api_base": "https://fa-ewgu-saasfaprod1.fa.ocs.oraclecloud.com",
+      "site": "CX_2001",
+      "site_url": "https://fa-ewgu-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_2001"
+    }
+  },
+  {
+    "name": "Digital Realty",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "oracle_hcm",
+      "api_base": "https://hdep.fa.us2.oraclecloud.com",
+      "site": "CX",
+      "site_url": "https://hdep.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX"
+    }
+  },
+  {
+    "name": "International Paper",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "oracle_hcm",
+      "api_base": "https://iazbqy.fa.ocs.oraclecloud.com",
+      "site": "CX_1",
+      "site_url": "https://iazbqy.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1"
+    }
+  },
+  {
+    "name": "Waste Management",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "oracle_hcm",
+      "api_base": "https://emcm.fa.us2.oraclecloud.com",
+      "site": "WMCareers",
+      "site_url": "https://emcm.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/WMCareers"
+    }
+  },
+  {
+    "name": "Applied Materials",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "eightfold_pcsx",
+      "api_url": "https://careers.appliedmaterials.com/api/pcsx/search",
+      "detail_url": "https://careers.appliedmaterials.com/api/pcsx/position_details",
+      "careers_url": "https://careers.appliedmaterials.com",
+      "domain": "appliedmaterials.com"
+    }
+  },
+  {
+    "name": "Eaton Corporation",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "eightfold_pcsx",
+      "api_url": "https://eaton.eightfold.ai/api/pcsx/search",
+      "detail_url": "https://eaton.eightfold.ai/api/pcsx/position_details",
+      "careers_url": "https://eaton.eightfold.ai",
+      "domain": "eaton.com"
+    }
+  },
+  {
+    "name": "Estée Lauder Companies (The)",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "eightfold_pcsx",
+      "api_url": "https://careers.elcompanies.com/api/pcsx/search",
+      "detail_url": "https://careers.elcompanies.com/api/pcsx/position_details",
+      "careers_url": "https://careers.elcompanies.com",
+      "domain": "elcompanies.com"
+    }
+  },
+  {
+    "name": "Kraft Heinz",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "eightfold_pcsx",
+      "api_url": "https://jobs.kraftheinz.com/api/pcsx/search",
+      "detail_url": "https://jobs.kraftheinz.com/api/pcsx/position_details",
+      "careers_url": "https://jobs.kraftheinz.com",
+      "domain": "kraftheinz.com"
+    }
+  },
+  {
+    "name": "Qualcomm",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "eightfold_pcsx",
+      "api_url": "https://careers.qualcomm.com/api/pcsx/search",
+      "detail_url": "https://careers.qualcomm.com/api/pcsx/position_details",
+      "careers_url": "https://careers.qualcomm.com",
+      "domain": "qualcomm.com"
+    }
+  },
+  {
+    "name": "Jack Henry & Associates",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "avature_html",
+      "search_url": "https://jackhenry.avature.net/careers/SearchJobs"
+    }
+  },
+  {
+    "name": "MetLife",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "avature_html",
+      "search_url": "https://metlife.avature.net/ml/SearchJobs"
+    }
+  },
+  {
+    "name": "Mettler Toledo",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "avature_html",
+      "search_url": "https://mt.avature.net/careers/SearchJobs"
+    }
+  },
+  {
+    "name": "Smurfit Westrock",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "avature_html",
+      "search_url": "https://westrockta.avature.net/careers/SearchJobs"
+    }
+  },
+  {
+    "name": "Synopsys",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "avature_html",
+      "search_url": "https://synopsys.avature.net/careers/SearchJobs"
+    }
+  },
+  {
+    "name": "Newmont",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "phenom_html",
+      "search_url": "https://jobs.newmont.com/us/en/search-results"
+    }
+  },
+  {
+    "name": "Steris",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "phenom_html",
+      "search_url": "https://careers.steris.com/us/en/search-results"
+    }
+  },
+  {
+    "name": "TJX Companies",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "phenom_html",
+      "search_url": "https://jobs.tjx.com/global/en/search-results"
+    }
+  },
+  {
+    "name": "United Airlines Holdings",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "phenom_html",
+      "search_url": "https://careers.united.com/us/en/search-results"
+    }
+  },
+  {
+    "name": "Zimmer Biomet",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "phenom_html",
+      "search_url": "https://careers.zimmerbiomet.com/us/en/search-results"
+    }
+  },
+  {
+    "name": "Martin Marietta Materials",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "jobvite_xml",
+      "feed_url": "http://app.jobvite.com/CompanyJobs/Xml.aspx?c=qpNaVfw1"
+    }
+  },
+  {
+    "name": "Cincinnati Financial",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "taleo_rest",
+      "api_url": "https://cinfin.taleo.net/careersection/rest/jobboard/searchjobs",
+      "career_url": "https://cinfin.taleo.net/careersection/ex",
+      "portal": "101430233"
+    }
+  },
+  {
+    "name": "D. R. Horton",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "taleo_rest",
+      "api_url": "https://drhorton.taleo.net/careersection/rest/jobboard/searchjobs",
+      "career_url": "https://drhorton.taleo.net/careersection/2",
+      "portal": "101430233"
+    }
+  },
+  {
+    "name": "Textron",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "taleo_rest",
+      "api_url": "https://textron.taleo.net/careersection/rest/jobboard/searchjobs",
+      "career_url": "https://textron.taleo.net/careersection/textron",
+      "portal": "8140753014"
+    }
+  },
+  {
+    "name": "Valero Energy",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "taleo_rest",
+      "api_url": "https://valero.taleo.net/careersection/rest/jobboard/searchjobs",
+      "career_url": "https://valero.taleo.net/careersection/2",
+      "portal": "101430233"
+    }
+  },
+  {
+    "name": "American Electric Power",
+    "priority": "neutral",
+    "active": true,
+    "company_screening": "S&P_500_LARGE_EMPLOYER_PROXY",
+    "poll_interval_hours": 20,
+    "source": {
+      "provider": "workday",
+      "token": "AEPCareerSite",
+      "host": "aep.wd1.myworkdayjobs.com",
+      "tenant": "aep",
+      "site": "AEPCareerSite"
+    }
   }
 ]

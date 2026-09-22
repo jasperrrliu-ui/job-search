@@ -6,7 +6,9 @@ import re
 import urllib.request
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
+from urllib.parse import quote, unquote, urlencode
 from xml.etree import ElementTree
+from urllib.parse import urljoin
 
 
 USER_AGENT = "job-search/0.1 (contact: jliu_Seeu@outlook.com)"
@@ -34,10 +36,47 @@ def _post_json(url: str, payload: dict) -> dict:
         return json.load(response)
 
 
+def _taleo_payload(keyword: str, page: int) -> dict:
+    return {
+        "multilineEnabled": True,
+        "sortingSelection": {
+            "sortBySelectionParam": "3",
+            "ascendingSortingOrder": "false",
+        },
+        "fieldData": {"fields": {"KEYWORD": keyword, "LOCATION": ""}},
+        "filterSelectionParam": {"searchFilterSelections": []},
+        "pageNo": page,
+    }
+
+
 def _get_text(url: str) -> str:
     request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     with urllib.request.urlopen(request, timeout=30) as response:
         return response.read().decode()
+
+
+def _post_form_text(url: str, fields: dict) -> str:
+    request = urllib.request.Request(
+        url,
+        data=urlencode(fields).encode(),
+        headers={
+            "Content-Type": "application/x-www-form-urlencoded",
+            "User-Agent": USER_AGENT,
+        },
+    )
+    with urllib.request.urlopen(request, timeout=30) as response:
+        return response.read().decode(errors="ignore")
+
+
+def _phenom_jobs(page: str) -> list[dict]:
+    marker = "phApp.ddo ="
+    start = page.find(marker)
+    if start < 0:
+        return []
+    start += len(marker)
+    end = page.find("</script>", start)
+    payload, _ = json.JSONDecoder().raw_decode(html.unescape(page[start:end]).lstrip())
+    return payload.get("eagerLoadRefineSearch", {}).get("data", {}).get("jobs", [])
 
 
 def _plain_text(value: str | None) -> str:
@@ -50,6 +89,15 @@ def _iso_from_millis(value: int | None) -> str | None:
     if not value:
         return None
     return datetime.fromtimestamp(value / 1000, tz=timezone.utc).isoformat()
+
+
+def _iso_from_epoch(value: int | str | None) -> str | None:
+    if not value:
+        return None
+    number = int(value)
+    if number > 10_000_000_000:
+        number //= 1000
+    return datetime.fromtimestamp(number, tz=timezone.utc).isoformat()
 
 
 def _target_title(title: str, title_rules: dict | None) -> bool:
@@ -297,6 +345,295 @@ def fetch_jobs(company: dict, title_rules: dict | None = None) -> list[dict]:
                         "official_updated_at": None,
                     }
                 )
+        return list({job["requisition_id"]: job for job in jobs}.values())
+
+    if provider == "jobvite_xml":
+        root = ElementTree.fromstring(_get_text(source["feed_url"]))
+        jobs = []
+        for item in root.findall("./job"):
+            title = _plain_text(item.findtext("title"))
+            if not _target_title(title, title_rules):
+                continue
+            posted = item.findtext("date")
+            jobs.append(
+                {
+                    "requisition_id": item.findtext("requisitionid") or item.findtext("id"),
+                    "title": title,
+                    "location": _plain_text(item.findtext("location")),
+                    "official_url": item.findtext("detail-url") or item.findtext("apply-url"),
+                    "description": _plain_text(item.findtext("description")),
+                    "official_created_at": datetime.strptime(posted, "%m/%d/%Y").replace(tzinfo=timezone.utc).isoformat() if posted else None,
+                    "official_updated_at": None,
+                }
+            )
+        return jobs
+
+    if provider == "taleo_rest":
+        jobs = []
+        endpoint = source["api_url"] + "?" + urlencode(
+            {"lang": "en", "portal": source["portal"]}
+        )
+        for search_text in WORKDAY_SEARCH_TERMS:
+            page_number = 1
+            while True:
+                payload = _post_json(endpoint, _taleo_payload(search_text, page_number))
+                postings = payload.get("requisitionList", [])
+                for posting in postings:
+                    columns = posting.get("column", [])
+                    title = columns[0] if columns else ""
+                    if not _target_title(title, title_rules):
+                        continue
+                    requisition = posting.get("contestNo") or posting.get("jobId")
+                    detail_url = source["career_url"] + "/jobdetail.ftl?" + urlencode(
+                        {"job": requisition, "lang": "en"}
+                    )
+                    detail_page = _get_text(detail_url)
+                    locations = columns[2] if len(columns) > 2 else ""
+                    jobs.append(
+                        {
+                            "requisition_id": str(requisition),
+                            "title": title,
+                            "location": _plain_text(locations.replace('["', '').replace('"]', '')),
+                            "official_url": detail_url,
+                            "description": _plain_text(unquote(detail_page)),
+                            "official_created_at": None,
+                            "official_updated_at": None,
+                        }
+                    )
+                paging = payload.get("pagingData", {})
+                if page_number * paging.get("pageSize", 25) >= paging.get("totalCount", 0):
+                    break
+                page_number += 1
+        return list({job["requisition_id"]: job for job in jobs}.values())
+
+    if provider == "icims_jibe":
+        jobs = []
+        for search_text in WORKDAY_SEARCH_TERMS:
+            payload = _get_json(
+                source["api_url"]
+                + "?"
+                + urlencode({"keywords": search_text, "page": 1, "limit": 100})
+            )
+            for item in payload.get("jobs", []):
+                data = item.get("data", item)
+                title = data.get("title", "")
+                if not _target_title(title, title_rules):
+                    continue
+                requisition = str(data.get("req_id") or data.get("slug"))
+                location = data.get("location") or ", ".join(
+                    str(data[key]) for key in ("city", "state", "country") if data.get(key)
+                )
+                jobs.append(
+                    {
+                        "requisition_id": requisition,
+                        "title": title,
+                        "location": location,
+                        "official_url": f"{source['careers_url']}/{data.get('slug')}?lang={data.get('language', 'en-us')}",
+                        "description": _plain_text(data.get("description")),
+                        "official_created_at": data.get("posted_date") or data.get("postedDate"),
+                        "official_updated_at": data.get("updated_date") or data.get("updatedDate"),
+                    }
+                )
+        return list({job["requisition_id"]: job for job in jobs}.values())
+
+    if provider == "oracle_hcm":
+        jobs = []
+        for search_text in WORKDAY_SEARCH_TERMS:
+            find_params = (
+                f"siteNumber={source['site']},limit=100,offset=0,keyword={search_text}"
+            )
+            url = (
+                source["api_base"]
+                + "/hcmRestApi/resources/latest/recruitingCEJobRequisitions"
+                + "?onlyData=true"
+                + "&expand=requisitionList.workLocation,requisitionList.otherWorkLocations,"
+                + "requisitionList.secondaryLocations"
+                + "&finder=findReqs;"
+                + quote(find_params, safe="=,")
+            )
+            payload = _get_json(url)
+            for posting in payload["items"][0].get("requisitionList", []):
+                title = posting.get("Title", "")
+                if not _target_title(title, title_rules):
+                    continue
+                description = " ".join(
+                    str(posting.get(field) or "")
+                    for field in (
+                        "ShortDescriptionStr",
+                        "ExternalResponsibilitiesStr",
+                        "ExternalQualificationsStr",
+                    )
+                )
+                requisition = str(posting["Id"])
+                jobs.append(
+                    {
+                        "requisition_id": requisition,
+                        "title": title,
+                        "location": posting.get("PrimaryLocation", ""),
+                        "official_url": f"{source['site_url']}/job/{requisition}",
+                        "description": _plain_text(description),
+                        "official_created_at": posting.get("PostedDate"),
+                        "official_updated_at": None,
+                    }
+                )
+        return list({job["requisition_id"]: job for job in jobs}.values())
+
+    if provider == "eightfold_pcsx":
+        jobs = []
+        for search_text in WORKDAY_SEARCH_TERMS:
+            start = 0
+            while True:
+                query = urlencode(
+                    {
+                        "domain": source["domain"],
+                        "start": start,
+                        "num": 10,
+                        "query": search_text,
+                        "location": "",
+                    }
+                )
+                payload = _get_json(source["api_url"] + "?" + query)
+                positions = payload.get("data", {}).get("positions", [])
+                for posting in positions:
+                    title = posting.get("name") or posting.get("title") or ""
+                    if not _target_title(title, title_rules):
+                        continue
+                    position_id = str(posting["id"])
+                    detail = _get_json(
+                        source["detail_url"]
+                        + "?"
+                        + urlencode(
+                            {"position_id": position_id, "domain": source["domain"]}
+                        )
+                    ).get("data", {})
+                    locations = posting.get("standardizedLocations") or posting.get("locations") or []
+                    jobs.append(
+                        {
+                            "requisition_id": str(
+                                posting.get("displayJobId")
+                                or posting.get("atsJobId")
+                                or position_id
+                            ),
+                            "title": title,
+                            "location": "; ".join(
+                                item if isinstance(item, str) else item.get("name", "")
+                                for item in locations
+                            ),
+                            "official_url": source["careers_url"]
+                            + (posting.get("positionUrl") or f"/careers/job/{position_id}"),
+                            "description": _plain_text(
+                                detail.get("jobDescription")
+                                or posting.get("jobDescription")
+                                or posting.get("job_description")
+                            ),
+                            "official_created_at": _iso_from_epoch(
+                                posting.get("postedTs") or posting.get("creationTs")
+                            ),
+                            "official_updated_at": _iso_from_epoch(posting.get("t_update")),
+                        }
+                    )
+                start += len(positions)
+                count = payload.get("data", {}).get("count", 0)
+                if not positions or start >= count or start >= 2000:
+                    break
+        return list({job["requisition_id"]: job for job in jobs}.values())
+
+    if provider == "avature_html":
+        links = {}
+        for search_text in WORKDAY_SEARCH_TERMS:
+            for offset in range(0, 300, 6):
+                page = _post_form_text(
+                    source["search_url"] + f"?jobOffset={offset}",
+                    {"search": search_text, "action": "search"},
+                )
+                found = 0
+                for match in re.finditer(
+                    r'<a[^>]+href=["\'](?P<url>[^"\']*JobDetail[^"\']*)["\'][^>]*>(?P<title>.*?)</a>',
+                    page,
+                    re.I | re.S,
+                ):
+                    url = urljoin(source["search_url"], html.unescape(match.group("url")))
+                    title = _plain_text(match.group("title"))
+                    if _target_title(title, title_rules):
+                        links[url] = title
+                    found += 1
+                if found == 0:
+                    break
+        jobs = []
+        for url, fallback_title in links.items():
+            detail_page = _get_text(url)
+            scripts = re.findall(
+                r'<script[^>]+type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',
+                detail_page,
+                re.I | re.S,
+            )
+            data = next(
+                (
+                    json.loads(html.unescape(script))
+                    for script in scripts
+                    if '"@type"' in script and "JobPosting" in script
+                ),
+                {},
+            )
+            location_data = data.get("jobLocation") or []
+            if isinstance(location_data, dict):
+                location_data = [location_data]
+            locations = []
+            for item in location_data:
+                address = item.get("address", {})
+                locations.append(
+                    ", ".join(
+                        str(address.get(key))
+                        for key in ("addressLocality", "addressRegion", "addressCountry")
+                        if address.get(key)
+                    )
+                )
+            jobs.append(
+                {
+                    "requisition_id": url.rstrip("/").split("/")[-1].split("?")[0],
+                    "title": data.get("title") or fallback_title,
+                    "location": "; ".join(filter(None, locations)),
+                    "official_url": url,
+                    "description": _plain_text(data.get("description") or detail_page),
+                    "official_created_at": data.get("datePosted"),
+                    "official_updated_at": None,
+                }
+            )
+        return jobs
+
+    if provider == "phenom_html":
+        jobs = []
+        for search_text in WORKDAY_SEARCH_TERMS:
+            for offset in range(0, 300, 10):
+                page = _get_text(
+                    source["search_url"]
+                    + "?"
+                    + urlencode({"keywords": search_text, "from": offset, "s": 1})
+                )
+                postings = _phenom_jobs(page)
+                for posting in postings:
+                    title = posting.get("title", "")
+                    if not _target_title(title, title_rules):
+                        continue
+                    jobs.append(
+                        {
+                            "requisition_id": str(posting.get("reqId") or posting.get("jobId")),
+                            "title": title,
+                            "location": posting.get("location")
+                            or posting.get("cityStateCountry")
+                            or "",
+                            "official_url": posting.get("applyUrl") or source["search_url"],
+                            "description": _plain_text(
+                                posting.get("descriptionTeaser")
+                                or posting.get("ml_job_parser", {}).get("descriptionTeaser_ats")
+                            ),
+                            "official_created_at": posting.get("postedDate")
+                            or posting.get("dateCreated"),
+                            "official_updated_at": None,
+                        }
+                    )
+                if len(postings) < 10:
+                    break
         return list({job["requisition_id"]: job for job in jobs}.values())
 
     if provider == "workday":

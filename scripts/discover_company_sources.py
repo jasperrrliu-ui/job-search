@@ -60,6 +60,29 @@ def get(url: str) -> tuple[str, str]:
         return response.geturl(), response.read(1_000_000).decode(errors="ignore")
 
 
+def post_json(url: str, payload: dict) -> dict:
+    request = urllib.request.Request(
+        url,
+        data=json.dumps(payload).encode(),
+        headers={**HEADERS, "Content-Type": "application/json", "tz": "America/New_York"},
+    )
+    with urllib.request.urlopen(request, timeout=12) as response:
+        return json.load(response)
+
+
+def taleo_payload(keyword: str = "") -> dict:
+    return {
+        "multilineEnabled": True,
+        "sortingSelection": {
+            "sortBySelectionParam": "3",
+            "ascendingSortingOrder": "false",
+        },
+        "fieldData": {"fields": {"KEYWORD": keyword, "LOCATION": ""}},
+        "filterSelectionParam": {"searchFilterSelections": []},
+        "pageNo": 1,
+    }
+
+
 def source_from_text(text: str) -> dict | None:
     text = html.unescape(text).replace("\\/", "/")
 
@@ -105,8 +128,45 @@ def source_from_text(text: str) -> dict | None:
 
 def valid_source(source: dict) -> bool:
     provider = source["provider"]
+    if provider == "jobvite_xml":
+        page = get(source["feed_url"])[1]
+        return "<result>" in page.lower() and "<job>" in page.lower()
+    if provider == "taleo_rest":
+        payload = post_json(
+            source["api_url"] + "?" + urlencode({"lang": "en", "portal": source["portal"]}),
+            taleo_payload(),
+        )
+        return isinstance(payload.get("requisitionList"), list)
     if provider == "successfactors_rss":
         return "<rss" in get(source["feed_url"])[1].lower()
+    if provider == "icims_jibe":
+        return isinstance(json.loads(get(source["api_url"] + "?page=1&limit=1")[1]).get("jobs"), list)
+    if provider == "oracle_hcm":
+        url = (
+            source["api_base"]
+            + "/hcmRestApi/resources/latest/recruitingCEJobRequisitions"
+            + "?onlyData=true&expand=requisitionList.workLocation"
+            + f"&finder=findReqs;siteNumber={source['site']},limit=1,offset=0"
+        )
+        item = json.loads(get(url)[1])["items"][0]
+        return isinstance(item.get("requisitionList"), list)
+    if provider == "eightfold_pcsx":
+        query = urlencode(
+            {
+                "domain": source["domain"],
+                "start": 0,
+                "num": 1,
+                "query": "data scientist",
+                "location": "",
+            }
+        )
+        payload = json.loads(get(source["api_url"] + "?" + query)[1])
+        return isinstance(payload.get("data", {}).get("positions"), list)
+    if provider == "avature_html":
+        return "jobdetail" in get(source["search_url"] + "?jobOffset=0")[1].lower()
+    if provider == "phenom_html":
+        page = get(source["search_url"] + "?keywords=data%20scientist")[1]
+        return "phApp.ddo" in page and "eagerLoadRefineSearch" in page
     token = source["token"]
     if provider == "greenhouse":
         url = f"https://boards-api.greenhouse.io/v1/boards/{token}/jobs"
@@ -138,12 +198,104 @@ def valid_source(source: dict) -> bool:
 
 
 def provider_source(candidate: dict) -> dict | None:
-    if candidate.get("detected_ats") != "SAP SuccessFactors":
-        return None
     url = next(iter(candidate_urls(candidate)), None)
     if not url:
         return None
     parsed = urlparse(url)
+    if candidate.get("detected_ats") == "Jobvite":
+        page = get(url)[1]
+        match = re.search(r"companyEId\s*:\s*['\"]([^'\"]+)", page)
+        if not match:
+            return None
+        company_id = match.group(1)
+        return {
+            "provider": "jobvite_xml",
+            "feed_url": f"http://app.jobvite.com/CompanyJobs/Xml.aspx?c={company_id}",
+        }
+    if candidate.get("detected_ats") == "Oracle Taleo":
+        _, page = get(url)
+        links = re.findall(
+            r"https?://[a-z0-9.-]+\.taleo\.net/careersection/[^\"'<> ]+",
+            html.unescape(page).replace("\\/", "/"),
+            re.I,
+        )
+        for link in links:
+            parsed_link = urlparse(link.rstrip("\\"))
+            match = re.search(r"/careersection/([^/]+)/", parsed_link.path)
+            if not match:
+                continue
+            search_url = urlunparse(
+                (parsed_link.scheme, parsed_link.netloc, f"/careersection/{match.group(1)}/jobsearch.ftl", "", "lang=en", "")
+            )
+            search_page = get(search_url)[1]
+            portal = re.search(r"portalNo:\s*['\"]([^'\"]+)", search_page)
+            if portal:
+                root = urlunparse((parsed_link.scheme, parsed_link.netloc, "", "", "", ""))
+                return {
+                    "provider": "taleo_rest",
+                    "api_url": root + "/careersection/rest/jobboard/searchjobs",
+                    "career_url": root + f"/careersection/{match.group(1)}",
+                    "portal": portal.group(1),
+                }
+        return None
+    if candidate.get("detected_ats") == "iCIMS":
+        return {
+            "provider": "icims_jibe",
+            "api_url": urlunparse((parsed.scheme, parsed.netloc, "/api/jobs", "", "", "")),
+            "careers_url": urlunparse((parsed.scheme, parsed.netloc, "/jobs", "", "", "")),
+        }
+    if candidate.get("detected_ats") == "Oracle HCM Cloud":
+        match = re.search(r"/sites/([^/?#]+)", parsed.path)
+        if not match:
+            return None
+        root = urlunparse((parsed.scheme, parsed.netloc, "", "", "", ""))
+        return {
+            "provider": "oracle_hcm",
+            "api_base": root,
+            "site": match.group(1),
+            "site_url": urlunparse(
+                (
+                    parsed.scheme,
+                    parsed.netloc,
+                    f"/hcmUI/CandidateExperience/en/sites/{match.group(1)}",
+                    "",
+                    "",
+                    "",
+                )
+            ),
+        }
+    if candidate.get("detected_ats") == "Eightfold":
+        domain = candidate.get("domain")
+        if not domain:
+            return None
+        root = urlunparse((parsed.scheme, parsed.netloc, "", "", "", ""))
+        return {
+            "provider": "eightfold_pcsx",
+            "api_url": root + "/api/pcsx/search",
+            "detail_url": root + "/api/pcsx/position_details",
+            "careers_url": root,
+            "domain": domain,
+        }
+    if candidate.get("detected_ats") == "Phenom People":
+        search_urls = search_result_urls(candidate)
+        if not search_urls:
+            return None
+        parsed_search = urlparse(search_urls[0])
+        return {
+            "provider": "phenom_html",
+            "search_url": urlunparse(
+                (
+                    parsed_search.scheme,
+                    parsed_search.netloc,
+                    parsed_search.path,
+                    "",
+                    "",
+                    "",
+                )
+            ),
+        }
+    if candidate.get("detected_ats") != "SAP SuccessFactors":
+        return None
     feed_url = urlunparse(
         (
             parsed.scheme,
@@ -155,6 +307,23 @@ def provider_source(candidate: dict) -> dict | None:
         )
     )
     return {"provider": "successfactors_rss", "feed_url": feed_url}
+
+
+def avature_source(page: str) -> dict | None:
+    hosts = list(dict.fromkeys(re.findall(r"https?://([a-z0-9.-]+\.avature\.net)", page, re.I)))
+    prefixes = ["/careers", "/ml", "/en_US/careers"]
+    for host in hosts:
+        for prefix in prefixes:
+            source = {
+                "provider": "avature_html",
+                "search_url": f"https://{host}{prefix}/SearchJobs",
+            }
+            try:
+                if valid_source(source):
+                    return source
+            except Exception:
+                pass
+    return None
 
 
 def discover(candidate: dict) -> tuple[str, dict] | None:
@@ -169,6 +338,10 @@ def discover(candidate: dict) -> tuple[str, dict] | None:
     for url in candidate_urls(candidate) + search_result_urls(candidate):
         try:
             final_url, page = get(url)
+            if candidate.get("detected_ats") == "Avature":
+                source = avature_source(final_url + " " + page)
+                if source:
+                    return candidate["name"], source
             source = source_from_text(final_url + " " + page)
             if source and valid_source(source):
                 return candidate["name"], source
