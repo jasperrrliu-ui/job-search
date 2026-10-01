@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import re
+from datetime import datetime, timezone
 
 from .llm import evaluate_with_openai
 
@@ -63,6 +64,48 @@ def _location_status(location: str, domain: dict) -> str:
     ):
         return "FAIL"
     return "UNKNOWN"
+
+
+def _parse_source_timestamp(value: str | None) -> datetime | None:
+    if not value:
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
+
+
+def _freshness(job: dict, now: datetime | None = None) -> str:
+    """Use source dates only; first_seen_at is an ingestion date, not a post date."""
+    now = now or datetime.now(timezone.utc)
+    created = _parse_source_timestamp(job.get("official_created_at"))
+    if created:
+        age_days = max(0, (now - created).days)
+        if age_days <= 7:
+            return "FRESH"
+        if age_days <= 30:
+            return "RECENT"
+        return "STALE"
+    if _parse_source_timestamp(job.get("official_updated_at")):
+        return "UPDATED_DATE_ONLY"
+    return "AGE_UNKNOWN"
+
+
+def _score(
+    eligibility: str, location_status: str, freshness: str, result: dict
+) -> int:
+    gate = result["role_interpretation"].get("candidate_gate", {}).get("status")
+    if eligibility == "FAIL" or gate == "DROP" or location_status != "PASS":
+        return 0
+    score = {"PASS": 35, "UNKNOWN": 10}.get(eligibility, 0)
+    score += {"FRESH": 15, "RECENT": 8, "UPDATED_DATE_ONLY": 3}.get(freshness, 0)
+    score += {"NEW_GRAD": 25, "EARLY_CAREER": 20, "LOW_YOE_COMPATIBLE": 15}.get(
+        result["role_interpretation"].get("career_stage"), 0
+    )
+    score += {"HIGH": 10, "MEDIUM": 5}.get(result["career_direction_fit"], 0)
+    score += {"HIGH": 10, "MEDIUM": 5}.get(result["resume_signal_fit"], 0)
+    return score
 
 
 def _hard_eligibility(
@@ -300,7 +343,7 @@ def _candidate_gate(job: dict, domain: dict, paths: list[dict]) -> dict:
 def _semantic_rules(job: dict, domain: dict, paths: list[dict]) -> tuple[bool, dict]:
     description = _responsibility_text(job.get("description", ""), domain)
     gate = _candidate_gate(job, domain, paths)
-    plausible = gate["status"] in {"PRIMARY", "STRETCH"}
+    plausible = gate["status"] in {"PRIMARY", "STRETCH", "SECONDARY"}
     seniority_signal = "STRONG_NEGATIVE" if gate["family"] == "NON_TARGET_SENIORITY" else "NEUTRAL"
     career_stage = _career_stage(job, paths, domain) if plausible else "NOT_TARGET"
     if not plausible:
@@ -371,7 +414,7 @@ def _semantic_rules(job: dict, domain: dict, paths: list[dict]) -> tuple[bool, d
         career_fit = "LOW"
     elif primary >= 2 and primary >= low:
         career_fit = "HIGH"
-    elif primary or secondary or gate["status"] == "PRIMARY":
+    elif primary or secondary or gate["status"] in {"PRIMARY", "SECONDARY"}:
         career_fit = "MEDIUM"
     else:
         career_fit = "UNKNOWN"
@@ -498,6 +541,7 @@ def evaluate(job: dict, domain: dict) -> dict:
         if semantic.get(key) not in FIT_VALUES:
             semantic[key] = "UNKNOWN"
 
+    freshness = _freshness(job)
     decision, priority = _decision(eligibility, location_status, plausible, semantic)
     evidence = {"hard_eligibility": hard_evidence, **semantic.get("evidence", {})}
     role = semantic["role_interpretation"]
@@ -524,9 +568,9 @@ def evaluate(job: dict, domain: dict) -> dict:
         "eligibility": eligibility,
         "role_archetype": role["role_archetype"],
         "fit": "NOT_COLLAPSED",
-        "freshness": "UNKNOWN",
+        "freshness": freshness,
         "priority": priority,
-        "score": 0,
+        "score": _score(eligibility, location_status, freshness, semantic),
         "decision": decision,
         "reasoning": " ".join(reasons),
         "uncertainty": " ".join(dict.fromkeys(uncertainties)),

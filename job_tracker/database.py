@@ -13,8 +13,12 @@ def utc_now() -> str:
 
 def connect(path: Path) -> sqlite3.Connection:
     path.parent.mkdir(parents=True, exist_ok=True)
-    connection = sqlite3.connect(path)
+    # The GitHub cache can be copied while antivirus or cloud sync briefly holds
+    # the SQLite file. Wait for that transient lock instead of failing a poll or
+    # a local re-evaluation immediately.
+    connection = sqlite3.connect(path, timeout=30)
     connection.row_factory = sqlite3.Row
+    connection.execute("PRAGMA busy_timeout = 30000")
     connection.execute("PRAGMA foreign_keys = ON")
     return connection
 
@@ -268,7 +272,7 @@ def reconcile_workday_discovery(
     ).fetchone()
     company_id = company["id"]
     existing = connection.execute(
-        "SELECT id, requisition_id, source_listing_id, official_url FROM jobs "
+        "SELECT id, requisition_id, source_listing_id, official_url, description FROM jobs "
         "WHERE company_id=?",
         (company_id,),
     ).fetchall()
@@ -278,7 +282,7 @@ def reconcile_workday_discovery(
         if row["source_listing_id"] is not None
     }
     now = utc_now()
-    new_listings = []
+    listings_needing_enrichment = []
     seen_ids = []
 
     for listing in listings:
@@ -296,7 +300,7 @@ def reconcile_workday_discovery(
                 None,
             )
         if row is None:
-            new_listings.append(listing)
+            listings_needing_enrichment.append(listing)
             continue
         connection.execute(
             "UPDATE jobs SET source_listing_id=?, title=?, location=?, official_url=?, "
@@ -310,6 +314,11 @@ def reconcile_workday_discovery(
                 row["id"],
             ),
         )
+        # Workday discovery records intentionally have no description. Re-fetch
+        # historic listings that were saved before enrichment so their future
+        # evaluation is based on the JD rather than just the title.
+        if len((row["description"] or "").strip()) < 100:
+            listings_needing_enrichment.append(listing)
 
     if seen_ids:
         placeholders = ",".join("?" for _ in seen_ids)
@@ -320,7 +329,7 @@ def reconcile_workday_discovery(
             (company_id, *seen_ids),
         )
     connection.commit()
-    return new_listings
+    return listings_needing_enrichment
 
 
 def record_poll(

@@ -14,9 +14,15 @@ from urllib.parse import urljoin
 USER_AGENT = "job-search/0.1 (contact: jliu_Seeu@outlook.com)"
 WORKDAY_SEARCH_TERMS = [
     "data scientist",
+    "data science",
     "ai scientist",
     "machine learning scientist",
     "applied scientist",
+    "decision scientist",
+    "statistician",
+    "biostatistician",
+    "marketing scientist",
+    "model evaluation",
 ]
 
 
@@ -103,11 +109,14 @@ def _iso_from_epoch(value: int | str | None) -> str | None:
 def _target_title(title: str, title_rules: dict | None) -> bool:
     if not title_rules:
         return True
-    lowered = title.lower()
     families = title_rules["primary_title_families"] | title_rules[
         "secondary_title_families"
     ]
-    return any(term in lowered for terms in families.values() for term in terms)
+    return any(
+        re.search(rf"\b{re.escape(term)}\b", title, flags=re.IGNORECASE)
+        for terms in families.values()
+        for term in terms
+    )
 
 
 def discover_workday_jobs(

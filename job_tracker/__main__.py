@@ -14,7 +14,14 @@ from .database import (
 )
 from .campus import build_campus_report
 from .mailer import send_digest
-from .service import build_digest, load_json, mark_notified, poll_all
+from .service import (
+    build_digest,
+    evaluate_all_open_jobs,
+    build_source_health_report,
+    load_json,
+    mark_notified,
+    poll_all,
+)
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -27,7 +34,7 @@ DELIVERY = ROOT / "config" / "delivery.json"
 def main() -> None:
     parser = argparse.ArgumentParser(description="Target-company job tracker")
     parser.add_argument(
-        "command", choices=["bootstrap", "poll", "digest", "email", "feedback", "due", "campus-report"]
+        "command", choices=["bootstrap", "poll", "digest", "email", "feedback", "due", "campus-report", "source-health", "reevaluate"]
     )
     parser.add_argument("--db", type=Path, default=DEFAULT_DB)
     parser.add_argument("--output", type=Path)
@@ -54,6 +61,21 @@ def main() -> None:
             print(f"Wrote {args.output}")
         else:
             print(report)
+        return
+
+    if args.command == "source-health":
+        report = build_source_health_report(connection)
+        if args.output:
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            args.output.write_text(report, encoding="utf-8")
+            print(f"Wrote {args.output}")
+        else:
+            print(report)
+        return
+
+    if args.command == "reevaluate":
+        count = evaluate_all_open_jobs(connection, load_json(DOMAIN))
+        print(f"Re-evaluated {count} open jobs without polling or sending email")
         return
 
     if args.command == "due":

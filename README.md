@@ -34,10 +34,10 @@ Company Lens uses 1,500 employees as the default minimum. Smaller companies stay
 out unless they are explicitly marked `EXCEPTION_HIGH_FIT`. Data Science and
 Applied/AI Scientist hiring are equally important screening signals.
 
-Workday polling uses four focused discovery searches, five bounded network workers, and
-the listing `externalPath` as a persistent ID. Full job descriptions are fetched
-only for newly discovered postings; the first poll stores a baseline without
-downloading historical descriptions.
+Workday polling uses focused Data/AI/adjacent-science discovery searches, five bounded
+network workers, and the listing `externalPath` as a persistent ID. Full job descriptions
+are fetched for newly discovered postings and backfilled when an existing Workday record
+has no usable description, so recommendations are not based on title alone.
 
 ## Run
 
@@ -58,6 +58,13 @@ python -m job_tracker digest --output outputs/digest.txt
 
 # Analyze all retained jobs for campus/new-grad supply and recurring employers.
 python -m job_tracker campus-report --output outputs/campus-report.txt
+
+# Identify ATS sources that are failing or have never successfully polled.
+python -m job_tracker source-health --output outputs/source-health.txt
+
+# Re-score all existing openings after changing domain rules. This does not poll
+# an ATS or send email.
+python -m job_tracker reevaluate
 ```
 
 To mark the current digest as sent:
@@ -117,7 +124,9 @@ values live in configuration and may be changed without editing the tracker.
 
 ## Optional LLM evaluation
 
-The default evaluator is free and deterministic. Only explicitly US-located jobs
+The default evaluator is free and deterministic. It labels source-backed job age as
+`FRESH`, `RECENT`, `STALE`, `UPDATED_DATE_ONLY`, or `AGE_UNKNOWN`; it never treats
+the system's `first_seen_at` timestamp as an official posting date. Only explicitly US-located jobs
 enter the email; ambiguous `Remote` locations stay `UNKNOWN`/`HOLD`. The target
 titles are Data Scientist, AI/ML Scientist, and non-research-heavy Applied
 Scientist. Senior/Sr. titles are excluded unless the JD contains an explicit

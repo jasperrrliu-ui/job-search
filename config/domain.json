@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-17-v6",
+  "version": "2026-10-01-v7",
   "knowledge_status": "candidate-profile-v0.1",
   "search_scope": {
     "country": "US",
@@ -19,7 +19,18 @@
       "illinois",
       "north carolina",
       "washington, dc",
-      "district of columbia"
+      "district of columbia",
+      "san francisco",
+      "boston",
+      "seattle",
+      "chicago",
+      "austin",
+      "los angeles",
+      "denver",
+      "atlanta",
+      "miami",
+      "philadelphia",
+      "minneapolis"
     ],
     "outside_us_markers": [
       "canada",
@@ -130,7 +141,16 @@
         "applied scientist"
       ]
     },
-    "secondary_title_families": {},
+    "secondary_title_families": {
+      "ADJACENT_DATA_SCIENCE": [
+        "decision scientist",
+        "marketing scientist",
+        "product data scientist",
+        "research data scientist",
+        "biostatistician",
+        "statistician"
+      ]
+    },
     "non_target_title_terms": [
       "software engineer",
       "backend engineer",
@@ -152,7 +172,6 @@
       "data analyst",
       "product analyst",
       "decision analyst",
-      "decision scientist",
       "quantitative scientist",
       "business systems analyst",
       "systems administrator",

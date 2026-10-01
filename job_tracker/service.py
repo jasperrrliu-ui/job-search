@@ -147,27 +147,25 @@ def poll_all(
         if postings is None:
             continue
         listing_jobs = [workday_listing_job(company, posting) for posting in postings]
-        new_listings = reconcile_workday_discovery(
+        postings_needing_enrichment = reconcile_workday_discovery(
             connection, company["name"], listing_jobs
         )
-        new_ids = {listing["source_listing_id"] for listing in new_listings}
-        new_postings = [
-            posting
-            for posting in postings
-            if posting["externalPath"] in new_ids
-        ]
         company_baseline = baseline or not has_successful_poll(
             connection, company["name"]
         )
         print(
             f"{company['name']}: {len(postings)} discovered, "
-            f"{len(new_postings)} need enrichment",
+            f"{len(postings_needing_enrichment)} need enrichment",
             flush=True,
         )
-        if company_baseline:
-            created, changed = upsert_jobs(
-                connection, company["name"], new_listings, True, close_missing=False
+        if postings_needing_enrichment:
+            enrichment_inputs[company["name"]] = (
+                company,
+                postings_needing_enrichment,
+                len(postings),
+                company_baseline,
             )
+        else:
             evaluate_company_jobs(connection, company["name"], domain)
             record_poll(
                 connection,
@@ -177,29 +175,22 @@ def poll_all(
                 len(postings),
                 None,
             )
-            total_new += created
-            total_changed += changed
-            print(
-                f"{company['name']}: baseline saved without detail downloads",
-                flush=True,
-            )
-        else:
-            enrichment_inputs[company["name"]] = (company, new_postings, len(postings))
 
     with ThreadPoolExecutor(max_workers=5) as executor:
         futures = {
             executor.submit(enrich_workday_jobs, company, postings): (
                 company,
                 discovered_count,
+                company_baseline,
             )
-            for company, postings, discovered_count in enrichment_inputs.values()
+            for company, postings, discovered_count, company_baseline in enrichment_inputs.values()
         }
         for future in as_completed(futures):
-            company, discovered_count = futures[future]
+            company, discovered_count, company_baseline = futures[future]
             try:
                 jobs = future.result()
                 created, changed = upsert_jobs(
-                    connection, company["name"], jobs, False, close_missing=False
+                    connection, company["name"], jobs, company_baseline, close_missing=False
                 )
                 evaluate_company_jobs(connection, company["name"], domain)
                 record_poll(
@@ -234,7 +225,7 @@ def poll_all(
 
 def evaluate_company_jobs(
     connection: sqlite3.Connection, company_name: str, domain: dict
-) -> None:
+) -> int:
     rows = connection.execute(
         """
         SELECT jobs.*, companies.name AS company FROM jobs
@@ -244,6 +235,7 @@ def evaluate_company_jobs(
         (company_name,),
     ).fetchall()
 
+    created = 0
     for row in rows:
         result = evaluate(dict(row), domain)
         latest = connection.execute(
@@ -293,7 +285,71 @@ def evaluate_company_jobs(
                 json.dumps(result["role_interpretation"], ensure_ascii=False),
             ),
         )
+        created += 1
     connection.commit()
+    return created
+
+
+def evaluate_all_open_jobs(connection: sqlite3.Connection, domain: dict) -> int:
+    """Re-score retained openings without polling sources or sending notifications."""
+    companies = connection.execute(
+        """
+        SELECT DISTINCT companies.name
+        FROM companies JOIN jobs ON jobs.company_id=companies.id
+        WHERE jobs.status='OPEN'
+        ORDER BY companies.name
+        """
+    ).fetchall()
+    return sum(evaluate_company_jobs(connection, row["name"], domain) for row in companies)
+
+
+def build_source_health_report(connection: sqlite3.Connection) -> str:
+    """Expose source failures so a failed ATS is never mistaken for no openings."""
+    rows = connection.execute(
+        """
+        SELECT companies.name, companies.provider,
+               latest.finished_at, latest.success, latest.job_count, latest.error,
+               (SELECT COUNT(*) FROM poll_runs history
+                WHERE history.company_id=companies.id AND history.success=0) AS failure_count
+               ,(SELECT MAX(success) FROM poll_runs history
+                 WHERE history.company_id=companies.id) AS has_success
+        FROM companies
+        LEFT JOIN poll_runs latest ON latest.id=(
+            SELECT id FROM poll_runs p WHERE p.company_id=companies.id
+            ORDER BY id DESC LIMIT 1
+        )
+        WHERE companies.active=1 AND companies.provider IS NOT NULL
+        ORDER BY CASE
+                   WHEN latest.id IS NULL THEN 0
+                   WHEN latest.success=0 THEN 1
+                   ELSE 2
+                 END,
+                 failure_count DESC, companies.name
+        """
+    ).fetchall()
+    unmonitored = [row for row in rows if not row["has_success"]]
+    failing = [row for row in rows if row["finished_at"] is not None and not row["success"]]
+    lines = [
+        f"Active sources: {len(rows)}",
+        f"Never successfully polled: {len(unmonitored)}",
+        f"Latest poll failed: {len(failing)}",
+        "",
+    ]
+    for heading, source_rows in (
+        ("Never successfully polled", unmonitored),
+        ("Latest poll failed", failing),
+    ):
+        if not source_rows:
+            continue
+        lines.extend([heading, ""])
+        for row in source_rows:
+            detail = row["error"] or "No poll record"
+            lines.append(
+                f"- {row['name']} ({row['provider']}): {detail} "
+                f"[historical failures: {row['failure_count']}]"
+            )
+        lines.append("")
+    return "\n".join(lines)
 
 
 def build_digest(
@@ -313,7 +369,7 @@ def build_digest(
         SELECT jobs.id, jobs.title, jobs.location, jobs.official_url,
                jobs.official_created_at, jobs.official_updated_at,
                jobs.first_seen_at, companies.name AS company,
-               evaluations.decision, evaluations.eligibility,
+               evaluations.decision, evaluations.eligibility, evaluations.freshness, evaluations.score,
                evaluations.role_archetype, evaluations.career_direction_fit,
                 evaluations.capability_fit, evaluations.resume_signal_fit,
                 evaluations.trajectory_fit, evaluations.reasoning,
@@ -327,7 +383,12 @@ def build_digest(
         WHERE jobs.status='OPEN' {notification_filter}
           AND evaluations.decision IN ('APPLY_TODAY', 'REVIEW')
         ORDER BY CASE evaluations.decision WHEN 'APPLY_TODAY' THEN 0 ELSE 1 END,
-                 jobs.first_seen_at DESC
+                 CASE evaluations.freshness
+                   WHEN 'FRESH' THEN 0 WHEN 'RECENT' THEN 1
+                   WHEN 'UPDATED_DATE_ONLY' THEN 2 WHEN 'AGE_UNKNOWN' THEN 3
+                   ELSE 4 END,
+                 evaluations.score DESC,
+                 COALESCE(jobs.official_created_at, jobs.official_updated_at, jobs.first_seen_at) DESC
         """,
         parameters,
     ).fetchall()
@@ -396,6 +457,8 @@ def build_digest(
                     f"Career stage: {stage}",
                     f"Recommendation: {row['decision']}",
                     f"Eligibility: {row['eligibility']}",
+                    f"Freshness: {row['freshness']}",
+                    f"Search score: {row['score']}",
                     f"Role: {row['role_archetype']}",
                     f"Direction / Capability / Resume / Trajectory: "
                     f"{row['career_direction_fit']} / {row['capability_fit']} / "
