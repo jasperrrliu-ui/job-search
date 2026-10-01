@@ -1,0 +1,91 @@
+name: Export latest database (read-only)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Restore latest job database cache
+        uses: actions/cache/restore@v4
+        with:
+          path: data/jobs.db
+          key: db-export-${{ github.run_id }}
+          restore-keys: |
+            job-db-
+
+      - name: Build database summary
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import sqlite3
+          from pathlib import Path
+
+          db_path = Path("data/jobs.db")
+          if not db_path.exists():
+              raise SystemExit("Latest job-db cache did not restore data/jobs.db")
+
+          connection = sqlite3.connect(db_path)
+          tables = [
+              row[0]
+              for row in connection.execute(
+                  "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"
+              )
+          ]
+          summary = {
+              "database_size_bytes": db_path.stat().st_size,
+              "tables": tables,
+              "row_counts": {
+                  table: connection.execute(
+                      f'SELECT COUNT(*) FROM "{table}"'
+                  ).fetchone()[0]
+                  for table in tables
+              },
+              "job_status": [
+                  dict(row)
+                  for row in connection.execute(
+                      "SELECT status, COUNT(*) AS count FROM jobs GROUP BY status ORDER BY status"
+                  ).fetchall()
+              ],
+              "evaluation_decisions": [
+                  dict(row)
+                  for row in connection.execute(
+                      "SELECT decision, COUNT(*) AS count FROM evaluations GROUP BY decision ORDER BY decision"
+                  ).fetchall()
+              ],
+              "job_time_range": dict(
+                  zip(
+                      ("first_seen_min", "last_seen_max"),
+                      connection.execute(
+                          "SELECT MIN(first_seen_at), MAX(last_seen_at) FROM jobs"
+                      ).fetchone(),
+                  )
+              ),
+          }
+          Path("outputs").mkdir(exist_ok=True)
+          Path("outputs/db-summary.json").write_text(
+              json.dumps(summary, indent=2, ensure_ascii=False) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(summary, indent=2, ensure_ascii=False))
+          PY
+
+      - name: Upload read-only database export
+        uses: actions/upload-artifact@v4
+        with:
+          name: latest-job-db-read-only
+          path: |
+            data/jobs.db
+            outputs/db-summary.json
+          retention-days: 1
