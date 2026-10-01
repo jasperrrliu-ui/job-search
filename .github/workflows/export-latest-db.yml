@@ -37,6 +37,7 @@ jobs:
               raise SystemExit("Latest job-db cache did not restore data/jobs.db")
 
           connection = sqlite3.connect(db_path)
+          connection.row_factory = sqlite3.Row
           tables = [
               row[0]
               for row in connection.execute(
