@@ -352,6 +352,85 @@ def build_source_health_report(connection: sqlite3.Connection) -> str:
     return "\n".join(lines)
 
 
+def build_tracker_status_report(connection: sqlite3.Connection) -> str:
+    """Return the tracker funnel from registered sources through human feedback."""
+    companies = connection.execute(
+        """
+        SELECT COUNT(*) AS total, SUM(active) AS active,
+               SUM(active=1 AND provider IS NOT NULL) AS active_with_source
+        FROM companies
+        """
+    ).fetchone()
+    polls = connection.execute(
+        """
+        SELECT COUNT(*) AS total, SUM(success=1) AS successful, SUM(success=0) AS failed,
+               COUNT(DISTINCT CASE WHEN success=1 THEN company_id END) AS companies_with_success,
+               MIN(started_at) AS first_poll, MAX(finished_at) AS latest_poll
+        FROM poll_runs
+        """
+    ).fetchone()
+    jobs = connection.execute(
+        """
+        SELECT COUNT(*) AS total, SUM(status='OPEN') AS open, SUM(status='CLOSED') AS closed,
+               MIN(first_seen_at) AS first_seen, MAX(last_seen_at) AS latest_seen
+        FROM jobs
+        """
+    ).fetchone()
+    snapshots = connection.execute("SELECT COUNT(*) AS total FROM job_snapshots").fetchone()
+    evaluations = connection.execute(
+        "SELECT COUNT(*) AS total, COUNT(DISTINCT job_id) AS jobs_evaluated FROM evaluations"
+    ).fetchone()
+    deliveries = connection.execute(
+        """
+        SELECT COUNT(*) AS total, COALESCE(SUM(job_count), 0) AS jobs_delivered,
+               MAX(sent_at) AS latest_delivery
+        FROM daily_deliveries
+        """
+    ).fetchone()
+    feedback = connection.execute("SELECT COUNT(*) AS total FROM feedback").fetchone()
+
+    def value(row: sqlite3.Row, name: str) -> int:
+        return row[name] or 0
+
+    return "\n".join(
+        [
+            "# Job Tracker Dashboard",
+            "",
+            f"_Database current through: {polls['latest_poll'] or 'NONE'}_",
+            "",
+            "| Stage | Metric | Value |",
+            "|---|---|---:|",
+            f"| 1. Sources | Registered companies | {value(companies, 'total'):,} |",
+            f"| 1. Sources | Active companies | {value(companies, 'active'):,} |",
+            f"| 1. Sources | Active companies with source | {value(companies, 'active_with_source'):,} |",
+            f"| 2. Collection | Poll runs | {value(polls, 'total'):,} |",
+            f"| 2. Collection | Successful polls | {value(polls, 'successful'):,} |",
+            f"| 2. Collection | Failed polls | {value(polls, 'failed'):,} |",
+            f"| 2. Collection | Companies successfully polled | {value(polls, 'companies_with_success'):,} |",
+            f"| 3. Inventory | Unique jobs retained | {value(jobs, 'total'):,} |",
+            f"| 3. Inventory | Open jobs | {value(jobs, 'open'):,} |",
+            f"| 3. Inventory | Closed jobs | {value(jobs, 'closed'):,} |",
+            f"| 3. Inventory | Job snapshots | {value(snapshots, 'total'):,} |",
+            f"| 4. Evaluation | Evaluation records | {value(evaluations, 'total'):,} |",
+            f"| 4. Evaluation | Distinct jobs evaluated | {value(evaluations, 'jobs_evaluated'):,} |",
+            f"| 5. Delivery | Digests sent | {value(deliveries, 'total'):,} |",
+            f"| 5. Delivery | Recommendations delivered | {value(deliveries, 'jobs_delivered'):,} |",
+            f"| 6. Outcomes | Feedback/application outcomes | {value(feedback, 'total'):,} |",
+            "",
+            "## Data window",
+            "",
+            f"- First poll: `{polls['first_poll'] or 'NONE'}`",
+            f"- Latest poll: `{polls['latest_poll'] or 'NONE'}`",
+            f"- First job seen: `{jobs['first_seen'] or 'NONE'}`",
+            f"- Latest job seen: `{jobs['latest_seen'] or 'NONE'}`",
+            f"- Latest digest: `{deliveries['latest_delivery'] or 'NONE'}`",
+            "",
+            "> Jobs and evaluations are tracker observations, not applications. "
+            "Until outcomes are recorded, response and interview conversion cannot be measured.",
+        ]
+    ) + "\n"
+
+
 def build_digest(
     connection: sqlite3.Connection,
     first_seen_since: str | None = None,

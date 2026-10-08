@@ -18,6 +18,7 @@ from .service import (
     build_digest,
     evaluate_all_open_jobs,
     build_source_health_report,
+    build_tracker_status_report,
     load_json,
     mark_notified,
     poll_all,
@@ -34,7 +35,7 @@ DELIVERY = ROOT / "config" / "delivery.json"
 def main() -> None:
     parser = argparse.ArgumentParser(description="Target-company job tracker")
     parser.add_argument(
-        "command", choices=["bootstrap", "poll", "digest", "email", "feedback", "due", "campus-report", "source-health", "reevaluate"]
+        "command", choices=["bootstrap", "poll", "digest", "email", "feedback", "due", "campus-report", "source-health", "status", "reevaluate"]
     )
     parser.add_argument("--db", type=Path, default=DEFAULT_DB)
     parser.add_argument("--output", type=Path)
@@ -65,6 +66,16 @@ def main() -> None:
 
     if args.command == "source-health":
         report = build_source_health_report(connection)
+        if args.output:
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            args.output.write_text(report, encoding="utf-8")
+            print(f"Wrote {args.output}")
+        else:
+            print(report)
+        return
+
+    if args.command == "status":
+        report = build_tracker_status_report(connection)
         if args.output:
             args.output.parent.mkdir(parents=True, exist_ok=True)
             args.output.write_text(report, encoding="utf-8")

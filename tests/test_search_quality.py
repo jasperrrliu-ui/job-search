@@ -13,7 +13,11 @@ from job_tracker.database import (
     upsert_jobs,
 )
 from job_tracker.evaluation import _freshness
-from job_tracker.service import build_source_health_report, evaluate_all_open_jobs
+from job_tracker.service import (
+    build_source_health_report,
+    build_tracker_status_report,
+    evaluate_all_open_jobs,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -98,6 +102,23 @@ class SearchQualityTests(unittest.TestCase):
         }], baseline=False)
         self.assertEqual(evaluate_all_open_jobs(connection, DOMAIN), 1)
         self.assertEqual(evaluate_all_open_jobs(connection, DOMAIN), 0)
+
+    def test_status_report_shows_the_source_to_feedback_funnel(self):
+        connection = connect(Path(":memory:"))
+        init_schema(connection)
+        company = {"name": "Example", "priority": "neutral", "active": True,
+                   "source": {"provider": "greenhouse", "token": "example"}}
+        sync_companies(connection, [company])
+        record_poll(connection, "Example", "2026-10-01T00:00:00+00:00", True, 1, None)
+        upsert_jobs(connection, "Example", [{
+            "requisition_id": "1", "title": "Data Scientist", "location": "Boston, MA",
+            "official_url": "https://example.test/1", "description": "Description",
+            "official_created_at": None, "official_updated_at": None,
+        }], baseline=False)
+        report = build_tracker_status_report(connection)
+        self.assertIn("| 1. Sources | Registered companies | 1 |", report)
+        self.assertIn("| 3. Inventory | Unique jobs retained | 1 |", report)
+        self.assertIn("| 6. Outcomes | Feedback/application outcomes | 0 |", report)
 
 
 if __name__ == "__main__":

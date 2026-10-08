@@ -1,5 +1,8 @@
 # Job Search
 
+[![Job search](https://github.com/jasperrrliu-ui/job-search/actions/workflows/job-search.yml/badge.svg)](https://github.com/jasperrrliu-ui/job-search/actions/workflows/job-search.yml)
+[View the tracker dashboard](reports/TRACKER_STATUS.md)
+
 Minimal target-company job tracker. It polls public ATS job-board APIs, stores job
 history in SQLite, applies editable domain rules, and renders a daily digest.
 
@@ -61,6 +64,9 @@ python -m job_tracker campus-report --output outputs/campus-report.txt
 
 # Identify ATS sources that are failing or have never successfully polled.
 python -m job_tracker source-health --output outputs/source-health.txt
+
+# Show the source-to-feedback tracker funnel and data-collection window.
+python -m job_tracker status
 
 # Re-score all existing openings after changing domain rules. This does not poll
 # an ATS or send email.
