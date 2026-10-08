@@ -71,6 +71,10 @@ jobs:
             python -m job_tracker bootstrap
           fi
 
+      - name: Backfill current role and career-stage taxonomy
+        if: steps.delivery.outputs.run == 'true' && hashFiles('data/jobs.db') != ''
+        run: python -m job_tracker reevaluate
+
       - name: Send daily digest
         if: steps.delivery.outputs.run == 'true' && (github.event_name != 'workflow_dispatch' || inputs.send_digest)
         env:

@@ -34,10 +34,11 @@ python scripts/discover_company_sources.py --all-candidates --workers 20
 ```
 
 Company Lens uses 1,500 employees as the default minimum. Smaller companies stay
-out unless they are explicitly marked `EXCEPTION_HIGH_FIT`. Data Science and
-Applied/AI Scientist hiring are equally important screening signals.
+out unless they are explicitly marked `EXCEPTION_HIGH_FIT`. The active search
+taxonomy covers Data Analyst, Data Scientist, Data Engineer, and Machine Learning
+Engineer roles.
 
-Workday polling uses focused Data/AI/adjacent-science discovery searches, five bounded
+Workday polling uses focused all-data-career discovery searches, five bounded
 network workers, and the listing `externalPath` as a persistent ID. Full job descriptions
 are fetched for newly discovered postings and backfilled when an existing Workday record
 has no usable description, so recommendations are not based on title alone.
@@ -59,7 +60,7 @@ python -m job_tracker digest
 # Save the preview to a file.
 python -m job_tracker digest --output outputs/digest.txt
 
-# Analyze all retained jobs for campus/new-grad supply and recurring employers.
+# Analyze retained internships, campus/new-grad roles, and <=2 YOE supply.
 python -m job_tracker campus-report --output outputs/campus-report.txt
 
 # Identify ATS sources that are failing or have never successfully polled.
@@ -133,17 +134,22 @@ values live in configuration and may be changed without editing the tracker.
 The default evaluator is free and deterministic. It labels source-backed job age as
 `FRESH`, `RECENT`, `STALE`, `UPDATED_DATE_ONLY`, or `AGE_UNKNOWN`; it never treats
 the system's `first_seen_at` timestamp as an official posting date. Only explicitly US-located jobs
-enter the email; ambiguous `Remote` locations stay `UNKNOWN`/`HOLD`. The target
-titles are Data Scientist, AI/ML Scientist, and non-research-heavy Applied
-Scientist. Senior/Sr. titles are excluded unless the JD contains an explicit
+enter the email; ambiguous `Remote` locations stay `UNKNOWN`/`HOLD`. The primary
+target title families are Data Analyst, Data Scientist, Data Engineer, and
+Machine Learning Engineer. Internship/co-op, new-grad/campus, full-time 0-2 YOE,
+and YOE-unknown roles are distinct career-stage tracks. Senior/Sr. titles are
+excluded unless the JD contains an explicit
 qualification path requiring no more than two years of experience; those rare
 exceptions remain low-priority review items. Lead, Staff, Principal, Manager,
 Director, Head, VP, Architect, and Supervisor titles are excluded at the
-candidate gate. Digests group results into New Grad/Campus, Early Career,
-explicit <=2 YOE compatible, Standard, and Senior Exception sections. A
-standard role with neither direct early-career evidence nor an explicit <=2 YOE
-path is retained as employer-market intelligence but is not sent as an
-application recommendation.
+candidate gate. Digests group results into Internship/Co-op, New Grad/Campus,
+Full-time 0-2 YOE, YOE Unknown, and Senior Exception sections. Unknown YOE is
+retained for review rather than silently treated as zero years or discarded.
+
+Historical completeness depends on the provider. Greenhouse, Ashby, Lever, and
+Greenhouse HTML sources retain full-board data that can be reclassified. Other
+sources use title-filtered discovery, so roles omitted by an older taxonomy cannot
+be reconstructed retroactively; broader collection begins with the first v2 poll.
 
 For plausible or ambiguous jobs, an optional OpenAI Responses API interpreter
 can classify responsibilities and role identity with quoted JD evidence. It

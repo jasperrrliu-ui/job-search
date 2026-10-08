@@ -12,9 +12,14 @@ from urllib.parse import urljoin
 
 
 USER_AGENT = "job-search/0.1 (contact: jliu_Seeu@outlook.com)"
-WORKDAY_SEARCH_TERMS = [
+ATS_SEARCH_TERMS = [
+    "data analyst",
     "data scientist",
     "data science",
+    "data engineer",
+    "data engineering",
+    "machine learning engineer",
+    "ml engineer",
     "ai scientist",
     "machine learning scientist",
     "applied scientist",
@@ -130,7 +135,7 @@ def discover_workday_jobs(
     list_url = f"https://{host}/wday/cxs/{tenant}/{site}/jobs"
     postings = {}
 
-    for search_text in WORKDAY_SEARCH_TERMS:
+    for search_text in ATS_SEARCH_TERMS:
         offset = 0
         pages = 0
         while True:
@@ -332,7 +337,7 @@ def fetch_jobs(company: dict, title_rules: dict | None = None) -> list[dict]:
 
     if provider == "successfactors_rss":
         jobs = []
-        for search_text in WORKDAY_SEARCH_TERMS:
+        for search_text in ATS_SEARCH_TERMS:
             feed_url = source["feed_url"]
             separator = "&" if "?" in feed_url else "?"
             page = _get_text(f"{feed_url}{separator}keywords={search_text.replace(' ', '%20')}")
@@ -382,7 +387,7 @@ def fetch_jobs(company: dict, title_rules: dict | None = None) -> list[dict]:
         endpoint = source["api_url"] + "?" + urlencode(
             {"lang": "en", "portal": source["portal"]}
         )
-        for search_text in WORKDAY_SEARCH_TERMS:
+        for search_text in ATS_SEARCH_TERMS:
             page_number = 1
             while True:
                 payload = _post_json(endpoint, _taleo_payload(search_text, page_number))
@@ -417,7 +422,7 @@ def fetch_jobs(company: dict, title_rules: dict | None = None) -> list[dict]:
 
     if provider == "icims_jibe":
         jobs = []
-        for search_text in WORKDAY_SEARCH_TERMS:
+        for search_text in ATS_SEARCH_TERMS:
             payload = _get_json(
                 source["api_url"]
                 + "?"
@@ -447,7 +452,7 @@ def fetch_jobs(company: dict, title_rules: dict | None = None) -> list[dict]:
 
     if provider == "oracle_hcm":
         jobs = []
-        for search_text in WORKDAY_SEARCH_TERMS:
+        for search_text in ATS_SEARCH_TERMS:
             find_params = (
                 f"siteNumber={source['site']},limit=100,offset=0,keyword={search_text}"
             )
@@ -489,7 +494,7 @@ def fetch_jobs(company: dict, title_rules: dict | None = None) -> list[dict]:
 
     if provider == "eightfold_pcsx":
         jobs = []
-        for search_text in WORKDAY_SEARCH_TERMS:
+        for search_text in ATS_SEARCH_TERMS:
             start = 0
             while True:
                 query = urlencode(
@@ -549,7 +554,7 @@ def fetch_jobs(company: dict, title_rules: dict | None = None) -> list[dict]:
 
     if provider == "avature_html":
         links = {}
-        for search_text in WORKDAY_SEARCH_TERMS:
+        for search_text in ATS_SEARCH_TERMS:
             for offset in range(0, 300, 6):
                 page = _post_form_text(
                     source["search_url"] + f"?jobOffset={offset}",
@@ -612,7 +617,7 @@ def fetch_jobs(company: dict, title_rules: dict | None = None) -> list[dict]:
 
     if provider == "phenom_html":
         jobs = []
-        for search_text in WORKDAY_SEARCH_TERMS:
+        for search_text in ATS_SEARCH_TERMS:
             for offset in range(0, 300, 10):
                 page = _get_text(
                     source["search_url"]

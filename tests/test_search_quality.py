@@ -12,7 +12,14 @@ from job_tracker.database import (
     sync_companies,
     upsert_jobs,
 )
-from job_tracker.evaluation import _freshness
+from job_tracker.evaluation import (
+    _candidate_gate,
+    _career_stage,
+    _experience_year_requirements,
+    _freshness,
+    _hard_eligibility,
+    _qualification_paths,
+)
 from job_tracker.service import (
     build_source_health_report,
     build_tracker_status_report,
@@ -25,12 +32,97 @@ DOMAIN = json.loads((ROOT / "config" / "domain.json").read_text(encoding="utf-8"
 
 
 class SearchQualityTests(unittest.TestCase):
-    def test_adjacent_titles_are_recalled_without_non_target_titles(self):
+    def test_all_data_career_titles_are_recalled(self):
         rules = DOMAIN["candidate_generation"]
+        self.assertTrue(_target_title("Data Analyst I", rules))
+        self.assertTrue(_target_title("Data Scientist", rules))
+        self.assertTrue(_target_title("Junior Data Engineer", rules))
+        self.assertTrue(_target_title("Machine Learning Engineer, New Grad", rules))
         self.assertTrue(_target_title("Biostatistician, Clinical Analytics", rules))
         self.assertTrue(_target_title("Decision Scientist", rules))
-        self.assertFalse(_target_title("Senior Data Analyst", rules))
+        self.assertTrue(_target_title("Senior Data Analyst", rules))
         self.assertFalse(_target_title("Quantitative Scientist", rules))
+        self.assertFalse(_target_title("Software Engineer", rules))
+
+    def test_four_primary_role_families_are_classified(self):
+        cases = {
+            "Data Analyst": "DATA_ANALYST",
+            "Data Scientist": "DATA_SCIENTIST",
+            "Data Engineer": "DATA_ENGINEER",
+            "Machine Learning Engineer": "ML_ENGINEER",
+        }
+        for title, family in cases.items():
+            with self.subTest(title=title):
+                gate = _candidate_gate({"title": title, "description": ""}, DOMAIN, [])
+                self.assertEqual(gate["status"], "PRIMARY")
+                self.assertEqual(gate["family"], family)
+
+    def test_internships_are_target_stage_not_employment_failure(self):
+        job = {
+            "title": "Data Analyst Intern",
+            "location": "Boston, MA",
+            "description": "Summer internship working with SQL and dashboards.",
+        }
+        paths = _qualification_paths(job["description"])
+        eligibility, failures, _ = _hard_eligibility(job, DOMAIN, paths)
+        self.assertEqual(eligibility, "UNKNOWN")
+        self.assertNotIn("employment_type", {item["field"] for item in failures})
+        self.assertEqual(_career_stage(job, paths, DOMAIN), "INTERNSHIP_COOP")
+
+    def test_early_career_tracks_are_distinct(self):
+        self.assertEqual(
+            _career_stage(
+                {"title": "Data Scientist, University Graduate", "description": ""},
+                [],
+                DOMAIN,
+            ),
+            "NEW_GRAD_CAMPUS",
+        )
+        self.assertEqual(
+            _career_stage(
+                {"title": "Data Engineer", "description": "Bachelor's degree and 2 years experience."},
+                [{"degree": "BS", "years": 2}],
+                DOMAIN,
+            ),
+            "FULL_TIME_0_2_YOE",
+        )
+        self.assertEqual(
+            _career_stage(
+                {"title": "Machine Learning Engineer", "description": ""},
+                [],
+                DOMAIN,
+            ),
+            "YOE_UNKNOWN",
+        )
+
+    def test_career_stage_parses_yoe_without_degree_phrase(self):
+        self.assertEqual(
+            _experience_year_requirements("Requires 0-2 years of relevant experience."),
+            [0],
+        )
+        self.assertEqual(
+            _career_stage(
+                {"title": "Data Analyst", "description": "Requires 2+ years of experience."},
+                [],
+                DOMAIN,
+            ),
+            "FULL_TIME_0_2_YOE",
+        )
+        self.assertEqual(
+            _career_stage(
+                {"title": "Data Engineer", "description": "Requires 3-5 years of experience."},
+                [],
+                DOMAIN,
+            ),
+            "OUT_OF_SCOPE",
+        )
+
+    def test_internship_experience_does_not_make_a_job_an_internship(self):
+        job = {
+            "title": "Data Scientist",
+            "description": "1 year of internship experience may count toward experience.",
+        }
+        self.assertEqual(_career_stage(job, [], DOMAIN), "FULL_TIME_0_2_YOE")
 
     def test_freshness_uses_source_dates_not_first_seen(self):
         now = datetime(2026, 10, 1, tzinfo=timezone.utc)
@@ -115,10 +207,13 @@ class SearchQualityTests(unittest.TestCase):
             "official_url": "https://example.test/1", "description": "Description",
             "official_created_at": None, "official_updated_at": None,
         }], baseline=False)
+        evaluate_all_open_jobs(connection, DOMAIN)
         report = build_tracker_status_report(connection)
         self.assertIn("| 1. Sources | Registered companies | 1 |", report)
         self.assertIn("| 3. Inventory | Unique jobs retained | 1 |", report)
         self.assertIn("| 6. Outcomes | Feedback/application outcomes | 0 |", report)
+        self.assertIn("| DATA_SCIENTIST | 1 |", report)
+        self.assertIn("| YOE_UNKNOWN | 1 |", report)
 
 
 if __name__ == "__main__":

@@ -21,6 +21,8 @@ from .database import (
 )
 from .evaluation import evaluate
 
+FULL_BOARD_PROVIDERS = {"greenhouse", "greenhouse_html", "ashby", "lever"}
+
 
 def load_json(path: Path) -> dict | list:
     return json.loads(path.read_text(encoding="utf-8"))
@@ -352,7 +354,9 @@ def build_source_health_report(connection: sqlite3.Connection) -> str:
     return "\n".join(lines)
 
 
-def build_tracker_status_report(connection: sqlite3.Connection) -> str:
+def build_tracker_status_report(
+    connection: sqlite3.Connection, domain: dict | None = None
+) -> str:
     """Return the tracker funnel from registered sources through human feedback."""
     companies = connection.execute(
         """
@@ -388,15 +392,51 @@ def build_tracker_status_report(connection: sqlite3.Connection) -> str:
         """
     ).fetchone()
     feedback = connection.execute("SELECT COUNT(*) AS total FROM feedback").fetchone()
+    source_rows = connection.execute(
+        "SELECT provider, COUNT(*) AS total FROM companies "
+        "WHERE active=1 AND provider IS NOT NULL GROUP BY provider"
+    ).fetchall()
+    full_board_sources = sum(
+        row["total"] for row in source_rows if row["provider"] in FULL_BOARD_PROVIDERS
+    )
+    title_filtered_sources = sum(
+        row["total"] for row in source_rows if row["provider"] not in FULL_BOARD_PROVIDERS
+    )
+
+    latest_evaluations = connection.execute(
+        """
+        SELECT jobs.status, evaluations.config_version,
+               evaluations.role_interpretation_json
+        FROM jobs
+        JOIN evaluations ON evaluations.id=(
+            SELECT id FROM evaluations current
+            WHERE current.job_id=jobs.id ORDER BY id DESC LIMIT 1
+        )
+        WHERE jobs.status='OPEN'
+        """
+    ).fetchall()
+    role_counts: dict[str, int] = {}
+    stage_counts: dict[str, int] = {}
+    target_open = 0
+    for row in latest_evaluations:
+        role = json.loads(row["role_interpretation_json"] or "{}")
+        gate = role.get("candidate_gate", {})
+        if gate.get("status") not in {"PRIMARY", "SECONDARY", "STRETCH"}:
+            continue
+        target_open += 1
+        family = gate.get("family", "UNKNOWN")
+        stage = role.get("career_stage", "YOE_UNKNOWN")
+        role_counts[family] = role_counts.get(family, 0) + 1
+        stage_counts[stage] = stage_counts.get(stage, 0) + 1
 
     def value(row: sqlite3.Row, name: str) -> int:
         return row[name] or 0
 
-    return "\n".join(
-        [
+    lines = [
             "# Job Tracker Dashboard",
             "",
             f"_Database current through: {polls['latest_poll'] or 'NONE'}_",
+            f"_Evaluation taxonomy: {(domain or {}).get('version', 'latest stored evaluation')}_",
             "",
             "| Stage | Metric | Value |",
             "|---|---|---:|",
@@ -417,6 +457,57 @@ def build_tracker_status_report(connection: sqlite3.Connection) -> str:
             f"| 5. Delivery | Recommendations delivered | {value(deliveries, 'jobs_delivered'):,} |",
             f"| 6. Outcomes | Feedback/application outcomes | {value(feedback, 'total'):,} |",
             "",
+            "## Collection coverage",
+            "",
+            "| Capture mode | Active sources | Historical interpretation |",
+            "|---|---:|---|",
+            f"| Full-board capture | {full_board_sources:,} | Existing raw history can be reclassified across role families |",
+            f"| Title-filtered capture | {title_filtered_sources:,} | Historical roles omitted by old title queries cannot be recovered retroactively |",
+            f"| No configured source | {max(0, value(companies, 'active') - value(companies, 'active_with_source')):,} | Not polled |",
+            "",
+            "## Open target roles by family",
+            "",
+            f"Open jobs classified into the current or latest stored target taxonomy: **{target_open:,}**.",
+            "",
+            "| Role family | Open jobs |",
+            "|---|---:|",
+        ]
+    role_order = [
+        "DATA_ANALYST",
+        "DATA_SCIENTIST",
+        "DATA_ENGINEER",
+        "ML_ENGINEER",
+    ]
+    for family in role_order:
+        lines.append(f"| {family} | {role_counts.pop(family, 0):,} |")
+    for family in sorted(role_counts):
+        lines.append(f"| {family} | {role_counts[family]:,} |")
+
+    lines.extend(
+        [
+            "",
+            "## Open target roles by career stage",
+            "",
+            "| Career stage | Open jobs |",
+            "|---|---:|",
+        ]
+    )
+    stage_order = [
+        "INTERNSHIP_COOP",
+        "NEW_GRAD_CAMPUS",
+        "FULL_TIME_0_2_YOE",
+        "YOE_UNKNOWN",
+        "OUT_OF_SCOPE",
+        "SENIOR_EXCEPTION",
+    ]
+    for stage in stage_order:
+        lines.append(f"| {stage} | {stage_counts.pop(stage, 0):,} |")
+    for stage in sorted(stage_counts):
+        lines.append(f"| {stage} | {stage_counts[stage]:,} |")
+
+    lines.extend(
+        [
+            "",
             "## Data window",
             "",
             f"- First poll: `{polls['first_poll'] or 'NONE'}`",
@@ -427,8 +518,13 @@ def build_tracker_status_report(connection: sqlite3.Connection) -> str:
             "",
             "> Jobs and evaluations are tracker observations, not applications. "
             "Until outcomes are recorded, response and interview conversion cannot be measured.",
+            "",
+            "> Historical completeness differs by capture mode. A v2 re-evaluation can "
+            "reclassify retained jobs, but it cannot reconstruct jobs that an older "
+            "title-filtered poll never collected.",
         ]
-    ) + "\n"
+    )
+    return "\n".join(lines) + "\n"
 
 
 def build_digest(
@@ -491,7 +587,7 @@ def build_digest(
     employer_counts: dict[str, int] = {}
     for row in active_rows:
         stage = json.loads(row["role_interpretation_json"]).get("career_stage")
-        if stage in {"NEW_GRAD", "EARLY_CAREER"}:
+        if stage in {"INTERNSHIP_COOP", "NEW_GRAD_CAMPUS", "FULL_TIME_0_2_YOE"}:
             employer_counts[row["company"]] = employer_counts.get(row["company"], 0) + 1
 
     lines = [f"Today: {len(rows)} new matching jobs"]
@@ -506,15 +602,15 @@ def build_digest(
     lines.append("")
 
     sections = [
-        ("NEW_GRAD", "Priority 1 — New Grad / Campus"),
-        ("EARLY_CAREER", "Priority 2 — Explicit Early Career"),
-        ("LOW_YOE_COMPATIBLE", "Priority 3 — Explicit <=2 YOE compatible (not a campus signal)"),
-        ("STANDARD", "Priority 4 — Standard Data/AI Scientist"),
+        ("INTERNSHIP_COOP", "Priority 1 — Internship / Co-op"),
+        ("NEW_GRAD_CAMPUS", "Priority 2 — New Grad / Campus"),
+        ("FULL_TIME_0_2_YOE", "Priority 3 — Full-time 0–2 YOE"),
+        ("YOE_UNKNOWN", "Review — Target role with YOE not stated or not parsed"),
         ("SENIOR_EXCEPTION", "Stretch — Senior title with explicit <=2 YOE path"),
     ]
     grouped = {stage: [] for stage, _ in sections}
     for row in rows:
-        stage = json.loads(row["role_interpretation_json"]).get("career_stage", "STANDARD")
+        stage = json.loads(row["role_interpretation_json"]).get("career_stage", "YOE_UNKNOWN")
         grouped.setdefault(stage, []).append(row)
 
     ids = []

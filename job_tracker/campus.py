@@ -82,6 +82,7 @@ def build_campus_report(connection: sqlite3.Connection, domain: dict) -> str:
     ).fetchall()
 
     target = []
+    internships = []
     explicit = []
     compatible = []
     for row in rows:
@@ -91,11 +92,12 @@ def build_campus_report(connection: sqlite3.Connection, domain: dict) -> str:
             continue
         if _location_status(row["location"], domain) != "PASS":
             continue
-        if re.search(r"\b(intern|internship)\b", text):
-            continue
         if _research_heavy(dict(row), domain):
             continue
         target.append(row)
+        if re.search(r"\b(intern|internship|co[- ]?op)\b", text):
+            internships.append(row)
+            continue
         if not _excluded_title(title, domain) and _campus_signal(
             title, row["description"]
         ):
@@ -132,9 +134,10 @@ def build_campus_report(connection: sqlite3.Connection, domain: dict) -> str:
         "Campus / New Grad reverse tracking report",
         f"Generated: {datetime.now(timezone.utc).isoformat()}",
         "",
-        "Scope: US, full-time, Data Scientist / AI or ML Scientist / non-research-heavy Applied Scientist titles.",
+        "Scope: US Data Analyst / Data Scientist / Data Engineer / Machine Learning Engineer roles; internships, campus/new-grad, and full-time <=2 YOE tracks.",
         f"All jobs retained in database: {len(rows)}",
-        f"Target-title US full-time jobs: {len(target)}",
+        f"Target-title US jobs: {len(target)}",
+        f"Internship/co-op jobs: {len(internships)}",
         f"Explicit campus/new-grad jobs: {len(explicit)} ({share:.1f}% of target roles)",
         f"Additional <=2 YOE compatible jobs: {len(compatible)}",
         f"Companies with explicit campus/new-grad evidence: {len(by_company)}",
@@ -152,6 +155,15 @@ def build_campus_report(connection: sqlite3.Connection, domain: dict) -> str:
             )
     else:
         lines.append("- No explicit campus/new-grad target roles found in the retained database.")
+
+    lines.extend(["", "Internship/co-op roles"])
+    for row in sorted(internships, key=_event_date, reverse=True)[:75]:
+        lines.extend(
+            [
+                f"- {_event_date(row)} | {row['company']} | {row['title']} | {row['status']}",
+                f"  {row['official_url']}",
+            ]
+        )
 
     lines.extend(["", "Explicit campus/new-grad roles"])
     for row in sorted(explicit, key=_event_date, reverse=True)[:75]:

@@ -109,6 +109,13 @@ def init_schema(connection: sqlite3.Connection) -> None:
             sent_at TEXT NOT NULL,
             job_count INTEGER NOT NULL
         );
+
+        CREATE INDEX IF NOT EXISTS idx_jobs_company_status
+            ON jobs(company_id, status);
+        CREATE INDEX IF NOT EXISTS idx_evaluations_job_latest
+            ON evaluations(job_id, id DESC);
+        CREATE INDEX IF NOT EXISTS idx_poll_runs_company_latest
+            ON poll_runs(company_id, id DESC);
         """
     )
     columns = {

@@ -100,9 +100,12 @@ def _score(
         return 0
     score = {"PASS": 35, "UNKNOWN": 10}.get(eligibility, 0)
     score += {"FRESH": 15, "RECENT": 8, "UPDATED_DATE_ONLY": 3}.get(freshness, 0)
-    score += {"NEW_GRAD": 25, "EARLY_CAREER": 20, "LOW_YOE_COMPATIBLE": 15}.get(
-        result["role_interpretation"].get("career_stage"), 0
-    )
+    score += {
+        "INTERNSHIP_COOP": 25,
+        "NEW_GRAD_CAMPUS": 25,
+        "FULL_TIME_0_2_YOE": 20,
+        "YOE_UNKNOWN": 5,
+    }.get(result["role_interpretation"].get("career_stage"), 0)
     score += {"HIGH": 10, "MEDIUM": 5}.get(result["career_direction_fit"], 0)
     score += {"HIGH": 10, "MEDIUM": 5}.get(result["resume_signal_fit"], 0)
     return score
@@ -133,7 +136,7 @@ def _hard_eligibility(
 
     if any(
         signal in text for signal in domain["search_scope"]["non_full_time_signals"]
-    ) or re.search(r"\b(intern|internship)\b", text):
+    ):
         failures.append(
             {
                 "field": "employment_type",
@@ -195,6 +198,24 @@ def _qualification_paths(description: str) -> list[dict]:
             if path not in paths:
                 paths.append(path)
     return paths
+
+
+def _experience_year_requirements(description: str) -> list[int]:
+    """Return minimum explicit YOE requirements without requiring a degree phrase."""
+    requirements = []
+    context = re.compile(
+        r"\b(experience|professional|industry|related|relevant|hands[- ]on)\b",
+        flags=re.IGNORECASE,
+    )
+    years = re.compile(
+        r"\b(?P<minimum>\d+)(?:\+|\s*(?:-|–|to)\s*\d+)?\s*(?:years?|yrs?)\b",
+        flags=re.IGNORECASE,
+    )
+    for sentence in _sentences(description):
+        if not context.search(sentence):
+            continue
+        requirements.extend(int(match.group("minimum")) for match in years.finditer(sentence))
+    return requirements
 
 
 def _evaluate_paths(paths: list[dict], candidate: dict) -> tuple[str, str]:
@@ -286,17 +307,36 @@ def _research_heavy(job: dict, domain: dict) -> bool:
 
 def _career_stage(job: dict, paths: list[dict], domain: dict) -> str:
     title = job["title"].lower()
-    text = f"{title}\n{job.get('description', '')}".lower()
+    description = job.get("description", "")
+    text = f"{title}\n{description}".lower()
     rules = domain["candidate_generation"]
+    if re.search(r"\b(intern|internship|co[- ]?op)\b", title) or re.search(
+        r"\b(this|summer|fall|spring)\s+(internship|co[- ]?op)\b|"
+        r"\b(internship|co[- ]?op)\s+program\b",
+        description,
+        flags=re.IGNORECASE,
+    ):
+        return "INTERNSHIP_COOP"
     if any(_title_has(title, term) for term in domain["seniority"]["senior_title_terms"]):
         return "SENIOR_EXCEPTION"
     if any(signal in text for signal in rules["new_grad_signals"]):
-        return "NEW_GRAD"
-    if any(signal in text for signal in rules["early_career_signals"]):
-        return "EARLY_CAREER"
+        return "NEW_GRAD_CAMPUS"
+    if any(signal in text for signal in rules["early_career_signals"]) or any(
+        _title_has(title, term) for term in rules["entry_title_terms"]
+    ) or re.search(
+        r"\b(data analyst|data scientist|data engineer|machine learning engineer|ml engineer)\s+(?:i|1)\b",
+        title,
+        flags=re.IGNORECASE,
+    ):
+        return "FULL_TIME_0_2_YOE"
     if paths and min(path["years"] for path in paths) <= 2:
-        return "LOW_YOE_COMPATIBLE"
-    return "STANDARD"
+        return "FULL_TIME_0_2_YOE"
+    experience_years = _experience_year_requirements(description)
+    if experience_years and min(experience_years) <= 2:
+        return "FULL_TIME_0_2_YOE"
+    if paths or experience_years:
+        return "OUT_OF_SCOPE"
+    return "YOE_UNKNOWN"
 
 
 def _candidate_gate(job: dict, domain: dict, paths: list[dict]) -> dict:
@@ -494,8 +534,8 @@ def _decision(
         return "HOLD", "LOW"
     if career_stage == "SENIOR_EXCEPTION":
         return "REVIEW", "LOW"
-    if career_stage == "STANDARD":
-        return "SAVE", "LOW"
+    if career_stage == "OUT_OF_SCOPE":
+        return "SKIP", "LOW"
     if (
         eligibility == "PASS"
         and result["role_interpretation"].get("seniority_signal") != "STRONG_NEGATIVE"

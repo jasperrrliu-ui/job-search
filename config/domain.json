@@ -1,9 +1,13 @@
 {
-  "version": "2026-10-01-v7",
+  "version": "2026-10-08-v9-all-data-careers",
   "knowledge_status": "candidate-profile-v0.1",
   "search_scope": {
     "country": "US",
-    "employment_type": "FULL_TIME",
+    "employment_types": [
+      "FULL_TIME",
+      "INTERNSHIP",
+      "CO_OP"
+    ],
     "require_explicit_us_location": true,
     "us_location_markers": [
       "united states",
@@ -49,7 +53,6 @@
     "non_full_time_signals": [
       "part-time",
       "part time",
-      "internship",
       "temporary",
       "contract role"
     ]
@@ -107,7 +110,10 @@
       "junior",
       "associate",
       "new grad",
-      "graduate"
+      "graduate",
+      "entry level",
+      "entry-level",
+      "level i"
     ],
     "research_heavy_signals": [
       "research scientist",
@@ -120,14 +126,27 @@
       "peer-reviewed publications"
     ],
     "primary_title_families": {
-      "DATA_SCIENCE": [
+      "DATA_ANALYST": [
+        "data analyst"
+      ],
+      "DATA_SCIENTIST": [
         "data scientist",
         "data science",
         "applied data scientist",
         "health data scientist",
         "clinical data scientist"
       ],
-      "AI_SCIENTIST": [
+      "DATA_ENGINEER": [
+        "data engineer",
+        "data engineering"
+      ],
+      "ML_ENGINEER": [
+        "machine learning engineer",
+        "ml engineer"
+      ]
+    },
+    "secondary_title_families": {
+      "ADJACENT_ML_SCIENCE": [
         "ai scientist",
         "artificial intelligence scientist",
         "applied ai scientist",
@@ -137,11 +156,9 @@
         "ai evaluation scientist",
         "model behavior scientist"
       ],
-      "APPLIED_SCIENTIST": [
+      "ADJACENT_APPLIED_SCIENCE": [
         "applied scientist"
-      ]
-    },
-    "secondary_title_families": {
+      ],
       "ADJACENT_DATA_SCIENCE": [
         "decision scientist",
         "marketing scientist",
@@ -149,6 +166,16 @@
         "research data scientist",
         "biostatistician",
         "statistician"
+      ],
+      "ADJACENT_ANALYTICS": [
+        "product analyst",
+        "analytics analyst",
+        "business intelligence analyst",
+        "bi analyst"
+      ],
+      "ADJACENT_DATA_ENGINEERING": [
+        "analytics engineer",
+        "ai engineer"
       ]
     },
     "non_target_title_terms": [
@@ -157,7 +184,6 @@
       "frontend engineer",
       "fullstack engineer",
       "full stack engineer",
-      "analytics engineer",
       "systems engineer",
       "field engineer",
       "support engineer",
@@ -169,8 +195,6 @@
       "communications",
       "financial analyst",
       "business analyst",
-      "data analyst",
-      "product analyst",
       "decision analyst",
       "quantitative scientist",
       "business systems analyst",
@@ -288,23 +312,38 @@
         "ai evaluation",
         "model governance",
         "evaluation system"
+      ],
+      "DATA_ANALYTICS": [
+        "data analysis",
+        "product analytics",
+        "business intelligence",
+        "dashboard",
+        "reporting",
+        "a/b testing",
+        "sql"
+      ],
+      "DATA_ENGINEERING": [
+        "data pipeline",
+        "etl",
+        "elt",
+        "data warehouse",
+        "data lake",
+        "data modeling",
+        "airflow",
+        "spark"
+      ],
+      "ML_ENGINEERING": [
+        "model deployment",
+        "model serving",
+        "mlops",
+        "machine learning platform",
+        "training pipeline",
+        "inference pipeline",
+        "feature store"
       ]
     },
     "secondary": {},
     "low_priority": {
-      "PRODUCT_ANALYTICS": [
-        "product analytics",
-        "dashboard",
-        "a/b testing",
-        "business intelligence",
-        "reporting"
-      ],
-      "ML_INFRASTRUCTURE": [
-        "distributed training",
-        "ml infrastructure",
-        "model serving infrastructure",
-        "backend infrastructure"
-      ],
       "RESEARCH_HEAVY": [
         "foundation model research",
         "novel algorithms",

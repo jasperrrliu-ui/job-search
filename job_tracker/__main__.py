@@ -75,7 +75,7 @@ def main() -> None:
         return
 
     if args.command == "status":
-        report = build_tracker_status_report(connection)
+        report = build_tracker_status_report(connection, load_json(DOMAIN))
         if args.output:
             args.output.parent.mkdir(parents=True, exist_ok=True)
             args.output.write_text(report, encoding="utf-8")
