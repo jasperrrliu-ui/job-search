@@ -2,6 +2,12 @@ name: Job search
 
 on:
   workflow_dispatch:
+    inputs:
+      send_digest:
+        description: "Send the daily digest after this manual poll"
+        required: false
+        default: false
+        type: boolean
   schedule:
     - cron: "17 8 * * *"
       timezone: "America/New_York"
@@ -66,7 +72,7 @@ jobs:
           fi
 
       - name: Send daily digest
-        if: steps.delivery.outputs.run == 'true'
+        if: steps.delivery.outputs.run == 'true' && (github.event_name != 'workflow_dispatch' || inputs.send_digest)
         env:
           SMTP_HOST: smtp.gmail.com
           SMTP_PORT: "587"
