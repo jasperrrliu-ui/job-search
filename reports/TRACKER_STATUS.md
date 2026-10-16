@@ -1,6 +1,6 @@
 # Job Tracker Dashboard
 
-_Database current through: 2026-10-16T17:43:00.619015+00:00_
+_Database current through: 2026-10-16T21:29:22.791180+00:00_
 _Evaluation taxonomy: 2026-10-08-v9-all-data-careers_
 
 | Stage | Metric | Value |
@@ -8,17 +8,17 @@ _Evaluation taxonomy: 2026-10-08-v9-all-data-careers_
 | 1. Sources | Registered companies | 504 |
 | 1. Sources | Active companies | 502 |
 | 1. Sources | Active companies with source | 487 |
-| 2. Collection | Poll runs | 24,991 |
-| 2. Collection | Successful polls | 21,812 |
-| 2. Collection | Failed polls | 3,179 |
+| 2. Collection | Poll runs | 25,255 |
+| 2. Collection | Successful polls | 21,964 |
+| 2. Collection | Failed polls | 3,291 |
 | 2. Collection | Companies successfully polled | 482 |
-| 3. Inventory | Unique jobs retained | 50,164 |
-| 3. Inventory | Open jobs | 33,603 |
-| 3. Inventory | Closed jobs | 16,561 |
-| 3. Inventory | Job snapshots | 173,596 |
-| 4. Evaluation | Evaluation records | 300,347 |
-| 4. Evaluation | Distinct jobs evaluated | 50,164 |
-| 5. Delivery | Digests sent | 66 |
+| 3. Inventory | Unique jobs retained | 50,316 |
+| 3. Inventory | Open jobs | 33,623 |
+| 3. Inventory | Closed jobs | 16,693 |
+| 3. Inventory | Job snapshots | 174,289 |
+| 4. Evaluation | Evaluation records | 301,041 |
+| 4. Evaluation | Distinct jobs evaluated | 50,316 |
+| 5. Delivery | Digests sent | 67 |
 | 5. Delivery | Recommendations delivered | 139 |
 | 6. Outcomes | Feedback/application outcomes | 0 |
 
@@ -32,14 +32,14 @@ _Evaluation taxonomy: 2026-10-08-v9-all-data-careers_
 
 ## Open target roles by family
 
-Open jobs classified into the current or latest stored target taxonomy: **757**.
+Open jobs classified into the current or latest stored target taxonomy: **740**.
 
 | Role family | Open jobs |
 |---|---:|
 | DATA_ANALYST | 61 |
-| DATA_SCIENTIST | 276 |
+| DATA_SCIENTIST | 274 |
 | DATA_ENGINEER | 78 |
-| ML_ENGINEER | 154 |
+| ML_ENGINEER | 139 |
 | ADJACENT_ANALYTICS | 18 |
 | ADJACENT_APPLIED_SCIENCE | 12 |
 | ADJACENT_DATA_ENGINEERING | 142 |
@@ -52,17 +52,17 @@ Open jobs classified into the current or latest stored target taxonomy: **757**.
 | INTERNSHIP_COOP | 88 |
 | NEW_GRAD_CAMPUS | 7 |
 | FULL_TIME_0_2_YOE | 126 |
-| YOE_UNKNOWN | 282 |
+| YOE_UNKNOWN | 265 |
 | OUT_OF_SCOPE | 239 |
 | SENIOR_EXCEPTION | 15 |
 
 ## Data window
 
 - First poll: `2026-09-11T03:11:54.456076+00:00`
-- Latest poll: `2026-10-16T17:43:00.619015+00:00`
+- Latest poll: `2026-10-16T21:29:22.791180+00:00`
 - First job seen: `2026-09-11T03:11:54.617237+00:00`
-- Latest job seen: `2026-10-16T17:43:00.547409+00:00`
-- Latest digest: `2026-10-16T17:45:07.208406+00:00`
+- Latest job seen: `2026-10-16T21:29:22.715888+00:00`
+- Latest digest: `2026-10-16T21:31:29.557863+00:00`
 
 > Jobs and evaluations are tracker observations, not applications. Until outcomes are recorded, response and interview conversion cannot be measured.
 
