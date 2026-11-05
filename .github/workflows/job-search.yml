@@ -27,6 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      id-token: write
 
     steps:
       - uses: actions/checkout@v4
@@ -60,6 +61,12 @@ jobs:
               echo "run=false" >> "$GITHUB_OUTPUT"
             fi
           fi
+
+      - name: Mark poll start for CareerGraph export
+        if: steps.delivery.outputs.run == 'true'
+        id: poll_clock
+        shell: bash
+        run: echo "started_at=$(date -u +%Y-%m-%dT%H:%M:%S+00:00)" >> "$GITHUB_OUTPUT"
 
       - name: Poll jobs or create the first baseline
         if: steps.delivery.outputs.run == 'true'
@@ -96,6 +103,46 @@ jobs:
         with:
           path: data/jobs.db
           key: job-db-${{ github.run_id }}
+
+      - name: Create complete CareerGraph export
+        if: success() && steps.delivery.outputs.run == 'true'
+        shell: bash
+        run: |
+          python -m job_tracker.careergraph_export \
+            --db data/jobs.db --output-dir careergraph-export \
+            --run-id "${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" \
+            --poll-started-at "${{ steps.poll_clock.outputs.started_at }}"
+
+      - name: Keep CareerGraph export as workflow artifact
+        if: success() && steps.delivery.outputs.run == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: careergraph-export-${{ github.run_id }}-${{ github.run_attempt }}
+          path: careergraph-export/exports/
+          retention-days: 14
+
+      - name: Authenticate to GCP for CareerGraph export
+        if: success() && steps.delivery.outputs.run == 'true' && vars.CAREERGRAPH_EXPORT_ROOT != '' && vars.CAREERGRAPH_WIF_PROVIDER != '' && vars.CAREERGRAPH_EXPORT_SA != ''
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.CAREERGRAPH_WIF_PROVIDER }}
+          service_account: ${{ vars.CAREERGRAPH_EXPORT_SA }}
+
+      - name: Install gcloud for CareerGraph export
+        if: success() && steps.delivery.outputs.run == 'true' && vars.CAREERGRAPH_EXPORT_ROOT != '' && vars.CAREERGRAPH_WIF_PROVIDER != '' && vars.CAREERGRAPH_EXPORT_SA != ''
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Publish CareerGraph export to GCS
+        if: success() && steps.delivery.outputs.run == 'true' && vars.CAREERGRAPH_EXPORT_ROOT != '' && vars.CAREERGRAPH_WIF_PROVIDER != '' && vars.CAREERGRAPH_EXPORT_SA != ''
+        shell: bash
+        env:
+          EXPORT_ROOT: ${{ vars.CAREERGRAPH_EXPORT_ROOT }}
+        run: |
+          run_id="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          source="careergraph-export/exports"
+          gcloud storage cp "$source/$run_id/jobs.jsonl.gz" "$EXPORT_ROOT/exports/$run_id/jobs.jsonl.gz"
+          gcloud storage cp "$source/$run_id/manifest.json" "$EXPORT_ROOT/exports/$run_id/manifest.json"
+          gcloud storage cp "$source/latest.json" "$EXPORT_ROOT/exports/latest.json"
 
       - name: Publish tracker dashboard
         if: success() && hashFiles('data/jobs.db') != ''
