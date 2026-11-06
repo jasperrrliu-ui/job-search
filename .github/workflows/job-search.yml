@@ -154,6 +154,8 @@ jobs:
           else
             gcloud storage cp outputs/careergraph/jobs.jsonl.gz "$prefix/$RUN_ID/jobs.jsonl.gz"
             gcloud storage cp outputs/careergraph/manifest.json "$prefix/$RUN_ID/manifest.json"
+          fi
+          if ! gcloud storage cat "$prefix/latest.json" 2>/dev/null | grep -Fq "\"run_id\": \"$RUN_ID\""; then
             gcloud storage cp outputs/careergraph/latest.json "$prefix/latest.json"
           fi
 
