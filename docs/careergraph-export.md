@@ -1,10 +1,10 @@
 # CareerGraph Tracker export
 
-The existing Job search workflow polls ATS sources and restores `data/jobs.db` from the GitHub Actions cache. After a poll, this branch exports **all** jobs for active companies, including OPEN and CLOSED rows. It uploads the raw snapshot to GCS. It does not run CareerGraph parsing.
+The existing Job search workflow polls ATS sources and restores `data/jobs.db` from the GitHub Actions cache. The morning poll only updates the Tracker database. After the afternoon poll succeeds, this branch exports **all** jobs for active companies, including OPEN and CLOSED rows, and uploads one dated snapshot to GCS. The afternoon fallback skips the upload if that day's manifest already exists. It does not run CareerGraph parsing.
 
 ## Output contract
 
-For each GitHub Actions run, `job_tracker.export` writes:
+For each daily afternoon export, `job_tracker.export` writes:
 
 - `jobs.jsonl.gz`: full Tracker rows, one JSON object per job.
 - `manifest.json`: run ID, UTC export time, row count, compressed-file SHA-256, per-company latest poll status, and poll details.
@@ -26,8 +26,8 @@ The workflow uses GitHub OIDC through Google Workload Identity Federation. No se
 
 ## First live run
 
-Use **Actions → Job search → Run workflow**, selecting `ms3-careergraph-export` and leaving `send_digest` off. The workflow restores the cached database if available, polls, saves the updated cache, exports all rows, and uploads them. If the cache is unavailable, it calls Tracker `bootstrap` and the resulting database becomes the first snapshot.
+The scheduled export runs after the afternoon poll once the workflow change is on the default branch. A manual **Job search** run still performs a Tracker poll and does not upload a CareerGraph snapshot. To verify this branch before deployment, inspect its workflow and export files; the first GCS snapshot requires the scheduled afternoon run after the branch is incorporated into the default branch.
 
-Check the workflow log for `job_count`, company poll status, and three successful GCS uploads. Then check `gs://ms3_data_ingestion/careergraph/exports/latest.json` and the matching run folder. CareerGraph Cloud Run and Vertex processing are a separate deployment and are not triggered by this GitHub workflow.
+Check the afternoon workflow log for `job_count`, company poll status, and three successful GCS uploads. Then check `gs://ms3_data_ingestion/careergraph/exports/latest.json` and the matching run folder. CareerGraph Cloud Run and Vertex processing are a separate deployment and are not triggered by this GitHub workflow.
 
-Scheduled GitHub Actions workflows use the default branch. The export therefore runs on the existing schedule only after this branch's workflow changes are incorporated into the default branch.
+Scheduled GitHub Actions workflows use the default branch. The existing morning and afternoon poll schedule remains unchanged; only the afternoon run exports to GCS after this branch's changes are incorporated into the default branch.
