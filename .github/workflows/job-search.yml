@@ -39,7 +39,7 @@ jobs:
       - uses: actions/cache/restore@v4
         with:
           path: data/jobs.db
-          key: job-db-${{ github.run_id }}
+          key: job-db-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: |
             job-db-
 
@@ -103,7 +103,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: data/jobs.db
-          key: job-db-${{ github.run_id }}
+          key: job-db-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Export full CareerGraph snapshot
         id: careergraph_export
