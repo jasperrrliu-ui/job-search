@@ -5,3 +5,5 @@ data/
 outputs/*.txt
 outputs/*.json
 outputs/*.md
+outputs/careergraph/
+gha-creds-*.json
