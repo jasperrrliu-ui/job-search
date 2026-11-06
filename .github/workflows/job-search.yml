@@ -27,6 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      id-token: write
 
     steps:
       - uses: actions/checkout@v4
@@ -61,7 +62,13 @@ jobs:
             fi
           fi
 
+      - name: Record poll start time
+        id: poll_clock
+        if: steps.delivery.outputs.run == 'true'
+        run: echo "started_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
+
       - name: Poll jobs or create the first baseline
+        id: poll
         if: steps.delivery.outputs.run == 'true'
         shell: bash
         run: |
@@ -91,11 +98,60 @@ jobs:
           fi
 
       - name: Save job database
-        if: success() && steps.delivery.outputs.run == 'true'
+        id: cache_save
+        if: always() && steps.delivery.outputs.run == 'true' && steps.poll.outcome == 'success'
         uses: actions/cache/save@v4
         with:
           path: data/jobs.db
           key: job-db-${{ github.run_id }}
+
+      - name: Export full CareerGraph snapshot
+        id: careergraph_export
+        if: always() && steps.cache_save.outcome == 'success'
+        env:
+          POLL_STARTED_AT: ${{ steps.poll_clock.outputs.started_at }}
+        run: |
+          run_id="tracker-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+          python -m job_tracker.export \
+            --db data/jobs.db \
+            --output-dir outputs/careergraph \
+            --run-id "$run_id" \
+            --poll-started-at "$POLL_STARTED_AT"
+
+      - name: Check GCP export configuration
+        id: export_config
+        if: always() && steps.careergraph_export.outcome == 'success'
+        env:
+          WIF_PROVIDER: ${{ vars.GCP_WIF_PROVIDER }}
+          EXPORT_SA: ${{ vars.GCP_TRACKER_EXPORT_SA }}
+        run: |
+          test -n "$WIF_PROVIDER" || { echo "::error::Set GCP_WIF_PROVIDER repository variable"; exit 1; }
+          test -n "$EXPORT_SA" || { echo "::error::Set GCP_TRACKER_EXPORT_SA repository variable"; exit 1; }
+
+      - name: Authenticate to GCP
+        id: gcp_auth
+        if: always() && steps.export_config.outcome == 'success'
+        uses: google-github-actions/auth@v3
+        with:
+          project_id: ms3-run-513900
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_TRACKER_EXPORT_SA }}
+
+      - name: Set up gcloud
+        id: gcloud_setup
+        if: always() && steps.gcp_auth.outcome == 'success'
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Upload CareerGraph snapshot
+        if: always() && steps.gcloud_setup.outcome == 'success'
+        env:
+          RUN_ID: ${{ steps.careergraph_export.outputs.run_id }}
+        run: |
+          prefix="gs://ms3_data_ingestion/careergraph/exports"
+          gcloud storage cp outputs/careergraph/jobs.jsonl.gz "$prefix/$RUN_ID/jobs.jsonl.gz"
+          gcloud storage cp outputs/careergraph/manifest.json "$prefix/$RUN_ID/manifest.json"
+          gcloud storage cp outputs/careergraph/latest.json "$prefix/latest.json"
 
       - name: Publish tracker dashboard
         if: success() && hashFiles('data/jobs.db') != ''
