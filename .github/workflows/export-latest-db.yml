@@ -2,9 +2,16 @@ name: Export latest database (read-only)
 
 on:
   workflow_dispatch:
+    inputs:
+      upload_to_gcs:
+        description: "Upload a CareerGraph snapshot to GCS from the cached database"
+        type: boolean
+        required: true
+        default: false
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   export:
@@ -90,3 +97,57 @@ jobs:
             data/jobs.db
             outputs/db-summary.json
           retention-days: 1
+
+      - name: Build CareerGraph snapshot from cached database
+        id: careergraph_export
+        if: inputs.upload_to_gcs
+        shell: bash
+        run: |
+          run_id="tracker-manual-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          poll_started_at=$(python - <<'PY'
+          import sqlite3
+          with sqlite3.connect("data/jobs.db") as db:
+              value = db.execute("SELECT MAX(started_at) FROM poll_runs").fetchone()[0]
+          if not value:
+              raise SystemExit("No Tracker poll found in cached database")
+          print(value)
+          PY
+          )
+          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+          python -m job_tracker.export \
+            --db data/jobs.db \
+            --output-dir outputs/careergraph \
+            --run-id "$run_id" \
+            --poll-started-at "$poll_started_at"
+
+      - name: Check GCP export configuration
+        if: inputs.upload_to_gcs
+        env:
+          WIF_PROVIDER: ${{ vars.GCP_WIF_PROVIDER }}
+          EXPORT_SA: ${{ vars.GCP_TRACKER_EXPORT_SA }}
+        run: |
+          test -n "$WIF_PROVIDER" || { echo "::error::Set GCP_WIF_PROVIDER repository variable"; exit 1; }
+          test -n "$EXPORT_SA" || { echo "::error::Set GCP_TRACKER_EXPORT_SA repository variable"; exit 1; }
+
+      - name: Authenticate to GCP
+        if: inputs.upload_to_gcs
+        uses: google-github-actions/auth@v3
+        with:
+          project_id: ms3-run-513900
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_TRACKER_EXPORT_SA }}
+
+      - name: Set up gcloud
+        if: inputs.upload_to_gcs
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Upload CareerGraph manual snapshot
+        if: inputs.upload_to_gcs
+        env:
+          RUN_ID: ${{ steps.careergraph_export.outputs.run_id }}
+        run: |
+          prefix="gs://ms3_data_ingestion/careergraph/exports"
+          gcloud storage cp outputs/careergraph/jobs.jsonl.gz "$prefix/$RUN_ID/jobs.jsonl.gz"
+          gcloud storage cp outputs/careergraph/manifest.json "$prefix/$RUN_ID/manifest.json"
+          gcloud storage cp outputs/careergraph/latest.json "$prefix/latest.json"
+          echo "CareerGraph export: $prefix/$RUN_ID/"
