@@ -107,11 +107,11 @@ jobs:
 
       - name: Export full CareerGraph snapshot
         id: careergraph_export
-        if: always() && steps.cache_save.outcome == 'success'
+        if: always() && steps.cache_save.outcome == 'success' && steps.delivery.outputs.slot == 'afternoon'
         env:
           POLL_STARTED_AT: ${{ steps.poll_clock.outputs.started_at }}
         run: |
-          run_id="tracker-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          run_id="tracker-$(TZ=America/New_York date +%F)"
           echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
           python -m job_tracker.export \
             --db data/jobs.db \
@@ -149,9 +149,13 @@ jobs:
           RUN_ID: ${{ steps.careergraph_export.outputs.run_id }}
         run: |
           prefix="gs://ms3_data_ingestion/careergraph/exports"
-          gcloud storage cp outputs/careergraph/jobs.jsonl.gz "$prefix/$RUN_ID/jobs.jsonl.gz"
-          gcloud storage cp outputs/careergraph/manifest.json "$prefix/$RUN_ID/manifest.json"
-          gcloud storage cp outputs/careergraph/latest.json "$prefix/latest.json"
+          if gcloud storage ls "$prefix/$RUN_ID/manifest.json" >/dev/null 2>&1; then
+            echo "Daily snapshot $RUN_ID already exists; skipping duplicate upload"
+          else
+            gcloud storage cp outputs/careergraph/jobs.jsonl.gz "$prefix/$RUN_ID/jobs.jsonl.gz"
+            gcloud storage cp outputs/careergraph/manifest.json "$prefix/$RUN_ID/manifest.json"
+            gcloud storage cp outputs/careergraph/latest.json "$prefix/latest.json"
+          fi
 
       - name: Publish tracker dashboard
         if: success() && hashFiles('data/jobs.db') != ''
