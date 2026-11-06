@@ -160,7 +160,7 @@ jobs:
           fi
 
       - name: Publish tracker dashboard
-        if: success() && hashFiles('data/jobs.db') != ''
+        if: always() && hashFiles('data/jobs.db') != '' && steps.poll.outcome != 'failure'
         shell: bash
         run: |
           mkdir -p reports
