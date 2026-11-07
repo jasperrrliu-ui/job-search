@@ -144,6 +144,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v3
 
       - name: Upload CareerGraph snapshot
+        id: gcs_upload
         if: always() && steps.gcloud_setup.outcome == 'success'
         env:
           RUN_ID: ${{ steps.careergraph_export.outputs.run_id }}
@@ -158,6 +159,14 @@ jobs:
           if ! gcloud storage cat "$prefix/latest.json" 2>/dev/null | grep -Fq "\"run_id\": \"$RUN_ID\""; then
             gcloud storage cp outputs/careergraph/latest.json "$prefix/latest.json"
           fi
+
+      - name: Start CareerGraph preprocessing
+        if: always() && steps.gcs_upload.outcome == 'success'
+        run: |
+          gcloud run jobs execute careergraph-job-launcher \
+            --project ms3-run-513900 \
+            --region us-central1 \
+            --wait
 
       - name: Publish tracker dashboard
         if: always() && hashFiles('data/jobs.db') != '' && steps.poll.outcome != 'failure'
