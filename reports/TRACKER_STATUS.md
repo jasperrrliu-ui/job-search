@@ -1,6 +1,6 @@
 # Job Tracker Dashboard
 
-_Database current through: 2026-11-08T19:25:02.504932+00:00_
+_Database current through: 2026-11-08T23:13:33.630302+00:00_
 _Evaluation taxonomy: 2026-10-08-v9-all-data-careers_
 
 | Stage | Metric | Value |
@@ -8,17 +8,17 @@ _Evaluation taxonomy: 2026-10-08-v9-all-data-careers_
 | 1. Sources | Registered companies | 504 |
 | 1. Sources | Active companies | 502 |
 | 1. Sources | Active companies with source | 487 |
-| 2. Collection | Poll runs | 7,235 |
-| 2. Collection | Successful polls | 5,152 |
-| 2. Collection | Failed polls | 2,083 |
+| 2. Collection | Poll runs | 7,501 |
+| 2. Collection | Successful polls | 5,307 |
+| 2. Collection | Failed polls | 2,194 |
 | 2. Collection | Companies successfully polled | 382 |
-| 3. Inventory | Unique jobs retained | 37,211 |
-| 3. Inventory | Open jobs | 33,008 |
-| 3. Inventory | Closed jobs | 4,203 |
-| 3. Inventory | Job snapshots | 63,513 |
-| 4. Evaluation | Evaluation records | 63,513 |
-| 4. Evaluation | Distinct jobs evaluated | 37,211 |
-| 5. Delivery | Digests sent | 19 |
+| 3. Inventory | Unique jobs retained | 37,214 |
+| 3. Inventory | Open jobs | 33,005 |
+| 3. Inventory | Closed jobs | 4,209 |
+| 3. Inventory | Job snapshots | 63,762 |
+| 4. Evaluation | Evaluation records | 63,762 |
+| 4. Evaluation | Distinct jobs evaluated | 37,214 |
+| 5. Delivery | Digests sent | 20 |
 | 5. Delivery | Recommendations delivered | 23 |
 | 6. Outcomes | Feedback/application outcomes | 0 |
 
@@ -59,10 +59,10 @@ Open jobs classified into the current or latest stored target taxonomy: **612**.
 ## Data window
 
 - First poll: `2026-10-30T18:00:02.904532+00:00`
-- Latest poll: `2026-11-08T19:25:02.504932+00:00`
+- Latest poll: `2026-11-08T23:13:33.630302+00:00`
 - First job seen: `2026-10-30T18:00:02.999476+00:00`
-- Latest job seen: `2026-11-08T19:19:09.650539+00:00`
-- Latest digest: `2026-11-08T19:26:58.531032+00:00`
+- Latest job seen: `2026-11-08T22:54:05.315672+00:00`
+- Latest digest: `2026-11-08T23:14:37.291114+00:00`
 
 > Jobs and evaluations are tracker observations, not applications. Until outcomes are recorded, response and interview conversion cannot be measured.
 
