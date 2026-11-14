@@ -1,6 +1,6 @@
 # Job Tracker Dashboard
 
-_Database current through: 2026-11-14T19:46:20.575938+00:00_
+_Database current through: 2026-11-14T23:19:17.740440+00:00_
 _Evaluation taxonomy: 2026-10-08-v9-all-data-careers_
 
 | Stage | Metric | Value |
@@ -8,17 +8,17 @@ _Evaluation taxonomy: 2026-10-08-v9-all-data-careers_
 | 1. Sources | Registered companies | 504 |
 | 1. Sources | Active companies | 502 |
 | 1. Sources | Active companies with source | 487 |
-| 2. Collection | Poll runs | 11,742 |
-| 2. Collection | Successful polls | 8,312 |
-| 2. Collection | Failed polls | 3,430 |
+| 2. Collection | Poll runs | 12,007 |
+| 2. Collection | Successful polls | 8,465 |
+| 2. Collection | Failed polls | 3,542 |
 | 2. Collection | Companies successfully polled | 383 |
-| 3. Inventory | Unique jobs retained | 40,625 |
-| 3. Inventory | Open jobs | 32,430 |
+| 3. Inventory | Unique jobs retained | 40,629 |
+| 3. Inventory | Open jobs | 32,434 |
 | 3. Inventory | Closed jobs | 8,195 |
-| 3. Inventory | Job snapshots | 80,750 |
-| 4. Evaluation | Evaluation records | 80,750 |
-| 4. Evaluation | Distinct jobs evaluated | 40,625 |
-| 5. Delivery | Digests sent | 31 |
+| 3. Inventory | Job snapshots | 81,010 |
+| 4. Evaluation | Evaluation records | 81,010 |
+| 4. Evaluation | Distinct jobs evaluated | 40,629 |
+| 5. Delivery | Digests sent | 32 |
 | 5. Delivery | Recommendations delivered | 36 |
 | 6. Outcomes | Feedback/application outcomes | 0 |
 
@@ -59,10 +59,10 @@ Open jobs classified into the current or latest stored target taxonomy: **601**.
 ## Data window
 
 - First poll: `2026-10-30T18:00:02.904532+00:00`
-- Latest poll: `2026-11-14T19:46:20.575938+00:00`
+- Latest poll: `2026-11-14T23:19:17.740440+00:00`
 - First job seen: `2026-10-30T18:00:02.999476+00:00`
-- Latest job seen: `2026-11-14T19:40:08.603867+00:00`
-- Latest digest: `2026-11-14T19:47:52.104626+00:00`
+- Latest job seen: `2026-11-14T23:00:10.198589+00:00`
+- Latest digest: `2026-11-14T23:20:50.501191+00:00`
 
 > Jobs and evaluations are tracker observations, not applications. Until outcomes are recorded, response and interview conversion cannot be measured.
 
