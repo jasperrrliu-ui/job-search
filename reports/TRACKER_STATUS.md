@@ -1,6 +1,6 @@
 # Job Tracker Dashboard
 
-_Database current through: 2026-11-24T01:52:00.218179+00:00_
+_Database current through: 2026-11-24T04:35:34.894918+00:00_
 _Evaluation taxonomy: 2026-10-08-v9-all-data-careers_
 
 | Stage | Metric | Value |
@@ -8,18 +8,18 @@ _Evaluation taxonomy: 2026-10-08-v9-all-data-careers_
 | 1. Sources | Registered companies | 504 |
 | 1. Sources | Active companies | 502 |
 | 1. Sources | Active companies with source | 487 |
-| 2. Collection | Poll runs | 18,515 |
-| 2. Collection | Successful polls | 13,051 |
-| 2. Collection | Failed polls | 5,464 |
+| 2. Collection | Poll runs | 18,779 |
+| 2. Collection | Successful polls | 13,203 |
+| 2. Collection | Failed polls | 5,576 |
 | 2. Collection | Companies successfully polled | 385 |
-| 3. Inventory | Unique jobs retained | 44,532 |
-| 3. Inventory | Open jobs | 32,259 |
-| 3. Inventory | Closed jobs | 12,273 |
-| 3. Inventory | Job snapshots | 110,243 |
-| 4. Evaluation | Evaluation records | 110,243 |
-| 4. Evaluation | Distinct jobs evaluated | 44,532 |
-| 5. Delivery | Digests sent | 49 |
-| 5. Delivery | Recommendations delivered | 56 |
+| 3. Inventory | Unique jobs retained | 44,555 |
+| 3. Inventory | Open jobs | 32,251 |
+| 3. Inventory | Closed jobs | 12,304 |
+| 3. Inventory | Job snapshots | 110,373 |
+| 4. Evaluation | Evaluation records | 110,373 |
+| 4. Evaluation | Distinct jobs evaluated | 44,555 |
+| 5. Delivery | Digests sent | 50 |
+| 5. Delivery | Recommendations delivered | 57 |
 | 6. Outcomes | Feedback/application outcomes | 0 |
 
 ## Collection coverage
@@ -42,8 +42,8 @@ Open jobs classified into the current or latest stored target taxonomy: **587**.
 | ML_ENGINEER | 118 |
 | ADJACENT_ANALYTICS | 16 |
 | ADJACENT_APPLIED_SCIENCE | 17 |
-| ADJACENT_DATA_ENGINEERING | 156 |
-| ADJACENT_ML_SCIENCE | 12 |
+| ADJACENT_DATA_ENGINEERING | 157 |
+| ADJACENT_ML_SCIENCE | 11 |
 
 ## Open target roles by career stage
 
@@ -59,10 +59,10 @@ Open jobs classified into the current or latest stored target taxonomy: **587**.
 ## Data window
 
 - First poll: `2026-10-30T18:00:02.904532+00:00`
-- Latest poll: `2026-11-24T01:52:00.218179+00:00`
+- Latest poll: `2026-11-24T04:35:34.894918+00:00`
 - First job seen: `2026-10-30T18:00:02.999476+00:00`
-- Latest job seen: `2026-11-24T01:45:47.269831+00:00`
-- Latest digest: `2026-11-24T01:53:54.695362+00:00`
+- Latest job seen: `2026-11-24T04:18:25.477569+00:00`
+- Latest digest: `2026-11-24T04:36:29.682719+00:00`
 
 > Jobs and evaluations are tracker observations, not applications. Until outcomes are recorded, response and interview conversion cannot be measured.
 
